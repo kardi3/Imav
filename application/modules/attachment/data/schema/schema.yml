@@ -1,0 +1,259 @@
+options:
+  type: MyISAM
+  collate: utf8_general_ci
+  charset: utf8
+AttachmentSerwis1:
+  tableName: attachment_serwis1_attachment
+  actAs:
+    I18n:
+      fields: [title, slug, description]
+      tableName: attachment_serwis1_attachment_translation
+      className: AttachmentSerwis1Translation
+    Timestampable: 
+      updated:
+        disabled: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    filename:
+      type: string(255)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+    extension:
+      type: string(255)
+    photo_root_id:
+      type: integer(4)
+AttachmentSerwis1Translation:
+  tableName: attachment_serwis1_attachment_translation
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    lang:
+      primary: true
+      type: string(64)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+  relations:
+    AttachmentSerwis1:
+      local: id
+      foreign: id
+      foreignAlias: Translation
+      alias: Attachment
+      type: one
+      foreignType: many
+AttachmentSerwis5:
+  tableName: attachment_serwis5_attachment
+  actAs:
+    I18n:
+      fields: [title, slug, description]
+      tableName: attachment_serwis5_attachment_translation
+      className: AttachmentSerwis5Translation
+    Timestampable: 
+      updated:
+        disabled: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    filename:
+      type: string(255)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+    extension:
+      type: string(255)
+    photo_root_id:
+      type: integer(4)
+AttachmentSerwis5Translation:
+  tableName: attachment_serwis5_attachment_translation
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    lang:
+      primary: true
+      type: string(64)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+  relations:
+    AttachmentSerwis5:
+      local: id
+      foreign: id
+      foreignAlias: Translation
+      alias: Attachment
+      type: one
+      foreignType: many
+AttachmentSerwis6:
+  tableName: attachment_serwis6_attachment
+  actAs:
+    I18n:
+      fields: [title, slug, description]
+      tableName: attachment_serwis6_attachment_translation
+      className: AttachmentSerwis6Translation
+    Timestampable: 
+      updated:
+        disabled: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    filename:
+      type: string(255)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+    extension:
+      type: string(255)
+    photo_root_id:
+      type: integer(4)
+AttachmentSerwis6Translation:
+  tableName: attachment_serwis6_attachment_translation
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    lang:
+      primary: true
+      type: string(64)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+  relations:
+    AttachmentSerwis6:
+      local: id
+      foreign: id
+      foreignAlias: Translation
+      alias: Attachment
+      type: one
+      foreignType: many
+AttachmentSerwis7:
+  tableName: attachment_serwis7_attachment
+  actAs:
+    I18n:
+      fields: [title, slug, description]
+      tableName: attachment_serwis7_attachment_translation
+      className: AttachmentSerwis7Translation
+    Timestampable: 
+      updated:
+        disabled: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    filename:
+      type: string(255)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+    extension:
+      type: string(255)
+    photo_root_id:
+      type: integer(4)
+AttachmentSerwis7Translation:
+  tableName: attachment_serwis7_attachment_translation
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    lang:
+      primary: true
+      type: string(64)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+  relations:
+    AttachmentSerwis7:
+      local: id
+      foreign: id
+      foreignAlias: Translation
+      alias: Attachment
+      type: one
+      foreignType: many
+AttachmentSerwis8:
+  tableName: attachment_serwis8_attachment
+  actAs:
+    I18n:
+      fields: [title, slug, description]
+      tableName: attachment_serwis8_attachment_translation
+      className: AttachmentSerwis8Translation
+    Timestampable: 
+      updated:
+        disabled: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    filename:
+      type: string(255)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+    extension:
+      type: string(255)
+    photo_root_id:
+      type: integer(4)
+AttachmentSerwis8Translation:
+  tableName: attachment_serwis8_attachment_translation
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    lang:
+      primary: true
+      type: string(64)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    description:
+      type: clob
+  relations:
+    AttachmentSerwis8:
+      local: id
+      foreign: id
+      foreignAlias: Translation
+      alias: Attachment
+      type: one
+      foreignType: many

@@ -1,0 +1,183 @@
+<script type="text/javascript">
+$(document).ready(function() {
+    var oTable = $("#notice_table").dataTable( {
+        "sPaginationType": "full_numbers",
+        "oLanguage": {
+            "sUrl": "/plugins/tables/dataTables/datatables.polish.txt"
+        },
+        "bFilter": true,
+        "bDestroy": true,
+        "bProcessing": true,
+        "bServerSide": true,
+        "bLengthChange": false,
+        <?php if($this->notice): ?>
+        "sAjaxSource": "<?php echo $this->adminUrl('list-notice-deal-data', 'offer', array('notice-id' => $this->notice->getId())) ?>",
+        <?php endif; ?>
+        "aaSorting": [[ 2, "desc" ]],
+        "aoColumns": [
+            { sWidth: '200px' },
+            { sClass: "al" },
+            { sWidth: '150px' },
+            { "bSortable": false, sWidth: '50px' }
+        ]
+    });
+    
+    $("#notice_table").bind("update", function(e) {
+        oTable.fnReloadAjax();
+    });
+    
+});
+</script>
+
+<div class="row-fluid">
+
+    <div class="span6">
+        
+        <div class="todo">
+            <h4><?php echo $this->translate('Summary') ?></h4>
+            <ul>
+                <li class="clearfix">
+                    <div class="txt">
+                        <?php echo $this->translate('Agent') ?>: <?php echo $this->deal['Offer']['User']['first_name'] . ' ' . $this->deal['Offer']['User']['last_name'] ?>
+                    </div>
+                </li>
+                <li class="clearfix">
+                    <div class="txt">
+                        <?php echo $this->translate('Offer') ?>: <?php echo $this->deal['Offer']['title'] ?>
+                    </div>
+                </li>
+                <li class="clearfix">
+                    <div class="txt">
+                        <?php echo $this->translate('Client') ?>: <?php echo $this->deal['Notice']['User']['first_name'] . ' ' . $this->deal['Notice']['User']['last_name'] ?>
+                    </div>
+                </li>
+                <li class="clearfix">
+                    <div class="txt">
+                        <?php echo $this->translate('Notice') ?>: <?php echo $this->deal['Notice']['title'] ?>
+                    </div>
+                </li>
+                <li class="clearfix">
+                    <div class="txt">
+                        <?php echo $this->translate('Message count') ?>: <?php echo count($this->deal['Messages']) ?>
+                    </div>
+                </li>
+                <li class="clearfix">
+                    <div class="txt">
+                        <?php echo $this->translate('Contact revealed') ?>:
+                        <?php if($this->deal['contact_revealed']): ?>
+                        <span class="label label-success"> <?php echo $this->translate('Yes') ?></span>
+                        <?php else: ?>
+                        <span class="label label-important"> <?php echo $this->translate('No') ?></span>
+                        <?php endif; ?>
+                    </div>
+                </li>
+                <li class="clearfix">
+                    <div class="txt">
+                        <?php echo $this->translate('Client mark') ?>:
+                        <?php if(strlen($this->deal['client_mark'])): ?>
+                        <span class="label"> <?php echo $this->deal['client_mark'] ?></span>
+                        <?php else: ?>
+                        <?php echo $this->translate('no mark') ?>
+                        <?php endif; ?>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="box">
+        
+            <div class="title">
+
+                <h4>
+                    <span class="icon16 icomoon-icon-comments-15"></span>
+                    <span><?php echo $this->translate('Notice deal messages') ?></span>
+                </h4>
+                <a href="#" class="minimize" style="display: none;">Minimize</a>
+                
+            </div>
+            <div class="content noPad">
+
+                <ul class="messages">
+                    <?php foreach($this->deal['Messages'] as $message): ?>
+                    <?php if($message['recipient'] == 'client'): ?>
+                    <li class="admin clearfix">
+                        <a href="#" class="avatar">
+                            <?php if(strlen($this->deal['Offer']['User']['Profile']['PhotoRoot']['filename'])): ?>
+                            <img src="/media/photos/<?php echo $this->deal['Offer']['User']['Profile']['PhotoRoot']['offset'] ?>/40x40/<?php echo $this->deal['Offer']['User']['Profile']['PhotoRoot']['filename'] ?>" alt="" />
+                            <?php else: ?>
+                            <img src="/images/avatar2.jpeg" alt="" />
+                            <?php endif; ?>
+                        </a>
+                        <div class="message">
+                            <div class="head clearfix">
+                                <span class="name"><strong><?php echo $this->deal['Offer']['User']['first_name'] ?></strong> (<?php echo $this->translate('agent') ?>):</span>
+                                <span class="time"><?php echo $this->text()->timeFormat($message['created_at'], 'H:i d/m/Y') ?></span>
+                            </div>
+                            <p>
+                                <?php echo nl2br($message['content']) ?>
+                            </p>
+                        </div>
+                    </li>
+                    <?php elseif($message['recipient'] == 'agent'): ?>
+                    <li class="user clearfix">
+                        <a href="#" class="avatar">
+                            <?php if(strlen($this->deal['Notice']['User']['Profile']['PhotoRoot']['filename'])): ?>
+                            <img src="/media/photos/<?php echo $this->deal['Notice']['User']['Profile']['PhotoRoot']['offset'] ?>/40x40/<?php echo $this->deal['Notice']['User']['Profile']['PhotoRoot']['filename'] ?>" alt="" />
+                            <?php else: ?>
+                            <img src="/images/avatar2.jpeg" alt="" />
+                            <?php endif; ?>
+                        </a>
+                        <div class="message">
+                            <div class="head clearfix">
+                                <span class="name"><strong><?php echo $this->deal['Notice']['User']['first_name'] ?></strong> (<?php echo $this->translate('client') ?>):</span>
+                                <span class="time"><?php echo $this->text()->timeFormat($message['created_at'], 'H:i d/m/Y') ?></span>
+                            </div>
+                            <p>
+                                <?php echo nl2br($message['content']) ?>
+                            </p>
+                        </div>
+                    </li>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+
+                </ul>
+
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    <div class="span6">
+        
+        <div class="box">
+            
+            <div class="title">
+
+                <h4>
+                    <span class="icon16 icomoon-icon-tab"></span>
+                    <span><?php echo $this->translate('Notice deals') ?></span>
+                </h4>
+                
+            </div>
+            <div class="content clearfix">
+
+                <table id="notice_table" cellpadding="0" cellspacing="0" border="0" class="responsive display table table-bordered" width="100%">
+                    <thead>
+                        <th><?php echo $this->translate('Category') ?></th>
+                        <th><?php echo $this->translate('Title') ?></th>
+                        <th><?php echo $this->translate('Date') ?></th>
+                        <th><?php echo $this->translate('Options') ?></th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            
+            </div>
+
+        </div><!-- End .box -->
+
+    </div>
+
+
+</div>

@@ -1,0 +1,73 @@
+<?php $address = $this->company_address." ".$this->company_postal_code." ".$this->company_city; ?>
+<div class="contactLeft">
+    <strong class="productTitle"><h1><?php echo $this->translate('Contact'); ?></h1></strong>
+    <?php echo $this->page['Translation'][$this->language]->content; ?>
+     <div class="mapa"><iframe width="455" height="580" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=<?php echo $address; ?>&output=embed&z=14"></iframe><br /><small><a href="http://maps.google.com/?q=<?php echo $address; ?>" style="color:#0000FF;text-align:left">Wyświetl większą mapę</a></small></div>
+     
+</div>
+<div class="contactRight">
+    <?php if($this->messages()->count()): ?>
+        <div class="message">
+            <?php echo $this->messages()->render(); ?>
+        </div>
+        <?php endif; ?>
+    <h4><?php echo $this->translate('Contact with us'); ?></h4>
+    <form class="wpcf7" method="post" action="<?php echo $this->form->getAction() ?>">
+            <?php echo $this->form->csrf; ?>
+            <fieldset>
+                <label><span class="text-color">*</span> <?php echo $this->form->firstName->getLabel(); ?>:</label>
+                <?php echo $this->form->firstName->setDecorators(array('ViewHelper')); ?>
+                <span class="error"><?php echo $this->form->firstName->setDecorators(array('Errors')); ?></span>
+            </fieldset>
+
+            <fieldset>
+                <label><span class="text-color">*</span> <?php echo $this->form->lastName->getLabel(); ?>:</label>
+                <?php echo $this->form->lastName->setDecorators(array('ViewHelper')); ?>
+                <span class="error"><?php echo $this->form->lastName->setDecorators(array('Errors')); ?></span>
+            </fieldset>
+
+            <fieldset>
+                <label><span class="text-color">*</span> <?php echo $this->form->email->getLabel(); ?>:</label>
+                <?php echo $this->form->email->setDecorators(array('ViewHelper')); ?>
+                <span class="error"><?php echo $this->form->email->setDecorators(array('Errors')); ?></span>
+            </fieldset>
+            
+            <fieldset>
+                <label><span class="text-color"></span> <?php echo $this->form->phone->getLabel(); ?>:</label>
+                <?php echo $this->form->phone->setDecorators(array('ViewHelper')); ?>
+                <span class="error"><?php echo $this->form->phone->setDecorators(array('Errors')); ?></span>
+            </fieldset>
+            
+            <fieldset>
+                <label><span class="text-color">*</span> <?php echo $this->form->subject->getLabel(); ?>:</label>
+                <?php echo $this->form->subject->setDecorators(array('ViewHelper')); ?>
+                <span class="error"><?php echo $this->form->subject->setDecorators(array('Errors')); ?></span>
+            </fieldset>
+
+            <fieldset>
+                <label><span class="text-color">*</span> <?php echo $this->form->message->getLabel(); ?>:</label>
+                <?php echo $this->form->message->setDecorators(array('ViewHelper')); ?>
+                <span class="error"><?php echo $this->form->message->setDecorators(array('Errors')); ?></span>
+            </fieldset>
+            
+        <fieldset>
+                <?php echo $this->form->captcha; ?>
+            </fieldset>
+        
+            <?php echo $this->form->submit; ?>
+
+        </form><!-- wpcf7 end -->
+</div>
+ <div class="productTop">
+   		<div class="titleBG">
+		  
+   		</div>
+   </div>
+
+ <div class="sftlo">
+ 
+     <div class="tekst">
+         
+     </div>
+     <div class="clear"></div>
+  </div>

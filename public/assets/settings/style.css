@@ -1,0 +1,12 @@
+.block_color_picker {width:205px; height:120px; overflow:hidden; position:fixed; left:0px; top:200px; background:url(images/bg_color_picker.png) no-repeat; z-index:1000;}
+.block_color_picker p {margin-left:12px; padding-bottom:6px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#4c4c4c; font-weight:bold;}
+.block_color_picker #picker_close {width:27px; height:29px; display:block; position:absolute; right:4px; top:14px; background:url(images/sprite_close.png) no-repeat -48px 6px;}
+.block_color_picker #picker_close img {width:27px; height:29px;}
+.block_color_picker.closed #picker_close { background:url(images/sprite_close.png) no-repeat 5px 6px;}
+.block_color_picker .picker_line {width:103px; height:2px; margin-left:12px; overflow:hidden; background:url(images/line.gif) repeat-x;}
+
+.block_color_picker .picker_skin {padding-top:19px; overflow:hidden;}
+.block_color_picker .picker_skin .picker_line {margin-bottom:13px;}
+.block_color_picker .picker_skin .picker_select {width:103px; height:23px; margin-left:12px; overflow:hidden; position:relative; background:url(images/bg_select.jpg) no-repeat;}
+.block_color_picker .picker_skin .picker_select select {width:103px; display:block; position:absolute; left:0px; top:2px; z-index:1001; font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#515151; cursor:pointer;}
+.block_color_picker .picker_skin .picker_select span {width:103px; display:block; position:absolute; left:0px; top:5px; z-index:1000; font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#515151; text-indent:8px;}

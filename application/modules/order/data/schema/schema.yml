@@ -1,0 +1,196 @@
+options:
+  type: MyISAM
+  collate: utf8_general_ci
+  charset: utf8
+Order:
+  tableName: order_order
+  actAs:
+     Timestampable: ~
+     SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    user_id:
+      type: integer(4) 
+    attention:
+      type: clob
+    total_cost:
+      type: decimal
+    order_status_id:
+      type: integer(4) 
+    delivery_id:
+      type: integer(4) 
+    payment_id:
+      type: integer(4) 
+  relations:
+    Delivery:
+      local: delivery_id
+      foreign: id
+      foreignType: one
+    Payment:
+      local: payment_id
+      foreign: id
+      foreignType: one
+    OrderStatus:
+      local: order_status_id
+      foreign: id
+      foreignType: many
+      foreignAlias: Orders  
+OrderStatus:
+  tableName: order_order_status
+  actAs:
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    name:
+      type: string(255)
+Item:
+  tableName: order_item
+  actAs:
+    Timestampable: ~
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    order_id:
+      type: integer(4)
+    product_id:
+      type: integer(4)
+    price:
+      type: decimal
+    discount_amount:
+      type: integer(4)
+    number:
+      type: integer(4)
+  relations:
+    Order:
+      local: order_id
+      foreign: id
+      foreignAlias: Items  
+Delivery:
+  tableName: order_delivery
+  actAs:
+    Timestampable: ~
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    delivery_type_id:
+      type: integer(4) 
+    delivery_address_id:
+      type: integer(4)
+    status:
+      type: string(255)
+  relations:
+    DeliveryType:
+      local: delivery_type_id
+      foreign: id
+      foreignAlias: Deliveries
+      foreignType: many
+    DeliveryAddress:
+      local: delivery_address_id
+      foreign: id
+      foreignType: one
+DeliveryType:
+  tableName: order_delivery_type
+  actAs:
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    name:
+      type: string(255)
+    price:
+      type: decimal
+    description:
+      type: clob
+DeliveryAddress:
+  tableName: order_delivery_address
+  actAs:
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    status:
+      type: boolean
+      default: 0
+    name:
+      type: string(255)
+    address:
+      type: string(255)
+    postal_code:
+      type: string(255)
+    city:
+      type: string(255)
+    province:
+      type: string(255)
+Payment:
+  tableName: order_payment
+  actAs:
+    Timestampable: ~
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    status_service:
+      type: string(255)
+    status:
+      type: string(255)
+    error_code:
+      type: string(255)
+    payment_type_id:
+      type: integer(4)
+    invoice:
+      type: boolean
+      default: 0
+  relations:
+    PaymentType:
+      local: payment_type_id
+      foreign: id
+      foreignAlias: Payments
+      foreignType: many
+PaymentType:
+  tableName: order_payment_type
+  actAs:
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    name:
+      type: string(255)
+    description:
+            type: clob
+DiscountCode:
+  tableName: order_discount_code
+  actAs:
+    Timestampable: ~
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    code:
+      type: string(255)
+    discount:
+      type: decimal(4,2)
+    active:
+      type: boolean
+      default: 1

@@ -1,0 +1,31 @@
+<section class="colums popular-objects">
+    <ul>
+        <?php
+      
+        foreach($this->collections as $collection):
+?>
+      <div class="col5">
+              <div class="img imgWrap"><a href="<?php  
+                  echo $this->url(array('slug' => $collection['Translation'][$this->language]->slug), 'domain-collection'); 
+              ?>">
+                    <?php if($collection['PhotoRoot']['filename']): ?>
+                        <img src="/media/photos/<?php echo $collection['PhotoRoot']['offset'] ?>/170x/<?php echo $collection['PhotoRoot']['filename'] ?>" alt="">
+                    <?php else: ?>
+                        <img src="/images/temp/prod05.jpg" alt="" />
+                    <?php endif; ?>
+                         <p class="imgDescription"></p>
+                         <span class="imgDescriptionText">
+                             <?php 
+                             echo $collection->Translation[$this->language]->name;
+                             ?></span>
+                    </a>
+                 
+              </div>
+       </div>
+        
+        <?php  endforeach; ?>
+    </ul>
+<!--    <div class="wp-pagenavi">
+        <?php //echo $this->paginationControl($this->paginator, 'Sliding', 'product_pagination_control.phtml') ?>
+    </div>-->
+</section>

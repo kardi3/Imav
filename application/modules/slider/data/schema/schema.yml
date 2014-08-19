@@ -1,0 +1,268 @@
+options:
+  type: MyISAM
+  collate: utf8_general_ci
+  charset: utf8
+SliderSerwis5:
+  tableName: slider_slider_serwis5
+  columns:
+    id:
+      primary: true
+      type: string(128)
+    name:
+      type: string(255)
+    slide_root_id:
+      type: integer(4)
+  relations:
+    SlideSerwis5:
+      local: slide_root_id
+      foreign: root_id
+      alias: Slides
+      type: many
+SlideSerwis5:
+  tableName: slider_slide_serwis5
+  actAs: 
+    NestedSet:
+      hasManyRoots: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    slider_id:
+      type: string(128)
+    title:
+      type: string(255)
+    title_pos_x:
+      type: integer(4)
+    title_pos_y:
+      type: integer(4)
+    title_color:
+      type: string(12)
+    title_size:
+      type: integer(4)
+    description:
+      type: string(255)
+    description_pos_x:
+      type: integer(4)
+    description_pos_y:
+      type: integer(4)
+    description_color:
+      type: string(12)
+    description_size:
+      type: integer(4)
+    description_bg_color:
+      type: string(12)
+    description_bg_width:
+      type: integer(4)
+    description_bg_height:
+      type: integer(4)
+    animation:
+      type: string(255)
+    photo_root_id:
+      type: integer(4)
+    target_href:
+      type: clob
+  relations:
+    SliderSerwis5:
+      local: id
+      foreign: slide_root_id
+      foreignAlias: SlideRoot
+      foreignType: one
+SliderSerwis6:
+  tableName: slider_slider_serwis6
+  columns:
+    id:
+      primary: true
+      type: string(128)
+    name:
+      type: string(255)
+    slide_root_id:
+      type: integer(4)
+  relations:
+    SlideSerwis6:
+      local: slide_root_id
+      foreign: root_id
+      alias: Slides
+      type: many
+SlideSerwis6:
+  tableName: slider_slide_serwis6
+  actAs: 
+    NestedSet:
+      hasManyRoots: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    slider_id:
+      type: string(128)
+    title:
+      type: string(255)
+    title_pos_x:
+      type: integer(4)
+    title_pos_y:
+      type: integer(4)
+    title_color:
+      type: string(12)
+    title_size:
+      type: integer(4)
+    description:
+      type: string(255)
+    description_pos_x:
+      type: integer(4)
+    description_pos_y:
+      type: integer(4)
+    description_color:
+      type: string(12)
+    description_size:
+      type: integer(4)
+    description_bg_color:
+      type: string(12)
+    description_bg_width:
+      type: integer(4)
+    description_bg_height:
+      type: integer(4)
+    animation:
+      type: string(255)
+    photo_root_id:
+      type: integer(4)
+    target_href:
+      type: clob
+  relations:
+    SliderSerwis6:
+      local: id
+      foreign: slide_root_id
+      foreignAlias: SlideRoot
+      foreignType: one
+SliderSerwis7:
+  tableName: slider_slider_serwis7
+  columns:
+    id:
+      primary: true
+      type: string(128)
+    name:
+      type: string(255)
+    slide_root_id:
+      type: integer(4)
+  relations:
+    SlideSerwis7:
+      local: slide_root_id
+      foreign: root_id
+      alias: Slides
+      type: many
+SlideSerwis7:
+  tableName: slider_slide_serwis7
+  actAs: 
+    NestedSet:
+      hasManyRoots: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    slider_id:
+      type: string(128)
+    title:
+      type: string(255)
+    title_pos_x:
+      type: integer(4)
+    title_pos_y:
+      type: integer(4)
+    title_color:
+      type: string(12)
+    title_size:
+      type: integer(4)
+    description:
+      type: string(255)
+    description_pos_x:
+      type: integer(4)
+    description_pos_y:
+      type: integer(4)
+    description_color:
+      type: string(12)
+    description_size:
+      type: integer(4)
+    description_bg_color:
+      type: string(12)
+    description_bg_width:
+      type: integer(4)
+    description_bg_height:
+      type: integer(4)
+    animation:
+      type: string(255)
+    photo_root_id:
+      type: integer(4)
+    target_href:
+      type: clob
+  relations:
+    SliderSerwis7:
+      local: id
+      foreign: slide_root_id
+      foreignAlias: SlideRoot
+      foreignType: one
+SliderSerwis8:
+  tableName: slider_slider_serwis8
+  columns:
+    id:
+      primary: true
+      type: string(128)
+    name:
+      type: string(255)
+    slide_root_id:
+      type: integer(4)
+  relations:
+    SlideSerwis8:
+      local: slide_root_id
+      foreign: root_id
+      alias: Slides
+      type: many
+SlideSerwis8:
+  tableName: slider_slide_serwis8
+  actAs: 
+    NestedSet:
+      hasManyRoots: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    slider_id:
+      type: string(128)
+    title:
+      type: string(255)
+    title_pos_x:
+      type: integer(4)
+    title_pos_y:
+      type: integer(4)
+    title_color:
+      type: string(12)
+    title_size:
+      type: integer(4)
+    description:
+      type: string(255)
+    description_pos_x:
+      type: integer(4)
+    description_pos_y:
+      type: integer(4)
+    description_color:
+      type: string(12)
+    description_size:
+      type: integer(4)
+    description_bg_color:
+      type: string(12)
+    description_bg_width:
+      type: integer(4)
+    description_bg_height:
+      type: integer(4)
+    animation:
+      type: string(255)
+    photo_root_id:
+      type: integer(4)
+    target_href:
+      type: clob
+  relations:
+    SliderSerwis8:
+      local: id
+      foreign: slide_root_id
+      foreignAlias: SlideRoot
+      foreignType: one

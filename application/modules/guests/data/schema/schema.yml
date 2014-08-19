@@ -1,0 +1,31 @@
+options:
+  type: MyISAM
+  collate: utf8_general_ci
+  charset: utf8
+Post:
+  tableName: guests_post
+  actAs:
+    Sluggable:
+      fields: [name]
+    Timestampable: 
+      updated:
+        disabled: true
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    name:
+      type: string(255)
+    slug:
+      type: string(255)
+    city:
+      type: string(255)
+    message:
+      type: clob
+    publish:
+      type: boolean
+      default: 0
+    metatag_id:
+      type: integer(4)

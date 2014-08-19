@@ -1,0 +1,107 @@
+.banner-container {
+    padding:0px;
+    background-color:#fff;
+    width:940px;
+    position:relative;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom: 40px;
+}
+
+.banner{
+    width:940px;
+    height:375px;
+    position:relative;
+    overflow:hidden;
+}
+
+.caption-heading{
+    color: #000;
+    font: 41px/41px 'BebasRegular';
+}
+
+.caption-pink-bg{
+    color: #fff;
+    font: 24px/24px 'BebasRegular';
+    background: #c14fbb;
+    padding: 15px;
+}
+
+.caption-pink2-bg{
+    color: #fff;
+    font: 18px/18px 'Myriad Pro', sans-serif;
+    background: #7b3277;
+    padding: 15px;
+    white-space: normal !important;
+}
+
+.caption-pink-text{
+    color: #c14fbb;
+    font: 14px/14px 'BebasRegular';
+}
+
+.caption-white-bg{
+    color: #000;
+    font: 18px/18px 'Myriad Pro', sans-serif;
+    background: #fff;
+    padding: 15px;
+    opacity: 0.65;
+
+}
+
+.caption-simple-black{
+    color: #000;
+    font: 14px/14px 'Myriad Pro', sans-serif;
+    white-space: normal !important;
+}
+
+.caption-arrow:after{
+    content: "";
+    position: absolute;
+    bottom: -40px; 
+    left: 20px; 
+    width: 0px;
+    height: 0px;
+    border-top: 20px solid #c14fbb;
+    border-bottom: 20px solid transparent; 
+    border-right: 20px solid transparent; 
+    border-left: 20px solid transparent; 
+}
+
+/*	THE MEDIA CHOOSER TO SET DIFFERENT SIZES OF THE CONTAINER DEPENDING ON THE SCREEN SIZE    */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+
+    .banner, .banner-container{	
+        width:688px; height:274px;
+    }
+
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .banner, .banner-container{	
+        width:400px; height:160px;	
+    }
+	
+	.tp-bullets.tp-thumbs{
+        width: 400px !important;
+    }
+
+    .tp-bullets.tp-thumbs .tp-mask{
+        width: 400px !important;
+    }
+
+}
+
+@media only screen and (min-width: 0px) and (max-width: 479px) {
+    .banner, .banner-container{	
+        width:240px;height:96px;	
+    }
+
+	.tp-bullets.tp-thumbs{
+        width: 240px !important;
+    }
+
+    .tp-bullets.tp-thumbs .tp-mask{
+        width: 240px !important;
+    }
+}

@@ -1,0 +1,23 @@
+<div class="card">
+    <h1>
+        <?php if(strlen($this->user['Profile']['PhotoRoot']['filename'])): ?>
+        <img src="<?php echo $this->serverUrl() ?>/media/photos/<?php echo $this->user['Profile']['PhotoRoot']['offset'] ?>/30x30/<?php echo $this->user['Profile']['PhotoRoot']['filename'] ?>" />
+        <?php endif; ?>
+        <?php echo $this->user['first_name'] . ' ' . $this->user['last_name'] ?> 
+    </h1>
+    <?php if(strlen($this->user['email'])): ?>
+    <p><?php echo $this->translate('E-mail') ?>: <?php echo $this->user['email'] ?></p>
+    <?php endif; ?>
+    <?php if(strlen($this->user['Profile']['phone'])): ?>
+    <p><?php echo $this->translate('Phone') ?>: <?php echo $this->user['Profile']['phone'] ?></p>
+    <?php endif; ?>
+    <?php if(strlen($this->user['Profile']['address'])): ?>
+    <p><?php echo $this->translate('Address') ?>: <?php echo $this->user['Profile']['address'] ?></p>
+    <?php endif; ?>
+    <?php if(strlen($this->user['Profile']['City']['name'])): ?>
+    <p><?php echo $this->translate('City') ?>: <?php echo $this->user['Profile']['City']['name'] ?></p>
+    <?php endif; ?>
+    <?php if(strlen($this->user['Profile']['Province']['name'])): ?>
+    <p><?php echo $this->translate('Province') ?>: <?php echo $this->user['Profile']['Province']['name'] ?></p>
+    <?php endif; ?>
+</div>

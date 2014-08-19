@@ -1,0 +1,11 @@
+<div class="banners">
+<?php foreach($this->partners as $partner):?>
+<a href="<?php echo $partner->website; ?>">
+    <?php if($partner->get('PhotoRoot')): 
+            $partnerPhoto = $partner->get('PhotoRoot'); ?>
+            <img src="/media/photos/<?php echo $partnerPhoto->getOffset(); ?>/x220/<?php echo $partnerPhoto->getFilename(); ?>" />
+        <?php endif; ?>
+</a>
+<div class="clear"></div>
+<?php endforeach; ?>
+</div>

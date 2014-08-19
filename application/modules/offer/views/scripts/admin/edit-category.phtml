@@ -1,0 +1,206 @@
+<script type="text/javascript">
+$(document).ready(function() {
+    var oTable = $("#category_table").dataTable( {
+        "sPaginationType": "full_numbers",
+        "oLanguage": {
+            "sUrl": "/plugins/tables/dataTables/datatables.polish.txt"
+        },
+        "bFilter": true,
+        "bDestroy": true,
+        "bProcessing": true,
+        "bServerSide": true,
+        "bLengthChange": false,
+        <?php if(isset($this->parent)): ?>
+        "sAjaxSource": "<?php echo $this->adminUrl('list-category-data', 'offer', array('id' => $this->parent->getId())) ?>",
+        <?php else: ?>
+        "sAjaxSource": "<?php echo $this->adminUrl('list-category-data', 'offer') ?>",
+        <?php endif; ?>
+        "aaSorting": [[ 1, "desc" ]],
+        "aoColumns": [
+            null,
+            { "bSortable": false, sWidth: '50px' }
+        ]
+    });
+    
+    $("#category_table").bind("update", function(e) {
+        oTable.fnReloadAjax();
+    });
+    
+    var offer_elem = $("<input type='hidden' name='offer_parameter-list' class='select2-sortable span12' />");
+    var offerParameterNames = <?php echo $this->offerParameterNames ?>;
+    $(offer_elem).val(offerParameterNames);
+    var options = $("#offer_parameters").find("option");
+    var tags = [];
+    $(options).each(function(i, offer_elem) {
+        tags.push($(offer_elem).text());
+    });
+    
+    $("#offer_parameters").replaceWith(offer_elem);
+    
+    $(".select2-sortable").select2({tags: tags});
+    $(".select2-sortable").on("keydown", function(e) {
+        e.preventDefault();
+    });
+    $(".select2-sortable").on("change", function() {
+        $("#e15_val").html($(".select2-sortable").val());
+    });
+
+    $(".select2-sortable").select2("container").find("ul.select2-choices").sortable({
+        containment: 'parent',
+        start: function() { $(".select2-sortable").select2("onSortStart"); },
+        update: function() { $(".select2-sortable").select2("onSortEnd"); }
+    });
+
+    var notice_elem = $("<input type='hidden' name='notice_parameter-list' class='select2-sortable span12' />");
+    var noticeParameterNames = <?php echo $this->noticeParameterNames ?>;
+    $(notice_elem).val(noticeParameterNames);
+    var options = $("#notice_parameters").find("option");
+    var tags = [];
+    $(options).each(function(i, notice_elem) {
+        tags.push($(notice_elem).text());
+    });
+    
+    $("#notice_parameters").replaceWith(notice_elem);
+    
+    $(".select2-sortable").select2({tags: tags});
+    $(".select2-sortable").on("keydown", function(e) {
+        e.preventDefault();
+    });
+    $(".select2-sortable").on("change", function() {
+        $("#e15_val").html($(".select2-sortable").val());
+    });
+
+    $(".select2-sortable").select2("container").find("ul.select2-choices").sortable({
+        containment: 'parent',
+        start: function() { $(".select2-sortable").select2("onSortStart"); },
+        update: function() { $(".select2-sortable").select2("onSortEnd"); }
+    });
+
+
+    
+});
+</script>
+
+<div class="row-fluid">
+
+    <div class="span6">
+        
+        <form class="form-horizontal" action="<?php echo $this->form->getAction() ?>" method="post" enctype="multipart/form-data">
+
+            <div class="box">
+
+                <div class="title">
+
+                    <h4>
+                        <span class="icon16 icomoon-icon-pencil"></span>
+                        <span><?php echo $this->translate('Edycja') ?></span>
+                    </h4>
+
+                </div>
+                <div class="content clearfix">
+
+                        <?php echo $this->form->name ?>
+                        <?php echo $this->form->offer_parameters ?>
+                        <?php echo $this->form->notice_parameters ?>
+                        <?php echo $this->form->description ?>
+                        <?php echo $this->form->submit ?>
+                        <?php echo $this->form->id ?>
+
+                </div>
+
+            </div>
+            
+            <div class="box">
+                <div class="title">
+                    <h4>
+                        <span class="icon16 icomoon-icon-basket"></span>
+                        <span><?php echo $this->translate('Price list') ?></span>
+                    </h4>
+                </div>
+                
+                <div class="content clearfix">
+                    <?php echo $this->form->pricelist->prices ?>
+                </div>
+                
+            </div>
+
+            <div class="box">
+
+                <div class="title">
+
+                    <h4>
+                        <span class="icon16 icomoon-icon-pencil"></span>
+                        <span><?php echo $this->translate('Metatags') ?></span>
+                    </h4>
+
+                </div>
+                <div class="content clearfix">
+                    <?php echo $this->form->metatags ?>
+                </div>
+                
+            </div>
+            
+        </form>
+        
+    </div>
+
+    <div class="span6">
+        
+        <div class="box">
+
+            <div class="title">
+
+                <h4 class="clearfix">
+                    <span class="icon16 cut-icon-tree"></span>
+                    <span><?php echo $this->translate('Category tree') ?></span>
+                    <form class="box-form right" action="<?php echo $this->addForm->getAction() ?>" method="post">
+                        <span class="span8">
+                            <input type="text" name="<?php echo $this->addForm->name->getName() ?>" class="search-query span2 text" placeholder="<?php echo $this->translate('Name') ?>">
+                        </span>
+                        <span class="span4">
+                            <button class="btn btn-success btn-small" type="submit"><?php echo $this->translate('Add') ?></button>
+                        </span>
+                        <?php echo $this->addForm->parent_id ?>
+                    </form>
+                </h4>
+            </div>
+            <div class="content">
+                
+                <div id="category_tree">
+                    <?php echo $this->partial('category-tree.phtml', 'offer', array('tree' => $this->categoryTree, 'parent' => $this->parent)) ?>
+                </div>
+                
+            </div>
+
+        </div><!-- End .box -->
+        
+        
+        <div class="box">
+
+            <div class="title">
+
+                <h4>
+                    <span class="icon16 icomoon-icon-pencil"></span>
+                    <span><?php echo $this->translate('Subcategories') ?></span>
+                </h4>
+                
+            </div>
+            <div class="content clearfix">
+
+                <table id="category_table" cellpadding="0" cellspacing="0" border="0" class="responsive display table table-bordered" width="100%">
+                    <thead>
+                        <th><?php echo $this->translate('Name') ?></th>
+                        <th><?php echo $this->translate('Options') ?></th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            
+            </div>
+            
+        </div>
+
+    </div>
+
+
+</div>

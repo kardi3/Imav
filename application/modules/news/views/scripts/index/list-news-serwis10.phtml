@@ -1,0 +1,100 @@
+<section class="news">
+<h1 class="news-header"><?php echo $this->translate('News') ?></h1>
+<div class="path">
+	<a href="<?php echo $this->url(array(),'domain-homepage'); ?>" title=""><?php echo $this->translate('Home') ;?></a> / <a class="curr" href="<?php echo $this->url(array(),'domain-i18n:news'); ?>" title=""><?php echo $this->translate('News') ;?></a>
+</div>
+
+	<div class="col-left">
+			
+		<div class="header">Aktualności</div>
+	</div>
+		
+	<div class="col-right">
+		<div class="select-ref"> Aktualności		
+                    <div class="pagination">
+            <?php echo $this->paginationControl($this->paginator, 'Sliding', 'news_pagination_control.phtml'); ?>
+       </div>
+		</div>
+		<ul class="news-list">
+                    
+                    <?php foreach($this->paginator as $news):?>
+                    <li class="clearfix">
+                         <?php if($news->get('PhotoRoot')&&$news->get('PhotoRoot')->getNode()->hasChildren()): ?>
+                                    <?php
+                                    $photoRoot = $news->get('PhotoRoot');
+                                    $photo = $news['Photos'][1];
+                                    if(!strlen($photo['offset'])): ?>
+                                        <div class="news-image">&nbsp;sfafa</div>
+                                    <?php else: ?>
+                                        <div class="news-image" style="background-image:url(&quot;/media/photos/<?php echo $photo->getOffset(); ?>/400x/<?php echo $photo->getFilename(); ?>&quot;)">&nbsp;</div>
+                                     <?php 
+                                    endif;
+                                    // gdy nie ma obrazka ale jest video
+                                elseif($news->get('VideoRoot')&&$news->get('VideoRoot')->getNode()->hasChildren()): 
+                                    $videoRoot = $news->get('VideoRoot');
+                                    $video = $videoRoot->getNode()->getFirstChild();
+                                    
+                                    // sprawdzamy czy video jest z youtuba czy vimeo
+                                    // i tworzymy miniaturke
+                                    
+                                    if (strpos($video->url,'youtube') !== false) { 
+                                        $video_id = substr($video->url,strrpos($video->url,'/')+1);
+                                        ?>
+                                        <div class="news-image" style="background-image:url('http://img.youtube.com/vi/<?php echo $video_id; ?>/1.jpg')">&nbsp;</div>
+                                    <?php }
+                                    elseif(strpos($video->url,'vimeo') !== false){  
+                                        $video_id = substr($video->url,strrpos($video->url,'/')+1);
+                                        $hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/$video_id.php")); ?>
+                                        <div class="news-image" style="background-image:url('<?php echo $hash[0]['thumbnail_medium'];  ?>')">&nbsp;</div>
+                                    <?php }
+                                    else{ ?>
+                                        <div class="news-image">&nbsp;</div>
+                                    <?php } ?>
+                                        
+                            <?php else:  ?>
+                                        <?php  $dom = new DOMDocument();
+                                                $dom->loadHTML($news['Translation'][$this->language]['content']);
+                                                $a = $dom->getElementsByTagName('iframe');
+                                                if($a->item(0)){
+                                                    $item = $a->item(0);
+                                                    $videoUrl = $item->getAttribute('src');
+                                                     if (strpos($videoUrl,'youtube') !== false) { 
+                                                        $video_id = substr($videoUrl,strrpos($videoUrl,'/')+1); 
+                                                        $video_id = str_replace('?feature=player_detailpage', '', $video_id);?>
+                                                        <div class="news-image" style="background-image:url('http://img.youtube.com/vi/<?php echo $video_id; ?>/1.jpg')">&nbsp;</div>
+                                                <?php }
+                                                     elseif(strpos($videoUrl,'vimeo') !== false){  
+                                                        $video_id = substr($videoUrl,strrpos($videoUrl,'/')+1);
+                                                        $hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/$video_id.php")); ?>
+                                                        <div class="news-image" style="background-image:url('<?php echo $hash[0]['thumbnail_medium'];  ?>')">&nbsp;</div>
+                                                <?php }
+                                                        else{ ?>
+                                                        <div class="news-image">&nbsp;</div>
+                                                <?php } 
+                                                }
+                                                else{ ?>
+                                                    <div class="news-image">&nbsp;</div>
+                                             <?php  } ?>
+                              <?php endif;?>
+                        <h2 class="news-head">
+                            <span class="news-date"><?php echo $this->text()->timeFormat($news['publish_date'], 'd/m/Y') ?></span>
+                             <a href="<?php  echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']), 'domain-news') ?>" class="tresc8b"><?php echo $news['Translation'][$this->language]['title'] ?></a>
+              
+                        </h2>
+                        
+                        <span class="tresc7 listNewsContent"><?php echo $this->text()->truncate($this->linkService->readLink($news['Translation'][$this->language]['content']), 120, 'letters') ?></span>
+                        <br /> <br />
+                        <a href="<?php  echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']), 'domain-news') ?>" class="news-more"><?php echo $this->translate('Read more...'); ?> <span> ›</span>
+                        </a>
+                        <div class="clear"></div>
+                    </li>
+                    <?php endforeach; ?>
+                    
+		
+		
+	</div>
+		
+	<div class="clear"></div>
+
+
+</section>

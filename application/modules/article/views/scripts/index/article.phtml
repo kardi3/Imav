@@ -1,0 +1,11 @@
+<article class="article span8">
+    <header>
+        <h2><?php echo $this->text()->truncate($this->article['title'], 78, 'letters', '') ?><span class="date"><?php echo $this->text()->timeFormat($this->article['created_at'], 'd/m/Y') ?></span></h2>
+        <?php if(isset($this->article['PhotoRoot']) && strlen($this->article['PhotoRoot']['filename'])): ?>
+            <img src="/media/photos/<?php echo $this->article['PhotoRoot']['offset'] ?>/650x262/<?php echo $this->article['PhotoRoot']['filename'] ?>" />
+        <?php endif; ?>
+    </header>
+    <section class="content">
+        <?php echo $this->article['content'] ?>
+    </section>
+</article>

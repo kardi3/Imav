@@ -1,0 +1,8 @@
+ <div class="marquee" id="mycrawler">
+        <?php foreach($this->producers as $producer): ?>
+            <a href="<?php echo $this->url(array('slug' => $producer['Translation']['pl']['slug']),'domain-i18n:producer'); ?>">
+                <?php $producerPhoto = $producer['PhotoRoot']; ?>
+                <img src="/media/photos/<?php echo $producerPhoto['offset']; ?>/<?php echo $producerPhoto['filename']; ?>" alt="<?php echo $producer['Translation']['pl']['name']; ?>" title="<?php echo $producer['Translation']['pl']['name']; ?>" />
+            </a>
+        <?php endforeach; ?>
+</div>

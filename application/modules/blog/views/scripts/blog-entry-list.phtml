@@ -1,0 +1,20 @@
+<?php if(isset($this->blogEntries)): ?>
+    <?php $count = 1; ?>
+    <?php foreach($this->blogEntries as $key => $entry): ?>
+        <?php if ($count == 1): ?>
+            <li class="blogFisrt">
+                <?php if(isset($entry['PhotoRoot']) && $entry['PhotoRoot']['filename'] != NULL): ?>
+                    <img src="/media/photos/<?php echo $entry['PhotoRoot']['offset'] ?>/290x135/<?php echo $entry['PhotoRoot']['filename'] ?>" alt="<?php echo $entry['PhotoRoot']['title']; ?>" class="blogThumb"/>
+                <?php endif; ?>
+                <a href="<?php echo $this->url(array('slug' => $entry['Translation']['pl']['slug']), 'domain-blog-entry') ?>"><?php echo $entry['Translation']['pl']['title']; ?></a><br/>
+                <p><?php echo $this->text()->truncate($entry['Translation']['pl']['content'], 200); ?><p>
+            </li>
+        <?php else: ?>
+            <li>
+                <a href="<?php echo $this->url(array('slug' => $entry['Translation']['pl']['slug']), 'domain-blog-entry') ?>"><?php echo $entry['Translation']['pl']['title']; ?></a><br/>
+                <p><?php echo $this->text()->truncate($entry['Translation']['pl']['content'], 200); ?></p>
+            </li>
+        <?php endif; ?>
+        <?php $count++; ?>
+    <?php endforeach; ?>
+<?php endif; ?>  

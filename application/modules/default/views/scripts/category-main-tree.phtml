@@ -1,0 +1,23 @@
+<ul>
+    <?php if(isset($this->tree)): ?>
+        <?php foreach($this->tree as $item): ?>
+        <?php if($item['level'] == 1 && $item['status'] == 1 && $item->Translation[$this->language]->slug): ?>
+    <li class="<?php echo $item->Translation[$this->language]->slug; ?>"><a href="<?php echo $this->url(array('category' => $item->Translation[$this->language]->slug), 'domain-i18n:category') ?>"><?php echo $item->Translation[$this->language]->name; ?></a>
+            <?php if($item->getNode()->getChildren()): ?>
+            <?php echo $this->partial('category-main-tree.phtml', 'default', array('subtree' => $item->getNode()->getChildren(), 'parent' => $item, 'language' => $this->language)) ?>
+            <?php endif; ?>
+        </li>
+        <?php endif;?>
+        <?php endforeach; ?>
+    <?php elseif(isset($this->subtree)): ?>
+        <?php foreach($this->subtree as $item): ?>
+            <?php if($item['status'] == 1 && $item->Translation[$this->language]->slug): ?>
+            <li class="<?php echo $item->Translation[$this->language]->slug; ?>"><a href="<?php echo $this->url(array('category' => $item->Translation[$this->language]->slug), 'domain-i18n:category') ?>"><?php echo $item->Translation[$this->language]->name; ?></a>
+                <?php if($item->getNode()->getChildren()): ?>
+                <?php echo $this->partial('category-main-tree.phtml', 'default', array('subtree' => $item->getNode()->getChildren(), 'parent' => $item, 'language' => $this->language)) ?>
+                <?php endif; ?>
+            </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</ul>

@@ -1,0 +1,19 @@
+AddHandler application/x-httpd-php54 .php
+
+RewriteEngine On
+
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]
+
+#:Location /*.php 
+#Use php53 
+#:Location 
+
+#php_flag magic_quotes_gpc off
+#php_flag magic_quotes_runtime off
+

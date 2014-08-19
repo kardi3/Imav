@@ -1,0 +1,9 @@
+<ul>
+    <?php foreach($this->collections as $collection):
+        ?>
+    <li>
+        <a href="<?php echo $this->url(array('slug'=>$collection['Translation']['pl']->slug),'domain-collection'); ?>"><?php echo $collection['Translation'][$this->language]->name; ?></a>
+    </li>
+    <?php
+    endforeach; ?>
+</ul>

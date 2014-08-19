@@ -1,0 +1,36 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <?php echo $this->partial('_head.phtml') ?>
+</head>
+
+<body>
+    <div class="root">
+	<header class="h10 sticky-enabled no-topbar">
+		
+                <?php echo $this->partial('_header.phtml') ?>
+            
+		<?php echo $this->action('top-menu','index','default'); ?>
+	</header>
+	<?php echo $this->layout()->slider; ?>
+            
+	<section class="content reverse">
+            <section class="accountNav" >
+                	<?php //var_dump($this->layout()->topMenu); ?>
+                <a class="accButton" href="<?php echo $this->url(array('action'=> 'account-data'),'domain-account'); ?>"><?php echo $this->translate('Client account'); ?></a> <br />
+                <a class="accButton" href="<?php echo $this->url(array('action'=> 'order-history'),'domain-account'); ?>"><?php echo $this->translate('Order history'); ?></a>
+            </section>
+		<section class="main" style="width:80%;">
+			<?php echo $this->layout()->content; ?>
+		</section>
+		
+                <?php //echo $this->layout()->sidebar; ?>
+            
+		<a href="#" class="go-top">Go to top of page</a>
+	</section>
+
+	 <?php echo $this->layout()->footer; ?>
+    </div>
+</body>
+
+</html>

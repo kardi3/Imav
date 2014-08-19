@@ -1,0 +1,32 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <?php echo $this->render('_head_serwis5.phtml') ?>
+</head>
+
+<body class="home"><div class="root">
+        <?php echo $this->render('_header_serwis5.phtml') ?>
+        <!-- .container_12 start -->
+            <div class="container_12">
+
+                <!-- .rs-wrapper start -->
+                <div class="rs-wrapper">
+                    <?php echo $this->layout()->slider; ?>
+                </div><!-- .rs-wrapper end -->
+
+                
+                <div class="clearfix"></div>
+
+            </div>
+            <!-- .container_12 end -->
+	<section class="content">
+            <?php echo $this->layout()->productSidebar ?>
+            <?php echo $this->layout()->content ?>
+            <a href="#top" class="go-top">Go to top of page</a>
+	</section>
+
+         <?php echo $this->layout()->footer; ?>
+	</div>
+</body>
+
+</html>

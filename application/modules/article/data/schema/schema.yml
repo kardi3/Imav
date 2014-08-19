@@ -1,0 +1,31 @@
+options:
+  type: MyISAM
+  collate: utf8_general_ci
+  charset: utf8
+Article:
+  tableName: article_article
+  actAs:
+    Timestampable: ~
+    Sluggable:
+      fields: [title]
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    category_id:
+      type: integer(4)
+    user_id:
+      type: integer(4)
+    title:
+      type: string(255)
+    content:
+      type: clob
+    photo_root_id:
+      type: integer(4)
+    metatag_id:
+      type: integer(4)
+    status:
+      type: integer(2)
+    views:
+      type: integer(4)

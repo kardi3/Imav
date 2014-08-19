@@ -1,0 +1,8 @@
+<footer>
+    <section class="widgets">
+        <?php echo $this->partial('footer_main_tree.phtml', 'menu', array('tree' => $this->tree, 'parent' => $this->menuItem, 'language' => $this->language)) ?>         
+    </section>
+</footer>  
+<div id="subfooter">
+        <span> <?php echo date('Y');?> Lucoa &copy; <?php echo $this->translate('All rights reserved'); ?></span> <img id="owocni" src="/images/owocni_logo.png" />
+</div>

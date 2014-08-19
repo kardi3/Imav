@@ -1,0 +1,42 @@
+<?php if(strlen($this->category->Translation[$this->language]['description'])): ?>
+<div class="centerBox">
+    <?php echo $this->category->Translation[$this->language]['description']; ?>
+</div>
+<?php endif; ?>
+
+
+
+<div class="productBoxes">
+    
+        <?php if($this->category->getNode()->hasParent()):
+            $parent = $this->category->getNode()->getParent();
+            if(strlen($parent['Translation'][$this->language][name])): ?>
+              <div class="boxList">
+                <a href="#">Maszyny do drewna - <?php echo $parent['Translation'][$this->language][name]." - ".$this->category['Translation'][$this->language]['name']; ?></a>
+            </div>  
+       <?php else: ?>
+            <div class="boxList">
+                <a href="#">Maszyny do drewna - <?php echo $this->category['Translation'][$this->language]['name']; ?></a>
+            </div> 
+        <?php endif;
+        endif;?>
+    
+    
+    <div class="productBox">
+        <?php foreach($this->products as $product):
+            $photoRoot = $product->get('PhotoRoot');
+            ?>
+        <div>
+            <a href="<?php echo $this->url(array('product' => $product['Translation'][$this->language]['slug']),'domain-i18n:product'); ?>">
+                <span class="productImgWrapper <?php if($product->sold){ echo "productImgSold"; }?>">
+                    <img src="/media/photos/<?php echo $photoRoot['offset']; ?>/<?php echo $this->photoDimension; ?>/<?php echo $photoRoot['filename']; ?>" />
+                </span>
+                <span class="productNameWrapper">
+                    <h3><?php echo $product['Translation'][$this->language]['name']; ?> </h3>
+                    <?php echo "Identyfikator: ".$product->id; ?><br />
+                </span>
+            </a>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<div class="newsletterWrapper">
+    <?php if(is_object($this->page)): ?>
+        <h1><?php echo $this->page['Translation'][$this->language]['title']; ?></h1>
+        <?php echo $this->page['Translation'][$this->language]['content']; ?>
+        <br />
+    <?php endif; ?>
+    <div class="newsletterContent">
+
+        <form class="form-horizontal" action="<?php echo $this->form->getAction() ?>" method="post" enctype="multipart/form-data">
+             <?php if($this->messages()->count()): ?>
+            <div class="message">
+                <?php echo $this->messages()->render(); ?>
+            </div>
+            <?php endif; ?>
+            <span class="newsletterHeader newsletterHeaderFirst">1) Wybierz kategorie</span><br />
+            <div class="clear"></div>
+            <?php echo $this->form->category_id; ?>
+            <div class="clear"></div>
+            <div class="newsletterOption2">
+                <span class="newsletterHeader">2) Wpisz swój email</span><br />
+                <?php echo $this->form->email; ?>
+            </div>
+            <div class="clear"></div>
+            <div class="newsletterOption3">
+                <span class="newsletterHeader">3) Potwierdź i zapisz się</span><br />
+                <div class="captchaWrapper">
+                    <?php echo $this->form->captcha ?>
+                </div>
+                <?php echo $this->form->submit ?>
+            </div>
+            <?php echo $this->form->id ?>
+            <div class="clear"></div>
+        </form>
+    </div>
+    
+    
+</div>
+
+
+

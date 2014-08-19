@@ -1,0 +1,143 @@
+<script>
+  
+  jQuery(document).ready(function($) {
+//         $('#video-gallery').royalSlider({
+//    fullscreen: {
+//      enabled: true,
+//      nativeFS: true
+//    },
+//    controlNavigation: 'thumbnails',
+//
+//    loop: false,
+//    navigateByClick: true,
+//    numImagesToPreload:2,
+//    arrowsNav:false,
+//    arrowsNavAutoHide: true,
+//    arrowsNavHideOnTouch: true,
+//    keyboardNavEnabled: true,
+//    fadeinLoadedSlide: true,
+//    imgWidth: 960,
+//    imgHeight: 270,
+//    globalCaption: false,
+//    globalCaptionInside: false,
+//    thumbs: {
+//      autoCenter: false,
+//      fitInViewport: true,
+//      orientation: 'vertical',
+//      spacing: 0,
+//      paddingBottom: 0
+//    },
+//  });
+if(window.innerWidth > 1023){
+  $('#video-gallery').royalSlider({
+    arrowsNav: false,
+    fadeinLoadedSlide: true,
+    controlNavigationSpacing: 0,
+    controlNavigation: 'thumbnails',
+    thumbs: {
+      autoCenter: false,
+      fitInViewport: true,
+      orientation: 'vertical',
+      spacing: 0,
+      paddingBottom: 0
+    },
+    
+    keyboardNavEnabled: true,
+    imageScaleMode: 'fill',
+    imageAlignCenter:true,
+    autoPlay: {
+    		// autoplay options go gere
+    		enabled: true,
+    		pauseOnHover: false,
+                delay: 4000
+    	},
+    slidesSpacing: 0,
+    loop: true,
+    loopRewind: true,
+    sliderDrag: true,
+    sliderTouch: false,
+    numImagesToPreload: 1,
+    autoScaleSlider: true, 
+    autoScaleSliderWidth: 960,     
+    
+    navigateByClick: false,
+    autoScaleSliderHeight: 295,
+
+    /* size of all images http://help.dimsemenov.com/kb/royalslider-jquery-plugin-faq/adding-width-and-height-properties-to-images */
+    imgWidth: 900,
+    imgHeight: 345,
+    video: {
+      autoHideArrows:true,
+      autoHideControlNav:false,
+      autoHideBlocks: true
+    }, 
+  });}
+  else{
+     $('#video-gallery').royalSlider({
+    arrowsNav: false,
+    fadeinLoadedSlide: true,
+    controlNavigationSpacing: 0,
+    controlNavigation: 'none',
+
+    keyboardNavEnabled: true,
+    imageScaleMode: 'fill',
+    imageAlignCenter:true,
+    slidesSpacing: 0,
+    loop: true,
+    loopRewind: true,
+    numImagesToPreload: 1,
+    video: {
+      autoHideArrows:true,
+      autoHideControlNav:false,
+      autoHideBlocks: true
+    }, 
+    autoPlay: {
+    		// autoplay options go gere
+    		enabled: true,
+    		pauseOnHover: false,
+                delay: 4000
+    	},
+    autoScaleSlider: true, 
+
+    /* size of all images http://help.dimsemenov.com/kb/royalslider-jquery-plugin-faq/adding-width-and-height-properties-to-images */
+    imgWidth: 500,
+    imgHeight: 345
+
+  }); 
+  }
+ 
+ $('.rsContent h3').click(function(){
+     $(location).attr('href',$(this).attr('href')); 
+  });
+  
+  
+});
+    </script>
+
+<div class="row clearfix">
+    <div class="col span_6 fwImage">
+        <div id="video-gallery" class="royalSlider videoGallery rsDefault">
+            <?php foreach($this->products as $product): 
+                $photoRoot =  $product->get('PhotoRoot');
+            if(!is_object($photoRoot)||!strlen($photoRoot->getFilename())){
+                continue;
+            }
+                ?>
+            <div class="rsContent">
+                <a class="rsImg"  href="/media/photos/<?php echo $photoRoot->getOffset(); ?>/<?php echo $this->photoDimension; ?>/<?php echo $photoRoot->getFilename(); ?>">
+                    <div class="rsTmb">
+                        <h5 ><?php echo $product['Translation'][$this->language]['name']; ?></h5>
+                        <span>
+                            <?php echo "Identyfikator - ".$product->id; ?>
+                        </span>
+                    </div>
+                    
+                </a>
+                <h3 class="rsABlock sampleBlock"><a href="<?php echo $this->url(array('product' => $product['Translation'][$this->language]['slug']),'domain-i18n:product'); ?>" >Zobacz szczegóły</a></h3>
+            </div>
+            <?php endforeach; ?>
+            
+        </div>
+    </div>
+</div>
+<div class='clear'></div>

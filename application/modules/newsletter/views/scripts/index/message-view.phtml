@@ -1,0 +1,39 @@
+<?php  
+$domain = "http://dodusmaszyny.pl";
+$photoRoot = $this->product['PhotoRoot']; ?>
+<table style="width:600px;text-align:center;">
+    <tr>
+        <td colspan="2">Dodaliśmy nowy produkt w subskrybowanej przez Ciebie kategorii <?php echo $this->product['Categories'][0]['Translation']['pl']['name']; ?>.</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <strong>
+                <?php echo $this->product['Translation']['pl']['name']; ?>
+            </strong>
+        </td>
+    </tr>
+    <tr style="min-width:400px;">
+        <td style="width:200px;height:100px;">
+            <img src="<?php echo $domain; ?>/media/photos/<?php echo $photoRoot['offset']; ?>/190x/<?php echo $photoRoot['filename']; ?>" />
+        </td>
+        <td style="width:400px;">
+            <?php echo $this->product['Translation']['pl']['description']; ?>
+        </td>    
+    </tr>
+    <tr>
+        <td colspan="2" height="30">
+            <a href="<?php echo $domain; ?>/pl/product/<?php echo $this->product['Translation']['pl']['slug']?>">Kliknij tutaj</a> aby przejść do strony produktu
+        </td>
+    </tr>
+    <tr style="height:58px;">
+        <td colspan="2">
+            Pozdrawiamy - F.H.U. Dodus<br />
+            <a href="http://dodusmaszyny.pl" style="font-size:12px;">dodusmaszyny.pl</a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="font-size:10px;">
+            Jeżeli chcesz wypisać się z naszego newslettera <a href="<?php echo $domain; ?>/<?php echo 'pl'; ?>/unsubscribe/<?php echo $this->token; ?>">kliknij tutaj</a>
+        </td>
+    </tr>
+</table>

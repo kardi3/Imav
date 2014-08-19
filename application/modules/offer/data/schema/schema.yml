@@ -1,0 +1,371 @@
+options:
+  type: MyISAM
+  collate: utf8_general_ci
+  charset: utf8
+Category:
+  tableName: offer_category
+  actAs:
+    NestedSet:
+      hasManyRoots: false
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    name:
+      type: string(255)
+    slug:
+      type: string(255)
+    description: 
+      type: clob
+    metatag_id:
+      type: integer(4)
+CategoryPrice:
+  tableName: offer_category_price
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    category_id:
+      type: integer(4)
+    period:
+      type: integer(4)
+    price:
+      type: integer(4)
+  indexes:
+    category_period:
+      fields: [category_id, period]
+      type: unique
+  relations:
+    Category:
+      foreignAlias: Prices
+      local: category_id
+      foreign: id
+OfferTemplate:
+  tableName: offer_offer_template
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    category_id:
+      type: integer(4)
+    offer_template_parameter_template_root_id:
+      type: integer(4)
+  relations: 
+    Category:
+      local: category_id
+      foreign: id
+      foreignType: one
+    OfferTemplateParameterTemplate:
+      local: offer_template_parameter_template_root_id
+      alias: OfferTemplateParameterTemplateRoot
+      foreign: id
+      foreignType: one
+OfferTemplateParameterTemplate: # drzewo z przypisanymi do szablonu oferty szablonami parametrów
+  tableName: offer_offer_template_parameter_template
+  actAs:
+    NestedSet:
+      hasManyRoots: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    parameter_template_id:
+      type: integer(4)
+  relations:
+    ParameterTemplate:
+      local: parameter_template_id
+      foreign: id
+NoticeTemplate:
+  tableName: offer_notice_template
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    category_id:
+      type: integer(4)
+    notice_template_parameter_template_root_id:
+      type: integer(4)
+  relations: 
+    Category:
+      local: category_id
+      foreign: id
+      foreignType: one
+    NoticeTemplateParameterTemplate:
+      local: notice_template_parameter_template_root_id
+      alias: NoticeTemplateParameterTemplateRoot
+      foreign: id
+      foreignType: one
+NoticeTemplateParameterTemplate: # drzewo z przypisanymi do szablonu oferty szablonami parametrów
+  tableName: offer_notice_template_parameter_template
+  actAs:
+    NestedSet:
+      hasManyRoots: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    parameter_template_id:
+      type: integer(4)
+  relations:
+    ParameterTemplate:
+      local: parameter_template_id
+      foreign: id
+ParameterTemplate:
+  tableName: offer_parameter_template
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    name: 
+      type: string(255)
+    description:
+      type: clob
+    unit:
+      type: string(128)
+    range: 
+      type: boolean
+      default: 0
+  relations:
+    OfferTemplateParameter:
+      foreignAlias: ParameterTemplate
+      local: id
+      foreign: parameter_template_id
+      foreignType: one
+    NoticeTemplateParameter:
+      foreignAlias: ParameterTemplate
+      local: id
+      foreign: parameter_template_id
+      foreignType: one
+Offer:
+  tableName: offer_offer
+  actAs:
+    Timestampable: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    code:
+      type: string(128)
+    offer_template_id:
+      type: integer(4)
+    category_id:
+      type: integer(4)
+    user_id:
+      type: integer(4)
+    extended:
+      type: boolean
+      default: 0
+    title:
+      type: string(255)
+    content:
+      type: clob
+    parameter_root_id:
+      type: integer(4)
+    province_id:
+      type: integer(4)
+    city_id:
+      type: integer(4)
+  relations:
+    OfferTemplate:
+      foreignAlias: Offers
+      local: offer_template_id
+      foreign: id
+    Category:
+      foreignAlias: Offers
+      local: category_id
+      foreign: id
+    OfferParameter:
+      foreignAlias: Offer
+      alias: Parameters
+      local: parameter_root_id
+      foreign: root_id
+      type: many
+    Province:
+      foreignAlias: Offers
+      local: province_id
+      foreign: id
+    City:
+      foreignAlias: Offers
+      local: city_id
+      foreign: id
+Notice:
+  tableName: offer_notice
+  actAs:
+    Timestampable: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    notice_template_id:
+      type: integer(4)
+    category_id:
+      type: integer(4)
+    user_id:
+      type: integer(4)
+    extended:
+      type: boolean
+      default: 0
+    title:
+      type: string(255)
+    content:
+      type: clob
+    publish:
+      type: boolean
+      default: 1
+    publish_date:
+      type: timestamp
+    parameter_root_id:
+      type: integer(4)
+    province_id:
+      type: integer(4)
+    city_id:
+      type: integer(4)
+    views:
+      type: integer(4)
+  relations:
+    NoticeTemplate:
+      foreignAlias: Notices
+      local: notice_template_id
+      foreign: id
+    Category:
+      foreignAlias: Notices
+      local: category_id
+      foreign: id
+    NoticeParameter:
+      foreignAlias: Notice
+      alias: Parameters
+      local: parameter_root_id
+      foreign: root_id
+      type: many
+    Province:
+      foreignAlias: Notices
+      local: province_id
+      foreign: id
+    City:
+      foreignAlias: Notices
+      local: city_id
+      foreign: id
+OfferParameter:
+  tableName: offer_offer_parameter
+  actAs:
+    NestedSet:
+      hasManyRoots: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    parameter_template_id: 
+      type: integer(4)
+    value:
+      type: string(255)
+    value_to:
+      type: string(255)
+    required:
+      type: boolean
+      default: 1
+  relations:
+    Offer:
+      foreignAlias: ParameterRoot
+      local: id
+      foreign: parameter_root_id
+      foreignType: one
+    ParameterTemplate:
+      foreignAlias: Parameters
+      local: parameter_template_id
+      foreign: id
+NoticeParameter:
+  tableName: offer_notice_parameter
+  actAs:
+    NestedSet:
+      hasManyRoots: true
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    parameter_template_id: 
+      type: integer(4)
+    value:
+      type: string(255)
+    value_to:
+      type: string(255)
+    required:
+      type: boolean
+      default: 1
+  relations:
+    Notice:
+      foreignAlias: ParameterRoot
+      local: id
+      foreign: parameter_root_id
+      foreignType: one
+    ParameterTemplate:
+      foreignAlias: Parameters
+      local: parameter_template_id
+      foreign: id
+Deal:
+  tableName: offer_deal
+  actAs:
+    Timestampable: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    offer_id:
+      type: integer(4)
+    notice_id:
+      type: integer(4)
+    status:
+      type: integer(2)
+    contact_revealed:
+      type: boolean
+      default: 0
+    client_mark:
+      integer(2)
+  relations:
+    Offer:
+      foreignAlias: Deals
+      local: offer_id
+      foreign: id
+    Notice:
+      foreignAlias: Deals
+      local: notice_id
+      foreign: id
+DealMessage:
+  tableName: offer_deal_message
+  actAs:
+    Timestampable: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    deal_id:
+      integer(4)
+    recipient:
+      type: enum
+      values: [agent, client]
+    title:
+      type: string(255)
+    content:
+      type: clob
+    status:
+      type: integer(2)
+    contains_card:
+      type: boolean
+      default: 0
+  relations: 
+    Deal:
+      local: deal_id
+      foreign: id
+      foreignAlias: Messages

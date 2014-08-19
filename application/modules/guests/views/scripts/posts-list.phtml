@@ -1,0 +1,15 @@
+<?php if(isset($this->posts)): ?>
+    <?php foreach($this->posts as $key => $post): ?>
+        <article>
+            <header>
+                <span><?php echo $post['name']; ?></span>
+                <h3><?php echo $post['city']; ?></h3>
+            </header>
+            <p>
+                <?php echo $post['message']; ?>
+            </p>
+        </article>
+    <?php endforeach; ?>
+<?php endif; ?>  
+            
+           

@@ -1,0 +1,62 @@
+<script type="text/javascript">
+$(document).ready(function() {
+    var oTable = $("#post_table").dataTable( {
+        "sPaginationType": "full_numbers",
+        "oLanguage": {
+            "sUrl": "/plugins/tables/dataTables/datatables.polish.txt"
+        },
+        "bFilter": true,
+        "bDestroy": true,
+        "bProcessing": true,
+        "bServerSide": true,
+        "bLengthChange": false,
+        "sAjaxSource": "<?php echo $this->adminUrl('list-post-data', 'guests') ?>",
+        "aaSorting": [[ 2, "desc" ]],
+        "aoColumns": [
+            null,
+            { "bSortable": false, sWidth: '100px' },
+            { sWidth: '200px' },
+            { "bSortable": false, sWidth: '50px' }
+        ]
+    });
+    
+    $("#post_table").bind("update", function(e) {
+        oTable.fnReloadAjax();
+    });
+});
+</script>
+<div class="row-fluid">
+
+    <div class="span12">
+        
+        <div class="box">
+            
+            <div class="title">
+
+                <h4>
+                    <span class="icon16 icomoon-icon-book"></span>
+                    <span><?php echo $this->translate('Guests Book') ?></span>
+                </h4>
+                
+            </div>
+          <?php 
+         
+          ?>
+            <div class="content clearfix">
+                <table id="post_table" cellpadding="0" cellspacing="0" border="0" class=" display table table-bordered" width="100%">
+                    <thead>
+                        <th><?php echo $this->translate('Author name') ?></th>
+                        <th><?php echo $this->translate('Publish') ?></th>
+                        <th><?php echo $this->translate('Date') ?></th>
+                        <th><?php echo $this->translate('Options') ?></th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                
+            </div>
+
+        </div><!-- End .box -->
+
+    </div>
+</div>

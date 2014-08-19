@@ -1,0 +1,63 @@
+<div class="block_home_col_1">
+    <?php foreach($this->lastNews as $key => $news): 
+        $photoRoot = $news['PhotoRoot'];
+        if($key%2!=0)
+            continue;
+        ?>
+    <div class="block_home_post">
+            <div class="pic">
+                    <a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>" class="w_hover">
+                            <img src="/media/photos/<?php echo $photoRoot['offset'];?>/67x45/<?php echo $photoRoot['filename']; ?>" alt="">
+                            <span></span>
+                    </a>
+            </div>
+
+            <div class="text">
+                    <p class="title"><a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>"><?php echo $news['Translation'][$this->language]['title']; ?></a></p>
+                    <div class="date"><p><?php echo MF_Text::polishTimeFormat($news['publish_date'], 'j M Y'); ?></p></div>
+                    <div class="icons">
+                        <ul>
+                                <li><a href="#" class="views"><?php echo $news['views']; ?></a></li>
+                        </ul>
+                    </div>
+            </div>
+    </div>
+    <div class="line_3" style="margin:14px 0px 17px;"></div>
+
+    <?php endforeach; ?>
+
+</div>
+<div class="block_home_col_2">
+    <div class="line_3 first" style="margin:14px 0px 17px;"></div>
+
+     <?php foreach($this->lastNews as $key => $news): 
+        if($key%2!=1)
+            continue;
+        ?>
+    <div class="block_home_post">
+            <div class="pic">
+                    <a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>" class="w_hover">
+                            <img src="/media/photos/<?php echo $photoRoot['offset'];?>/67x45/<?php echo $photoRoot['filename']; ?>" alt="">
+                            <span></span>
+                    </a>
+            </div>
+
+            <div class="text">
+                    <p class="title"><a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>"><?php echo $news['Translation'][$this->language]['title']; ?></a></p>
+                    <div class="date"><p><?php echo MF_Text::polishTimeFormat($news['publish_date'], 'j M Y'); ?></p></div>
+                    <div class="icons">
+                        <ul>
+                                <li><a href="#" class="views"><?php echo $news['views']; ?></a></li>
+                        </ul>
+                    </div>
+            </div>
+    </div>
+    <div class="line_3" style="margin:14px 0px 17px;"></div>
+
+    <?php endforeach; ?>
+</div>
+<div class="clearboth"></div>
+
+<div class="line_3" style="margin:14px 0px 13px;"></div>
+<a href="<?php echo $this->url(array(),'domain-news'); ?>" class="lnk_all_news fl">Pozostałe aktualności</a>
+<div class="clearboth"></div>

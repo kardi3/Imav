@@ -1,0 +1,25 @@
+<section class="span8">
+    <header>
+        <h2><?php echo $this->translate('Articles') ?></h2>
+    </header>
+    <ul class="article-list">
+        <?php foreach($this->paginator as $item): ?>
+        <li>
+            <?php if(isset($item['PhotoRoot']) && strlen($item['PhotoRoot']['filename'])): ?>
+            <a href="<?php echo $this->url(array('slug' => $item['slug'], 'date' => $this->text()->timeFormat($item['created_at'], 'Y-m-d')), 'domain-article-item') ?>">
+                <img src="/media/photos/<?php echo $item['PhotoRoot']['offset'] ?>/255x122/<?php echo $item['PhotoRoot']['filename'] ?>" />
+            </a>
+            <?php endif; ?>
+            <h3>
+                <span><?php echo $this->text()->timeFormat($item['created_at'], 'd/m/Y') ?></span>
+                <span class="pull-right"><?php echo $item['User']['first_name'] . ' ' . $item['User']['last_name'] ?></span>
+                <a href="<?php echo $this->url(array('slug' => $item['slug'], 'date' => $this->text()->timeFormat($item['created_at'], 'Y-m-d')), 'domain-article-item') ?>"><?php echo $item['title'] ?></a>
+            </h3>
+            <div class="excerpt"><?php echo $this->text()->truncate($item['content'], 160, 'letters') ?></div>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+    <div class="pagination">
+        <?php echo $this->paginationControl($this->paginator, 'Sliding', 'article_pagination_control.phtml'); ?>
+    </div>  
+</section>

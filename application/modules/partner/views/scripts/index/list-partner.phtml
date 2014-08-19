@@ -1,0 +1,16 @@
+<?php $partnerService = new Partner_Service_PartnerSerwis10();
+
+        if(!$partners = $partnerService->getAllPartners()) {
+            throw new Zend_Controller_Action_Exception('Partners not found ');
+        }?> 
+
+<?php foreach($partners as $partner):
+    $photo = $partner->get('PhotoRoot');
+if(!strlen($photo->getOffset()))
+    continue;
+?>
+<a href="<?php echo $partner->website; ?>" target='_blank'>
+    <img class='partnerImage' src="/media/photos/<?php echo $photo->getOffset(); ?>/155x/<?php echo $photo->getFilename(); ?>" />
+</a>
+
+<?php endforeach; ?>

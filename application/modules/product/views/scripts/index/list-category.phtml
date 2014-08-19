@@ -1,0 +1,36 @@
+<section class="colums popular-objects">
+    <ul>
+        <?php
+      
+        foreach($this->products as $product):
+?>
+      <div class="col5">
+              <div class="img imgWrap"><a href="<?php  
+              if(isset($product['Categories'][0])) 
+                  echo $this->url(array('slug' => $product['Categories'][0]->Translation[$this->language]->slug), 'domain-category');
+              else 
+                  echo "#" 
+                  ?> ">
+                    <?php if($product['PhotoRoot']['filename']): ?>
+                        <img src="/media/photos/<?php echo $product['PhotoRoot']['offset'] ?>/170x/<?php echo $product['PhotoRoot']['filename'] ?>" alt="">
+                    <?php else: ?>
+                        <img src="/images/temp/prod05.jpg" alt="" />
+                    <?php endif; ?>
+                         <p class="imgDescription"></p>
+                         <span class="imgDescriptionText">
+                             <?php if(isset($product['Categories'])){
+                             echo $product['Categories'][0]->Translation[$this->language]->name;
+                         }
+                             ?></span>
+                    </a>
+                 
+              </div>
+       </div>
+        
+        <?php 
+        endforeach; ?>
+    </ul>
+<!--    <div class="wp-pagenavi">
+        <?php //echo $this->paginationControl($this->paginator, 'Sliding', 'product_pagination_control.phtml') ?>
+    </div>-->
+</section>

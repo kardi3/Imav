@@ -1,0 +1,139 @@
+<?php $news = $this->article;
+$photoRoot = $news->get('PhotoRoot');
+?>
+<div class="block_breadcrumbs">
+<!--    <div class="text"><p>Tu jesteś: </p></div>-->
+
+    <ul>
+        <li><a href="/">Strona głowna</a></li>
+        <li><a href="<?php echo $this->url(array('slug' => $news['Category']['slug']),'domain-news-category'); ?>"><?php echo $news['Category']['title']; ?></a></li>
+        <li><?php echo $news['Translation'][$this->language]['title']; ?></li>
+    </ul>
+</div>
+<div class="separator" style="height:30px;"></div>
+
+<article class="block_single_news">
+        <div class="f_pic">
+            <a href="#">
+                <img src="/media/photos/<?php echo $photoRoot['offset'];?>/610x292/<?php echo $photoRoot['filename'];?>" alt=""></a>
+        </div>
+  <p class="title"><?php echo $news['Translation'][$this->language]['title']; ?></p>
+    <!--<p class="subtitle">Many variations of passages of available, but the majority have suffered alteration in some form. Humour, or randomised words which don't look even slightly believable.</p>-->
+
+    <div class="info">
+        <div class="date"><p><?php echo MF_Text::polishTimeFormat($news['publish_date'],'d M Y H:i'); ?></p></div>
+        <div class="author"><p>Autor: <?php echo $news['UserCreated']['first_name']." ".$news['UserCreated']['last_name']; ?></p></div>
+
+        <div class="r_part">
+                <div class="category"><p><a href="#">Life</a></p></div>
+            <a href="#" class="views"><?php echo $news['views']; ?></a>
+            <a href="#" class="comments"><?php echo $this->comment_count; ?></a>
+        </div>
+    </div>
+
+    <div class="content">
+        <?php echo $news['Translation'][$this->language]['content']; ?>
+    </div>
+
+</article>
+<div class="line_3" style="margin:10px 0px 15px;"></div>
+<div class="block_related_posts">
+        <h3>Galeria</h3>
+    <div class="block_main_news">
+        <?php foreach($photoRoot->getNode()->getChildren() as $photo): ?>
+        <div class="block_news_post">
+            <div class="f_pic">
+                <a href="/media/photos/<?php echo $photo['offset'];?>/<?php echo $photo['filename'];?>" data-rel='prettyPhoto' title='<?php echo $news['Translation'][$this->language]['title']; ?>' >
+                    <img src="/media/photos/<?php echo $photo['offset'];?>/130x130/<?php echo $photo['filename'];?>" alt="">
+                </a>
+            </div>
+        </div>
+          <?php endforeach; ?>
+
+
+        <div class="clearboth"></div>
+    </div>
+</div>
+<div class="separator" style="height:4px;"></div>
+
+<div class="block_post_tags">
+        <!--<p>Tags: <a href="#">business,</a><a href="#">stock market</a></p>-->
+</div>
+
+<div class="block_post_social">
+        <h4><span>B</span></h4>
+
+    <section class="rating">
+        <p class="title"><span>Rating</span></p>
+
+        <ul>
+                <li><span>1024</span>views</li>
+            <li><span><?php echo $this->comment_count; ?></span><?php echo MF_Text::sufixCheck('Komentarz',$this->comment_count) ;?></li>
+        </ul>
+    </section>
+
+    <section class="subscribe">
+        <p class="title"><span>Subscribe</span></p>
+        <a href="#">Subscribe to comments</a>
+    </section>
+
+    <section class="recommend">
+        <p class="title"><span>recommend to friends</span></p>
+
+        <ul>
+                <li><a href="http://www.facebook.com/share.php?u=http://google.com" target="_blank"><img src="/assets/images/button_social_1.png" alt=""></a></li>
+            <li><a href="https://twitter.com/share?text=I like BusinessNews Template and You?" target="_blank"><img src="/assets/images/button_social_2.png" alt=""></a></li>
+            <li><a href="https://plusone.google.com/_/+1/confirm?url=http://google.com" target="_blank"><img src="/assets/images/button_social_3.png" alt=""></a></li>
+            <li><a href="http://pinterest.com/pin/create/button/?url=http://google.com" target="_blank"><img src="/assets/images/button_social_4.png" alt=""></a></li>
+        </ul>
+    </section>
+
+    <div class="clearboth"></div>
+</div>
+
+<div class="line_2" style="margin:22px 0px 29px;"></div>
+
+
+<div class="line_2" style="margin:5px 0px 30px;"></div>
+
+<div class="block_comments_type_2">
+        <h3><?php echo $this->comment_count;?> <?php echo MF_Text::sufixCheck('Komentarz',$this->comment_count) ;?></h3>
+    <a href="#leaveReply" class="add_new">Dodaj komentarz</a>
+
+    <?php foreach($this->comments as $comment): ?>
+    <div class="comment">
+        
+        <div class="comment_wrap">
+            <div class="name"><p><?php echo $comment['name']; ?></p></div>
+            <div class="date"><p><?php echo MF_Text::polishTimeFormat($comment['created_at'],'d M Y H:i'); ?></p></div>
+            <div class="content">
+                <p><?php echo $comment['content'] ;?></p>
+            </div>
+        </div>
+        <div class="clearboth"></div>
+        <div class="line_3"></div>
+    </div>
+    <?php endforeach; ?>
+
+</div>
+
+<div class="separator" style="height:30px;"></div>
+
+<div class="block_leave_reply" id='leaveReply'>
+        <h3>Zostaw komentarz</h3>
+        <!--<p class="text">Your email address will not be published. Required fields are marked <span>*</span></p>-->
+
+        <form class="w_validation" action="" method='POST'>
+        <p>Imie<span>*</span></p>
+        <div class="field"><input type="text" class="req" required name='name' ></div>
+
+<!--        <p>E-mail<span>*</span></p>
+        <div class="field"><input type="text" class="req"></div>-->
+
+        <p>Komentarz</p>
+        <div class="textarea"><textarea placeholder='Maksymalnie 300 znaków' cols="1" rows="1" maxlength='300' name='content'></textarea></div>
+
+        <input type="submit" class="general_button" name='submit_comment' value="Dodaj komentarz">
+    </form>
+</div>
+                        

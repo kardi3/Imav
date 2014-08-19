@@ -1,0 +1,40 @@
+    
+<?php if(isset($this->tree)): ?>
+    
+        <?php foreach($this->tree as $item):
+            
+            ?>
+<article>
+        <h3>
+            <span>
+                <?php echo mb_strtoupper($item->Translation[$this->language]['title'],'UTF-8') ?>
+            </span>
+        </h3>
+            <?php if($item->getNode()->getChildren()):  ?>
+    <ul>
+            <?php echo $this->partial('footer_main_subtree.phtml', 'menu', array('subtree' => $item->getNode()->getChildren(), 'parent' => $this->parent, 'language' => $this->language)) ?>
+            <?php endif; ?>
+    </ul>
+      </article>
+        <?php endforeach; ?>
+
+    <?php elseif(isset($this->subtree)): ?>
+
+        <?php foreach($this->subtree as $item): ?>
+<article>
+        <h3>
+            <span>
+                <?php echo mb_strtoupper($item->Translation[$this->language]['title'],'UTF-8') ?>
+            </span>
+        </h3>
+            <?php if($item->getNode()->getChildren()): ?>
+    <ul>
+            <?php echo $this->partial('footer_main_subtree.phtml', 'menu', array('subtree' => $item->getNode()->getChildren(), 'parent' => $this->parent, 'language' => $this->language)) ?>
+           <?php 
+                  endif; ?>
+    </ul>
+    </article>
+        <?php endforeach; ?>
+        
+    <?php endif; ?>
+

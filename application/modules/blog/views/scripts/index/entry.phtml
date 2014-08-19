@@ -1,0 +1,44 @@
+    <?php echo $this->render('_menu.phtml') ?>
+</div>
+<div class="content noTop">
+    <div class="blogger">
+        <div class="row">
+            <div class="defPad">
+                <h2>
+                    Nasz blog
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col c01">
+                        &nbsp;
+                    </div>
+                    <div class="col bg03 defPad">
+                        <div class="row">
+                            <div class="col c08">
+                                <div class="defPad bg01">
+                                    <h1><?php echo $this->entry['Translation']['pl']['title']; ?></h1>
+                                    <?php if(isset($this->entry['PhotoRoot']) && $this->entry['PhotoRoot']['filename'] != NULL): ?>
+                                        <img src="/media/photos/<?php echo $this->entry['PhotoRoot']['offset'] ?>/290x135/<?php echo $this->entry['PhotoRoot']['filename'] ?>" alt="<?php echo $this->entry['PhotoRoot']['title']; ?>" class="bloggerThumb"/>
+                                    <?php endif; ?>
+                                       
+                                    <?php echo $this->entry['Translation']['pl']['content']; ?>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="col c02">
+                                <div class="defPad fc01 fs12 bg02">
+                                    data:  <?php echo $this->entry['publish_date']; ?><br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col c01"></div>
+        </div>
+        <?php echo $this->entry['content']; ?>
+       <div class="col c01">
+            <br/><br/><br/>
+       </div>
+    </div>
+</div>
+<div class="content bottom">

@@ -1,0 +1,445 @@
+
+<!-- revolution slider settings -->
+<link rel="stylesheet" type="text/css" href="/rs-plugin/css/settings.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/rs-plugin/css/revolution.css" media="screen" />
+
+
+<!-- scripts -->
+<script  src="/js/jquery-1.8.3.js"></script> <!-- jQuery library -->  
+<script  src="/js/jquery.placeholder.min.js"></script><!-- jQuery placeholder fix for old browsers -->
+<script  src="/js/jquery.carouFredSel-6.0.0-packed.js"></script><!-- CarouFredSel carousel plugin -->
+<script  src="/js/jquery.touchSwipe-1.2.5.js"></script><!-- support for touch swipe on mobile devices -->  
+<script  src="/js/jquery.prettyPhoto.js"></script> <!-- prettyPhoto lightbox -->
+<script  src="/js/portfolio.js"></script> <!-- portfolio custom options -->
+<script type="text/javascript" src="/rs-plugin/js/jquery.themepunch.plugins.min.js"></script>
+<script type="text/javascript" src="/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
+<script  src="/js/include.js"></script> <!-- jQuery custom options -->
+
+<script type="text/javascript">
+$(document).ready(function() {
+if (jQuery.fn.cssOriginal !== undefined)   // CHECK IF fn.css already extended
+        jQuery.fn.css = jQuery.fn.cssOriginal;
+
+    function refreshSlider(){
+        jQuery('.banner').revolution(
+                {
+                    delay: 4000,
+                    startheight: 320,
+                    startwidth: 980,
+                    hideThumbs: 200,
+                    thumbWidth: 100,
+                    thumbHeight: 50,
+                    thumbAmount: 5,
+                    navigationType: "none",
+                    navigationArrows: "verticalcentered",
+                    navigationStyle: "round-old",
+                    navigationHAlign: "right",
+                    navigationVAlign: "top",
+                    navigationHOffset: 0,
+                    navigationVOffset: 20,
+
+                    soloArrowLeftHalign: "left",
+                    soloArrowLeftValign: "center",
+                    soloArrowLeftHOffset: 20,
+                    soloArrowLeftVOffset: 0,
+                    soloArrowRightHalign: "right",
+                    soloArrowRightValign: "center",
+                    soloArrowRightHOffset: 20,
+                    soloArrowRightVOffset: 0,
+
+                    touchenabled: "on",
+                    onHoverStop: "on",
+                    navOffsetHorizontal: 0,
+                    navOffsetVertical: 20,
+                    hideCaptionAtLimit: 0,
+                    hideAllCaptionAtLilmit: 0,
+                    hideSliderAtLimit: 0,
+                    stopAtSlide: -1,
+                    stopAfterLoops: -1,
+                    shadow: 0,
+                    fullWidth: "off"
+
+                });
+    }
+    
+    refreshSlider();
+    
+    $("#save-button").click(function(e) {
+        e.preventDefault();
+
+        $("#form").append("<input type='hidden' name='saveOnly' value='1' />");
+        $("#form #submit").trigger("click");
+    });
+
+    $.sendCropData;
+    $("#form").bind("submit", function(e) {
+        if(typeof $.sendCropData != "undefined") {
+            $.sendCropData(function() {
+                $("#form").unbind("submit");
+                $("#form #submit").trigger("click");
+            });
+        }
+        //e.preventDefault();
+    });
+    $('#title_size').attr('value', $('#title_size').attr('value')+'px').before('<div id="title_size_slider" class="slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"><div class="ui-slider-range ui-widget-header ui-slider-range-min" style="width: 0%;"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 40%;"></a></div>');
+    $('#description_size').attr('value', $('#description_size').attr('value')+'px').before('<div id="description_size_slider" class="slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"><div class="ui-slider-range ui-widget-header ui-slider-range-min" style="width: 0%;"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 40%;"></a></div>');
+    $('#title_pos_x').attr('value', $('#title_pos_x').attr('value')+'px').before('<div id="title_pos_x_slider" class="slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"><div class="ui-slider-range ui-widget-header ui-slider-range-min" style="width: 0%;"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 40%;"></a></div>');
+    $('#title_pos_y').attr('value', $('#title_pos_y').attr('value')+'px').before('<div id="title_pos_y_slider" class="slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"><div class="ui-slider-range ui-widget-header ui-slider-range-min" style="width: 0%;"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 40%;"></a></div>');
+    $('#description_pos_x').attr('value', $('#description_pos_x').attr('value')+'px').before('<div id="description_pos_x_slider" class="slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"><div class="ui-slider-range ui-widget-header ui-slider-range-min" style="width: 0%;"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 40%;"></a></div>');
+    $('#description_pos_y').attr('value', $('#description_pos_y').attr('value')+'px').before('<div id="description_pos_y_slider" class="slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"><div class="ui-slider-range ui-widget-header ui-slider-range-min" style="width: 0%;"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 40%;"></a></div>');
+    
+    
+    $('#title').keyup(function(){
+        $('.caption.sfl.caption-heading.tp-caption.start').text($(this).attr('value'));
+    });
+    $('#description').keyup(function(){
+        $('.caption.sft.caption-subtitle-2.tp-caption.start').text($(this).attr('value'));
+        if($(this).attr('value') == ''){
+            $('.caption.sft.caption-subtitle-2.tp-caption.start').css('display', 'none');
+        }else{
+            $('.caption.sft.caption-subtitle-2.tp-caption.start').css('display', 'initial');
+        }
+    });
+    
+    $('#animation').change(function(){
+        var value = $('#animation').attr('value');
+        $('.banner ul li').attr('data-transition', value);
+        refreshSlider();
+    });
+    $('#colorpicker').farbtastic(function(color){
+        $('#title_color').attr('value', color).css('background-color', color);
+        $('.caption.sfl.caption-heading.tp-caption.start').css('color', color);
+    });
+
+
+    $('#colorpicker2').farbtastic(function(color){
+        $('#description_color').attr('value', color).css('background-color', color);
+        $('.caption.sft.caption-subtitle-2.tp-caption.start').css('color', color);
+    });
+    $('#colorpicker3').farbtastic(function(color){
+        $('#description_bg_color').attr('value', color).css('background-color', color);
+        $('.caption.sft.caption-subtitle-2.tp-caption.start').css('background-color', color);
+    });
+    
+    $( "#title_size_slider" ).slider({
+            range: "min",
+            value: <?php echo $this->form->title_size->getValue(); ?>,
+            min: 6,
+            max: 200,
+            step: 1,
+            slide: function( event, ui ) {
+                    $( "#title_size" ).val( ui.value + "px" );
+                    $('.caption.sfl.caption-heading.tp-caption.start').css('font-size', ui.value+"px");
+            }
+    });
+    
+    $( "#description_size_slider" ).slider({
+            range: "min",
+            value: <?php echo $this->form->description_size->getValue(); ?>,
+            min: 6,
+            max: 100,
+            step: 1,
+            slide: function( event, ui ) {
+                    $( "#description_size" ).val( ui.value + "px" );
+                    $('.caption.sft.caption-subtitle-2.tp-caption.start').css('font-size', ui.value+"px");
+            }
+    });
+
+    $( "#title_pos_x_slider" ).slider({
+            range: "min",
+            value: <?php echo $this->form->title_pos_x->getValue(); ?>,
+            min: 0,
+            max: 900,
+            step: 1,
+            slide: function( event, ui ) {
+                    var value = ui.value;
+                    $( "#title_pos_x" ).val( value + "px" );
+                    $('.caption.sfl.caption-heading.tp-caption.start').css('left', value-20+"px");
+            }
+    });
+    $( "#title_pos_y_slider" ).slider({
+            range: "min",
+            value: <?php echo $this->form->title_pos_y->getValue(); ?>,
+            min: 0,
+            max: 300,
+            step: 1,
+            slide: function( event, ui ) {
+                    var value = ui.value;
+                    $( "#title_pos_y" ).val( value + "px" );
+                    $('.caption.sfl.caption-heading.tp-caption.start').css('top', value-20+"px");
+            }
+    });
+    $( "#description_pos_x_slider" ).slider({
+            range: "min",
+            value: <?php echo $this->form->description_pos_x->getValue(); ?>,
+            min: 0,
+            max: 900,
+            step: 1,
+            slide: function( event, ui ) {
+                    var value = ui.value;
+                    $( "#description_pos_x" ).val( value + "px" );
+                    $('.caption.sft.caption-subtitle-2.tp-caption.start').css('left', value-20+"px");
+            }
+    });
+    $( "#description_pos_y_slider" ).slider({
+            range: "min",
+            value: <?php echo $this->form->description_pos_y->getValue(); ?>,
+            min: 0,
+            max: 300,
+            step: 1,
+            slide: function( event, ui ) {
+                    var value = ui.value;
+                    $( "#description_pos_y" ).val( value + "px" );
+                    $('.caption.sft.caption-subtitle-2.tp-caption.start').css('top', value-20+"px");
+            }
+    });
+    
+    $('.banner ul li').attr('data-transition', $('#animation').attr('value'));
+    
+    $('.caption.sfl.caption-heading')
+        .css('color', $('#title_color').attr('value'))
+        .css('font-size', $('#title_size').attr('value'))
+        .attr('data-x', parseInt($('#title_pos_x').attr('value')))
+        .attr('data-y',  parseInt($('#title_pos_y').attr('value')))
+        .text($('#title').attr('value'))
+    ;
+    
+    $('.caption.sft.caption-subtitle-2')
+        .css('color', $('#description_color').attr('value'))
+        .css('background-color', $('#description_bg_color').attr('value'))
+        .css('font-size', $('#description_size').attr('value'))
+        .attr('data-x', parseInt($('#description_pos_x').attr('value')))
+        .attr('data-y',  parseInt($('#description_pos_y').attr('value')))
+        .text($('#description').attr('value'))
+//        .css('display', 'none')
+        ;
+
+        if($('#description').attr('value') == ''){
+            $('.caption.sft.caption-subtitle-2').css('display', 'none');
+        }
+    
+    $('.title.min').mouseover(function(){
+        $('.title.min').not(this).next().hide(500);
+        $(this).next().show(500);
+    });
+    
+    $('.span12').mouseover(function(){
+        $('.title.min').next().hide(500);
+    });
+    
+    
+});
+
+</script>
+
+
+<div class="row-fluid">
+    <div class="span12">
+        
+        <div class="box">
+            
+            <div class="title">
+
+                <h4>
+                    <span class="icon16 icomoon-icon-pencil"></span>
+                    <span><?php echo $this->translate('Edit slide') ?></span>
+                </h4>
+                
+            </div>
+            
+            <div class="content clearfix">
+                
+                    <div class="banner">
+                        <ul>
+                            <li data-slotamount="1">
+                                <img src="/media/photos/<?php echo $this->slide['PhotoRoot']['offset'] ?>/<?php echo $this->photoDimension; ?>/<?php echo $this->slide['PhotoRoot']['filename'] ?>" alt="img"/>
+                                <div class="caption sfl caption-heading" data-speed="700" data-start="1200"></div>
+                                <div class="caption sft caption-subtitle-2" data-speed="700" data-start="1900" ></div>
+                            </li>
+                        </ul>
+                    </div>
+            </div>
+            
+        </div>
+        
+</div>
+<form id="form" class="form crop-form" method="post">
+    <div class="span6">
+        <div class="box">
+            <div class="title">
+
+                <h4>
+                    <span class="icon16 icomoon-icon-pencil"></span>
+                    <span><?php echo $this->translate('Edit title') ?></span>
+                </h4>
+                
+            </div>
+            <div class="content clearfix">
+                
+                <?php echo $this->form->id ?>
+                
+                <div class="box">
+                    <div class="title min">
+                        <h4>
+                            <span class="icon16 icomoon-icon-equalizer-2"></span>
+                            <span><?php echo $this->form->title->getLabel() ?></span>
+                        </h4>
+<!--                        <a href="#" class="maximize" style="display: none;">Minimize</a>-->
+                    </div>
+                    <div class="content" style="display: none;">
+                        <?php echo $this->form->title->removeDecorator('Label') ?>
+                    </div>
+                </div>
+                
+                <div class="box">
+                    <div class="title min">
+                        <h4>
+                            <span class="icon16 icomoon-icon-equalizer-2"></span>
+                            <span><?php echo $this->form->title_size->getLabel() ?></span>
+                        </h4>
+                    </div>
+                    <div class="content" style="display: none;">
+                        <?php echo $this->form->title_size->removeDecorator('Label') ?>
+                    </div>
+                </div>
+                
+                <div class="box">
+                    <div class="title min">
+                        <h4>
+                            <span class="icon16 icomoon-icon-equalizer-2"></span>
+                            <span><?php echo $this->translate('Title position') ?></span>
+                        </h4>
+                    </div>
+                    <div class="content" style="display: none;">
+                        <?php echo $this->form->title_pos_x ?>
+                        <?php echo $this->form->title_pos_y ?>
+                    </div>
+                </div>
+                
+                <div class="box">
+                    <div class="title min">
+                        <h4>
+                            <span class="icon16 icomoon-icon-equalizer-2"></span>
+                            <span><?php echo $this->form->title_color->getLabel() ?></span>
+                        </h4>
+                    </div>
+                    <div class="content" style="display: none;">
+                        <?php echo $this->form->title_color->removeDecorator('Label') ?>
+                        <div id="colorpicker"></div>
+                    </div>
+                </div>
+               
+                
+            </div>
+        </div>
+    </div>
+    <div class="span6">
+        <div class="box">
+            
+            <div class="title">
+
+                <h4>
+                    <span class="icon16 icomoon-icon-pencil"></span>
+                    <span><?php echo $this->translate('Edit description') ?></span>
+                </h4>
+                
+            </div>
+            <div class="content clearfix">
+                    
+                    <?php echo $this->form->id ?>
+                
+                <div class="box">
+                    <div class="title min">
+                        <h4>
+                            <span class="icon16 icomoon-icon-equalizer-2"></span>
+                            <span><?php echo $this->form->description->getLabel() ?></span>
+                        </h4>
+                    </div>
+                    <div class="content" style="display: none;">
+                        <?php echo $this->form->description->removeDecorator('Label') ?>
+                    </div>
+                </div>
+                
+                <div class="box">
+                    <div class="title min">
+                        <h4>
+                            <span class="icon16 icomoon-icon-equalizer-2"></span>
+                            <span><?php echo $this->translate('Description position') ?></span>
+                        </h4>
+                    </div>
+                    <div class="content" style="display: none;">
+                        <?php echo $this->form->description_pos_x ?>
+                        <?php echo $this->form->description_pos_y ?>
+                    </div>
+                </div>
+                
+                <div class="box">
+                    <div class="title min">
+                        <h4>
+                            <span class="icon16 icomoon-icon-equalizer-2"></span>
+                            <span><?php echo $this->form->description_color->getLabel() ?></span>
+                        </h4>
+                    </div>
+                    <div class="content" style="display: none;">
+                        <?php echo $this->form->description_color->removeDecorator('Label') ?>
+                        <div id="colorpicker2"></div>
+                    </div>
+                </div>
+                
+                <div class="box">
+                    <div class="title min">
+                        <h4>
+                            <span class="icon16 icomoon-icon-equalizer-2"></span>
+                            <span><?php echo $this->form->description_bg_color->getLabel() ?></span>
+                        </h4>
+                    </div>
+                    <div class="content" style="display: none;">
+                        <?php echo $this->form->description_bg_color->removeDecorator('Label') ?>
+                        <div id="colorpicker3"></div>
+                    </div>
+                </div>
+                
+                <div class="box">
+                    <div class="title min">
+                        <h4>
+                            <span class="icon16 icomoon-icon-equalizer-2"></span>
+                            <span><?php echo $this->form->description_size->getLabel() ?></span>
+                        </h4>
+                    </div>
+                    <div class="content" style="display: none;">
+                        <?php echo $this->form->description_size->removeDecorator('Label') ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span12">
+        <div class="box">
+            
+            <div class="title">
+
+                <h4>
+                    <span class="icon16 icomoon-icon-pencil"></span>
+                    <span><?php echo $this->translate('Edit slide') ?> <?php //echo $this->slide->getTitle() ?></span>
+                </h4>
+                
+            </div>
+            <div class="content clearfix">
+                    <?php echo $this->form->animation ?>
+                    <?php echo $this->form->target_href ?>
+                    
+                    <div class="form-actions">
+                        <?php echo $this->form->submit ?>
+                        <a href="<?php echo $this->adminUrl('list-slide', 'slider', array('slider' => $this->slider->getId())) ?>" class="btn"><?php echo $this->translate('Cancel') ?></a>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+</form>
+
+</div>
+
+        
+<div id="explorer" class="dialog"><div id="elfinder"></div></div>
+    

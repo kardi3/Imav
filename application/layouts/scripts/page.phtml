@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+  <?php echo $this->render('_head.phtml'); ?>
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="corporate">
+    <div class="mainWrapper">
+    <!-- BEGIN HEADER -->
+    <?php echo $this->render('_header.phtml'); ?>
+    <!-- Header END -->
+
+    
+
+    <div class="main">
+        <div class='content pageContainer'>
+            
+            <div class="sidebar">
+                <div class="sidebarWrapper">
+                    
+                    <span>MASZYNY DO DREWNA</span>
+                    <?php echo $this->layout()->sidebar; ?>
+                    
+                </div>
+                <a class="newsletterBanner" href='/pl/newsletter'><img src="/img/_newsletter.png" /></a>
+            </div>
+            <div class="pagecontainer">
+                
+              <?php echo $this->layout()->content; ?>
+            </div>
+            <div class='clear'></div>
+        </div>            
+        <div class='clear'></div>
+    </div>
+    <div class='clear'></div>
+    
+
+   
+    </div>
+    
+</body>
+<!-- END BODY -->
+</html>

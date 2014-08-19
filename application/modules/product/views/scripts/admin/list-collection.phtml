@@ -1,0 +1,88 @@
+<script type="text/javascript">
+$(document).ready(function() {
+    var oTable = $("#collection_table").dataTable( {
+        "sPaginationType": "full_numbers",
+        "oLanguage": {
+            "sUrl": "/plugins/tables/dataTables/datatables.polish.txt"
+        },
+        "bFilter": true,
+        "bDestroy": true,
+        "bProcessing": true,
+        "bServerSide": true,
+        "bLengthChange": false,
+        "iDisplayLength": 50,
+        "sAjaxSource": "<?php echo $this->adminUrl('list-collection-data', 'product', array()) ?>",
+        "aaSorting": [[ 1, "desc" ]],
+        "aoColumns": [
+            null,
+            { "bSortable": false, sWidth: '50px' },
+            { "bSortable": false, sWidth: '50px' },
+            { "bSortable": false, sWidth: '50px' }
+        ]
+    });
+    
+    $("#collection_table").bind("update", function(e) {
+        oTable.fnReloadAjax();
+    });
+    
+    
+});
+</script>
+
+<div class="row-fluid">
+
+    <div class="span12">
+        
+        <div class="box">
+
+            <div class="title">
+              
+                <h4>
+                    <span class="icon16 iconic-icon-list-nested"></span>
+                    <span><?php echo $this->translate('Category tree') ?></span>
+                    <div class="box-form right">
+                        <a href="<?php  echo $this->adminUrl('add-collection', 'product') ?>" class="btn btn-success btn-mini"><?php echo $this->translate('Add collection') ?></a>
+                    </div>
+                </h4>
+            </div>
+            <div class="content">
+                
+                <div id="collection_tree">
+                    <?php  echo $this->partial('collection-tree.phtml', 'product', array('tree' => $this->collectionTree, 'parent' => $this->parent, 'adminLanguage' => $this->adminLanguage)) ?>
+                </div>
+                
+            </div>
+
+        </div><!-- End .box -->
+        
+        <div class="box">
+
+            <div class="title">
+
+                <h4>
+                    <span class="icon16 silk-icon-list"></span>
+                    <span><?php echo $this->translate('Category list') ?></span>
+                </h4>
+                
+            </div>
+            <div class="content clearfix">
+
+                <table id="collection_table" cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" width="100%">
+                    <thead>
+                        <th><?php echo $this->translate('Name') ?></th>
+                        <th><?php echo $this->translate('Promoted') ?></th>
+                        <th><?php echo $this->translate('Status') ?></th>
+                        <th><?php echo $this->translate('Options') ?></th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            
+            </div>
+            
+        </div>
+
+    </div>
+
+
+</div>

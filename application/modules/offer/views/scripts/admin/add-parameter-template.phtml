@@ -1,0 +1,62 @@
+<script type="text/javascript">
+$(document).ready(function() {
+    var oTable = $("#tamplate_table").dataTable( {
+        "sPaginationType": "full_numbers",
+        "oLanguage": {
+            "sUrl": "/plugins/tables/dataTables/datatables.polish.txt"
+        },
+        "bFilter": true,
+        "bDestroy": true,
+        "bProcessing": true,
+        "bServerSide": true,
+        "bLengthChange": false,
+        "sAjaxSource": "<?php echo $this->adminUrl('list-parameter-template-data', 'offer') ?>",
+        "aaSorting": [[ 0, "asc" ]],
+        "aoColumns": [
+            null,
+            null,
+            null,
+            { "bSortable": false, sWidth: '50px' }
+        ]
+    });
+    
+    $("#tamplate_table").bind("update", function(e) {
+        oTable.fnReloadAjax();
+    });
+    
+    
+});
+</script>
+<div class="row-fluid">
+
+    <div class="span6">
+
+        <div id="new_parameter" class="box">
+
+            <div class="title">
+                <h4>
+                    <span class="icon16 entypo-icon-settings"></span>
+                    <span><?php echo $this->translate('New parameter') ?></span>
+                </h4>
+            </div>
+            <div class="content">
+                <form class="form-horizontal" action="<?php echo $this->adminUrl('add-parameter-template', 'offer') ?>" method="post">
+                    <?php echo $this->form->name ?>
+                    <?php echo $this->form->unit ?>
+                    <?php echo $this->form->range ?> 
+                    <?php echo $this->form->description ?> 
+                    <?php echo $this->form->submit ?>
+                    <?php echo $this->form->id ?>
+                </form>
+            </div>
+
+        </div><!-- End .box -->
+
+    </div> <!-- End span6 -->
+    
+    <div class="span6">
+        
+        
+    </div>
+
+</div>

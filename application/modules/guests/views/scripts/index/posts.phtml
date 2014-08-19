@@ -1,0 +1,50 @@
+    <?php echo $this->render('_menu.phtml') ?>
+</div>
+<div class="content noTop">
+    <div class="blogger">
+        <div class="row">
+            <div class="defPad">
+                <h2>
+                    Księga gości
+                </h2>
+
+            </div>
+        </div>
+        <?php if(isset($this->paginator)): ?>
+        <?php foreach($this->paginator as $key => $entry): ?>
+                <div class="row">
+                    <div class="col c01">
+                        &nbsp;
+                    </div>
+                    <div class="col bg03 defPad">
+                        <div class="row">
+                            <div class="col c08">
+                                <div class="defPad bg01">
+                                    <header>
+                                        <?php echo $entry['name'] ?>
+                                    </header>
+                                       
+                                    <?php echo $entry['message']; ?>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="col c02">
+                                <div class="defPad fc01 fs12 bg02">
+                                    data:  <?php echo $entry['created_at']; ?><br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col c01"></div>
+                </div>
+       <?php endforeach; ?>
+       <?php endif; ?>
+       <div class="pagination">
+            <?php echo $this->paginationControl($this->paginator, 'Sliding', 'posts_pagination_control.phtml'); ?>
+       </div>  
+       <div class="col c01">
+            <br/><br/><br/>
+       </div>
+    </div>
+</div>
+<div class="content bottom">

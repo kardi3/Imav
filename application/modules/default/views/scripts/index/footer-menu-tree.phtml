@@ -1,0 +1,87 @@
+<script>
+    var time = 300;
+    $(function(){
+        $(".unreel").hide().parent().mouseover(function(){
+            $(this).find('ul').slideDown(time);
+        });
+        $("#top_menu").mouseleave(function(){
+            $(".unreel").stop().slideUp(time);
+        });
+        
+    });
+</script>
+
+
+   <!-- #nav-container start -->
+            <section id="nav-container">
+
+                <section class="container_12">
+                    <section class="grid_12">
+                        <!-- #nav start -->
+                        <nav id="nav">
+<!--                            <ul>
+                                
+                                <li>
+                                     
+                                    <a href="#">O nas</a>
+                                    
+                                </li>
+
+                                <li>
+                                   
+                                    <a href="#">Tkaniny odzieżowe</a>
+                                    
+                                </li>
+
+                                <li>
+                                   
+                                    <a href="#">Tkaniny obiciowe</a>
+
+                                    
+                                </li>
+
+                                <li>
+                                   
+                                    <a href="#">Tkaniny dekoracyjne</a>
+                                    
+                                </li>
+                                
+                                 <li>
+                                   
+                                    <a href="#">Dodatki krawieckie</a>
+                                   
+                                </li>
+                                 <li>
+                                   
+                                    <a href="#">Pasmanteria</a>
+                                   
+                                </li>
+
+                                <li>
+                                    
+                                    <a href="contact.html">Kontakt</a>
+                                </li>
+                            </ul>-->
+                    <?php 
+                    echo $this->partial('menu_main_tree.phtml', 'menu', array('tree' => $this->tree, 'parent' => $this->menuItem, 'language' => $this->language)) ?>
+                        </nav><!-- #nav end -->
+                        
+                        <!-- responsive navigation start -->
+                        <select id="nav-responsive">
+                             <?php echo $this->partial('menu_main_tree_responsive.phtml', 'menu', array('tree' => $this->tree, 'parent' => $this->menuItem, 'language' => $this->language)) ?>
+                           
+                        </select><!-- responsive navigation end -->
+
+                 <!--       <section id="search-box">
+                            <form action="#" method="get">
+                                <input id="m_search" name="s" type="text" placeholder="Type and hit enter..." />
+                                <input class="search-submit" type="submit" />
+                            </form>
+                        </section>-->
+                    </section><!-- .grid_12 end -->
+                </section><!-- .container_12 end -->
+
+            </section><!-- #nav-container end -->
+
+
+

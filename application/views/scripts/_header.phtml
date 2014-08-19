@@ -1,0 +1,122 @@
+<?php echo $this->google_analytics; ?>
+
+<!-- BEGIN HEADER -->
+    <div class="header">
+        <div class="headerAddress">
+           <div itemscope itemtype="http://schema.org/FurnitureStore">
+               <div class="addressData">
+                      <span itemprop="name"><?php echo $this->company_name; ?></span>
+                      <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                        <span itemprop="streetAddress"><?php echo $this->company_address; ?></span>,
+                        <span itemprop="postalCode"><?php echo $this->company_postal_code; ?></span>
+                        <span itemprop="addressLocality"><?php echo $this->company_city; ?></span>
+                      </div>
+               
+              | 
+              <div class="contactPoint" itemprop="ContactPoint" itemscope itemtype="http://schema.org/ContactPoint">
+                  <a class="company_mail" href="mailto:<?php echo $this->contact_email; ?>"><span itemprop="email"><?php echo $this->contact_email; ?></span></a>
+                  
+                  
+              </div>
+              </div>
+              <div class="company_phone" itemprop="ContactPoint" itemscope itemtype="http://schema.org/ContactPoint">
+                  <img src="/img/_phone.png" />
+                        <span itemprop="telephone"><?php echo $this->company_phone; ?></span>
+                
+              </div>
+            </div>
+
+      </div>
+      <div class="container">
+          <img id="dodusmaszynypl" src="/img/dodusmaszyny_pl.jpg" />
+          <div class='bladeWrapper'>
+              <div class='blade'></div>
+          
+              <a href="/"><img src="/img/_log1.png" alt='<?php echo $this->company_name; ?> logo' class='mainLogo frontLogo'>
+                  <img src="/img/LOGO_stat.png" alt='<?php echo $this->company_name; ?> logo' class='mainLogo responsiveLogo'></a>
+              
+              
+          </div>
+          <div class='topWrapper'>
+        <a href="javascript:void(0);" class="mobi-toggler"><i class="fa fa-bars"></i></a>
+        <!-- BEGIN NAVIGATION -->
+        
+        <div class="custom-col-md-6 pull-right">
+            <ul class="social-footer list-unstyled list-inline pull-right">
+              <?php if(strlen($this->facebook_url)): ?>
+                  <li><a href="<?php echo $this->facebook_url; ?>"><img src="/img/_fb.png" /></a></li>
+              <?php endif; ?>
+              
+              <a href="//plus.google.com/u/0/117325910062100233646?prsrc=3"
+                   rel="publisher" target="_top" style="text-decoration:none;display:inline-block;color:#333;text-align:center; font:13px/16px arial,sans-serif;white-space:nowrap;">
+                <img src="//ssl.gstatic.com/images/icons/gplus-32.png" alt="Google+" style="border:0;width:32px;height:32px;"/>
+                </a>
+              <?php if(strlen($this->pin_url)): ?>
+                  <li><a href="<?php echo $this->pin_url; ?>"><img src="/img/_pi.png" /></a></li>
+              <?php endif; ?>
+              <?php if(strlen($this->googleplus_url)): ?>
+                  <li><a href="<?php echo $this->googleplus_url; ?>"><img src="/img/_rss.png" /></a></li>
+              <?php endif; ?>
+            </ul>  
+            <div class="clear"></div>
+             <fieldset class="searchFieldset">
+                 <form action="/search" method="GET">
+                    <button type="submit" id="searchsubmit"><img id="searchIcon" src="/img/_search.png"></button>
+                    <input type="text" value="" name="query" id="s" placeholder="wpisz nazwę, rodzaj lub numer szukanej maszyny">
+                 </form>
+            </fieldset>
+             <div class="navigation header-navigation pull-right font-transform-inherit">
+                <?php echo $this->action('main-menu','index','menu'); ?>
+            </div>
+          </div>
+        
+       
+        </div>
+          <div class="clear"></div>
+          </div>
+        <!--<a class="site-logo" href="/"></a>-->
+        
+        
+      </div>
+<div class='clear'></div>
+    <!-- Header END -->
+    
+    
+    <script>
+        $(document).ready(function(){
+            if(window.innerWidth > 1023){
+           $('.drop-menu').click(function(){
+               var item = $(this).next('.subItem');
+               if(item.css('display')=="none"){
+                   item.css('display','block');
+               }
+               else{
+                   item.css('display','none');
+               }
+              
+              return false;
+           });
+           
+           $('.navigation a').removeClass('active');
+           $('.navigation a').each(function(){
+               if($.trim($(this).attr('href')) == $.trim($(location).attr('href'))){
+                   $(this).addClass('active');
+               }
+           });
+          
+            }
+            else{
+                $('#categoryResponsiveBtn').click(function(){
+                    var sidebar = $('.sidebarWrapper');
+                    if(sidebar.css('display')=="block"){
+                        sidebar.css('display','none');
+                    }
+                    else{
+                        sidebar.css('display','block');
+                    }
+                })
+            }
+        });
+        
+        
+    </script>

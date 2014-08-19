@@ -1,0 +1,60 @@
+<?php if(isset($this->tree)):
+    echo "ta ksdlakdla";
+    ?>
+<ul class="menu">
+    <li class="first"><?php echo $this->translate('All about ajurweda') ?></li>
+<?php elseif(isset($this->subtree)): ?>
+<?php if($this->parent['PhotoRoot']['offset']): ?>
+    <ul style="background: url('../media/photos/<?php echo $this->parent['PhotoRoot']['offset'] ?>/446x306/<?php echo $this->parent['PhotoRoot']['filename'] ?>') no-repeat bottom #FFFFEB;">
+<?php else: ?>
+<ul style="background: #FFFFEB;">
+<?php endif; ?>
+<header><?php echo $this->parent->Translation[$this->language]->title; ?></header>
+<?php endif; ?>
+    <?php if(isset($this->tree)): ?>
+        <?php foreach($this->tree as $item): ?>
+        <?php if($item['level'] == 1 && $item->Translation[$this->language]->title): ?>
+        <li>
+            <?php if($item['target_type'] && count($item['Articles']) > 0): ?>
+                <?php if(count($item['Articles']) < 2 && $item->Translation[$this->language]->slug): ?>
+                    <a href="<?php echo $this->url(array('slug' => $item->Translation[$this->language]->slug), 'domain-i18n:article-page') ?>"><?php echo $item->Translation[$this->language]->title; ?></a>
+                <?php else: ?>
+                        <a href="<?php echo $this->url(array('slug' => $item->Translation[$this->language]->slug), 'domain-i18n:article-list') ?>"><?php echo $item->Translation[$this->language]->title; ?></a>
+                <?php endif; ?>
+            <?php else: ?>
+                <a href="javascript:void(0)"><?php echo $item->Translation[$this->language]->title; ?></a>
+            <?php endif; ?>
+            <?php if($item->getNode()->getChildren()): ?>
+            <?php echo $this->partial('menu-main-tree.phtml', 'default', array('subtree' => $item->getNode()->getChildren(), 'parent' => $item, 'language' => $this->language)) ?>
+            <?php endif; ?>
+        </li>
+        <?php endif;?>
+        <?php endforeach; ?>
+    <?php elseif(isset($this->subtree)): ?>
+        <?php foreach($this->subtree as $item): ?>
+            <?php if($item->Translation[$this->language]->title): ?>
+            <li>
+                <?php if($item['target_type'] && count($item['Articles']) > 0): ?>
+                    <?php if(count($item['Articles']) < 2 && $item->Translation[$this->language]->slug): ?>
+                        <a href="<?php echo $this->url(array('slug' => $item->Translation[$this->language]->slug), 'domain-i18n:article-page') ?>"><?php echo $item->Translation[$this->language]->title; ?></a>
+                    <?php else: ?>
+                        <a href="<?php echo $this->url(array('slug' => $item->Translation[$this->language]->slug), 'domain-i18n:article-list') ?>"><?php echo $item->Translation[$this->language]->title; ?></a>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <a href="javascript:void(0)"><?php echo $item->Translation[$this->language]->title; ?></a>
+                <?php endif; ?>
+                <?php if($item->getNode()->getChildren()): ?>
+                <?php echo $this->partial('menu-main-tree.phtml', 'default', array('subtree' => $item->getNode()->getChildren(), 'parent' => $item, 'language' => $this->language)) ?>
+                <?php elseif($item->Translation[$this->language]->slug=="kategorie"):
+                    echo "to tutaj";
+                    echo $this->partial('category-main-tree.phtml', 'default', array('subtree' => $item->getNode()->getChildren(), 'parent' => $item, 'language' => $this->language));
+                    else:
+                        echo $item->Translation[$this->language]->slug;
+                    endif; ?>
+            </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        
+    <?php endif; ?>
+<li><div style="height: 10px;"></div></li>
+</ul>
