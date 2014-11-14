@@ -7,14 +7,16 @@
  * 
  * @package    Admi
  * @subpackage Slider
- * @author     Michał Folga <michalfolga@gmail.com>
+ * @author     Andrzej Wilczyński <and.wilczynski@gmail.com>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 class Slider_Model_Doctrine_Slide extends Slider_Model_Doctrine_BaseSlide
 {
     public static $slidePhotoDimensions = array(
         '126x126' => 'Admin slide list',
-        '960x180' => 'Main photo'
+        '516x368' => 'First slide',
+        '247x368' => 'Second slide',
+        '406x180' => 'Third and fourth slide'
     );
     
     public static function getSlidePhotoDimensions() {
@@ -56,6 +58,11 @@ class Slider_Model_Doctrine_Slide extends Slider_Model_Doctrine_BaseSlide
         parent::setUp();
         $this->hasOne('Media_Model_Doctrine_Photo as PhotoRoot', array(
             'local' => 'photo_root_id',
+            'foreign' => 'id'
+        ));
+        
+        $this->hasOne('News_Model_Doctrine_News as News', array(
+            'local' => 'news_id',
             'foreign' => 'id'
         ));
     }

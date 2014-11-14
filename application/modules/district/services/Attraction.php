@@ -36,7 +36,6 @@ class District_Service_Attraction extends MF_Service_ServiceAbstract{
     
     public function getFullAttraction($id, $field = 'id', $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
         $q = $this->attractionTable->getPublishAttractionQuery();
-        $q = $this->attractionTable->getPhotoQuery($q);
         if(in_array($field, array('id'))) {
             $q->andWhere('a.' . $field . ' = ?', array($id));
         } elseif(in_array($field, array('slug'))) {
@@ -46,12 +45,10 @@ class District_Service_Attraction extends MF_Service_ServiceAbstract{
         return $q->fetchOne(array(), $hydrationMode);
     }
    
-    
-    public function getNew($limit, $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
+     public function getAllAttractions($hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
         $q = $this->attractionTable->getPublishAttractionQuery();
-        $q = $this->attractionTable->getPhotoQuery($q);
-        $q = $this->attractionTable->getLimitQuery($limit, $q);
-        $q->orderBy('a.created_at DESC');
+        $q->addOrderBy('a.publish_date DESC');
+        
         return $q->execute(array(), $hydrationMode);
     }
 
@@ -87,6 +84,9 @@ class District_Service_Attraction extends MF_Service_ServiceAbstract{
             }
         }
         
+        if($attraction->gallery):
+            $form->removeElement('gallery');
+        endif;
         return $form;
     }
     

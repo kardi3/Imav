@@ -1,6 +1,7 @@
-<?php foreach($this->photos as $photo): ?>
+<?php
+$photo = $this->root; ?>
 <li class="pull-left">
-    <?php if($photo->getOffset()): ?>
+    <?php if(is_object($photo)&&$photo->getOffset()): ?>
     <a id="main_photo" href="/media/photos/<?php echo $photo->getOffset() ?>/<?php echo $photo->getFilename() ?>" rel="prettyPhoto" title="<?php echo $photo->getTitle() ?>">
         <img src="/media/photos/<?php echo $photo->getOffset() ?>/126x126/<?php echo $photo->getFilename() ?>" data-original="/media/photos/<?php echo $photo->getOffset() ?>/<?php echo $photo->getFilename() ?>" alt="<?php echo $photo->getTitle() ?>">
     </a>
@@ -9,9 +10,13 @@
         <img src="/images/gallery/preload.png" data-original="/images/gallery/thumbnails/1.jpg" alt="<?php echo $this->translate('No photo') ?>">
     </a>
     <?php endif; ?>
-    <div class="actionBtn">
+     <div class="actionBtn">
+        <a href="<?php echo $this->adminUrl('edit-gallery-photo', 'gallery', array('gallery-id' => $this->gallery->getId(), 'id' => $this->gallery->get('PhotoRoot')->getId())) ?>" class="edit"><span class="icon16 icomoon-icon-pencil-2 white"></span></a>
         <a href="#" class="add"><span class="icon16 iconic-icon-cursor white"></span></a>
         <a href="#" class="delete"><span class="icon16 icomoon-icon-cancel-4 white"></span></a>
     </div>
-</li>
-<?php endforeach; ?>
+
+
+
+    
+    </li>

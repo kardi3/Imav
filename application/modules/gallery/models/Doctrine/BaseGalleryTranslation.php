@@ -7,9 +7,9 @@
  * 
  * @property integer $id
  * @property string $lang
- * @property string $name
+ * @property string $title
  * @property string $slug
- * @property clob $description
+ * @property clob $content
  * @property Gallery_Model_Doctrine_Gallery $Gallery
  * 
  * @package    Admi
@@ -33,7 +33,7 @@ abstract class Gallery_Model_Doctrine_BaseGalleryTranslation extends Doctrine_Re
              'type' => 'string',
              'length' => '64',
              ));
-        $this->hasColumn('name', 'string', 255, array(
+        $this->hasColumn('title', 'string', 255, array(
              'type' => 'string',
              'length' => '255',
              ));
@@ -41,7 +41,7 @@ abstract class Gallery_Model_Doctrine_BaseGalleryTranslation extends Doctrine_Re
              'type' => 'string',
              'length' => '255',
              ));
-        $this->hasColumn('description', 'clob', null, array(
+        $this->hasColumn('content', 'clob', null, array(
              'type' => 'clob',
              ));
 

@@ -221,7 +221,11 @@ class User_AdminController extends MF_Controller_Action
     }
     
     public function listAdminAction() {
-        
+          $serviceBroker = MF_Service_ServiceBroker::getInstance();
+                   $user = $serviceBroker->getService('User_Service_Auth')->getAuthenticatedUser();
+                   if($user->role=="redaktor"): 
+                       echo "Odkryto próbe włamania. Właściciel serwisu został już o tym poinformowany";
+                   endif;
     }
     
     public function listAdminDataAction() {
@@ -241,6 +245,12 @@ class User_AdminController extends MF_Controller_Action
             $row = array();
             $row['DT_RowId'] = $result->id;
             $row[] = $result['first_name'] . ' ' . $result['last_name'];
+            $row[] = $result['role'];
+            $roles = "";
+            foreach($result['Roles'] as $role):
+                $roles .= $role['name']."<br />";
+            endforeach;
+            $row[] = $roles;
             $row[] = $result['email'];
             $row[] = MF_Text::timeFormat($result['created_at'], 'H:i m/d/Y');
             $options = '<a href="' . $this->view->adminUrl('edit-admin', 'user', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;';
@@ -268,8 +278,11 @@ class User_AdminController extends MF_Controller_Action
         $options = $this->getInvokeArg('bootstrap')->getOptions();
         
         $form = new User_Form_User();
-        $form->removeElement('role');
+     //   $form->removeElement('role');
 
+        
+        $form->getElement('roles')->addMultiOptions($userService->prependRoleValues());
+        
         if($this->getRequest()->isPost()) {
             if($form->isValid($this->getRequest()->getParams())) {
                 try {
@@ -284,7 +297,6 @@ class User_AdminController extends MF_Controller_Action
                         $passwordEncoder = new User_PasswordEncoder();
                         $values['salt'] = MF_Text::createUniqueToken();
                         $values['token'] = MF_Text::createUniqueToken();
-                        $values['role'] = 'admin';
                         
                         $user = $userService->saveAdminFromArray($values);
 
@@ -301,9 +313,9 @@ class User_AdminController extends MF_Controller_Action
                         }
                         
                         $mail = new Zend_Mail('UTF-8');
-                        $mail->setSubject($translator->translate('Założenie konta administratora w portalu ajurweda.pl'));
+                        $mail->setSubject($translator->translate('Założenie konta administratora w portalu imav.tv'));
                         $mail->addTo($user->getEmail(), $user->getFirstName() . ' ' . $user->getLastName());
-                        $mail->setReplyTo($options['reply_email'], 'System logowania ajurweda.pl');
+                        $mail->setReplyTo($options['reply_email'], 'System logowania imav.tv');
                         
                         $userService->sendAdminAddMail($user, $mail, $this->view);
                     }
@@ -339,8 +351,11 @@ class User_AdminController extends MF_Controller_Action
         }
         
         $form = $userService->getUserForm($user); //new User_Form_User();
-        $form->removeElement('role');
+//        $form->removeElement('role');
 
+        
+        $form->getElement('roles')->addMultiOptions($userService->prependRoleValues());
+        
         if($this->getRequest()->isPost()) {
             if($form->isValid($this->getRequest()->getParams())) {
                 try {

@@ -3,7 +3,7 @@
 /**
  * Bootstrap
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Michał Folga <michalfolga@gmail.com>
  */
 class Newsletter_Bootstrap extends Zend_Application_Module_Bootstrap {
     

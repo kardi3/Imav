@@ -134,11 +134,7 @@ class Product_Service_Category extends MF_Service_ServiceAbstract {
         
         $category->save();
         
-        if(isset($values['parent_id'])) {
-            $parent = $this->getCategory((int) $values['parent_id']);
-            $category->getNode()->insertAsLastChildOf($parent);
-        }
-        
+       
         return $category;
     }
     
@@ -198,9 +194,7 @@ class Product_Service_Category extends MF_Service_ServiceAbstract {
             $result[''] = ' ';
         }
         foreach($items as $item) {
-            if ($item->level > 0):
-                $result[$item->getId()] = $item->Translation[$this->language]->name;
-            endif;
+                $result[$item->getId()] = $item->Translation[$language]->name;
         }
         return $result;
     } 

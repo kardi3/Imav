@@ -14,6 +14,12 @@ class News_Form_News extends Admin_Form {
         $id = $this->createElement('hidden', 'id');
         $id->setDecorators(array('ViewHelper'));
         
+        $student = $this->createElement('hidden', 'student');
+        $student->setDecorators(array('ViewHelper'));
+        
+        $student_active = $this->createElement('hidden', 'student_active');
+        $student_active->setDecorators(array('ViewHelper'));
+        
         $categoryId = $this->createElement('select', 'category_id');
         $categoryId->setLabel('Category');
         $categoryId->setDecorators(self::$selectDecorators);
@@ -84,6 +90,8 @@ class News_Form_News extends Admin_Form {
             $publish,
             $publishDate,
             $servicesDisplay,
+            $student,
+            $student_active,
             $submit
         ));
     }

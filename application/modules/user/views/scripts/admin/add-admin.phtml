@@ -1,3 +1,17 @@
+<script>
+    $(document).ready(function(){
+        $('#roles').select2();
+               $('.roles').hide(); 
+        $('[name="role"]').click(function(){
+           
+           if($(this).val()=="redaktor")
+               $('.roles').show(); 
+           else{
+               $('.roles').hide(); 
+           }
+        });
+    });
+</script>
 <div class="row-fluid">
 
     <div class="box">
@@ -29,6 +43,12 @@
                 ?>
                 <?php echo $this->form->first_name ?>
                 <?php echo $this->form->last_name ?>
+                <div class="roleRadio">
+                    <?php echo $this->form->role ?>
+                </div>
+                <div class="roles">
+                <?php echo $this->form->roles->setAttrib('class','nostyle') ?>
+                </div>
                 <?php echo $this->form->email ?>
                     
                 <div class="form-actions">

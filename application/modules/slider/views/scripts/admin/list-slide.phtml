@@ -2,11 +2,11 @@
 $(document).ready(function() {
     $("#add_slide").click(function(e) {
         e.preventDefault();
-        $("#explorer-content").show();
+        
         var elf = $('#elfinder').elfinder({
             url : '/admin/media/elfinder',  // connector URL (REQUIRED)
             getFileCallback : function(href) {
-                var data = { hrefs: href, slider: "main" };
+                var data = { hrefs: href, slider: "<?php echo $this->slider->getId() ?>", format: "json" };
                 $.ajax({
                     type: "post",
                     dataType: "json",
@@ -43,8 +43,94 @@ $(document).ready(function() {
         $('#explorer').dialog('open');
     });
     
+    $("#itemContainer").delegate(".add", "click", function(e) {
+        e.preventDefault();
+        var linkHref = $(this).attr("href");
+
+        var elf = $('#elfinder').elfinder({
+            url : '/admin/media/elfinder',  // connector URL (REQUIRED)
+            getFileCallback : function(href) {
+                var data = { hrefs: href, slider: "<?php echo $this->slider->getId() ?>", format: "json" };
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: "<?php echo $this->adminUrl('add-slide-photo', 'slider') ?>",
+                    data: data,
+                    success: function(resp) {
+                        if(resp.status == "success") {
+                            $("#slide_container").html(resp.body);
+                            $("#itemContainer").trigger("update");
+                        }
+                    }
+                });
+
+                $('#explorer').dialog('close');
+            },
+            commandsOptions : {
+                // configure value for "getFileCallback" used for editor integration
+                getfile : {
+                    // allow to return folders info
+                    onlyURL  : true,
+
+                    // allow to return multiple files info
+//                    multiple : true,
+
+                    // allow to return folders info
+                    folders  : false,
+
+                    // action after callback (close/destroy)
+                    oncomplete : ''
+                },
+            }
+        }).elfinder('instance');	
+        
+        $('#explorer').dialog('open');
+    });
     
-    
+    $("#itemContainer").delegate(".edit-photo", "click", function(e) {
+        e.preventDefault();
+        var linkHref = $(this).attr("href");
+        var slideId = $(this).attr("id");
+
+        var elf = $('#elfinder2').elfinder({
+            url : '/admin/media/elfinder',  // connector URL (REQUIRED)
+            getFileCallback : function(href) {
+                var data = { hrefs: href, slider: "<?php echo $this->slider->getId() ?>", slide: slideId, format: "json" };
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: "<?php echo $this->adminUrl('edit-slide-photo', 'slider') ?>",
+                    data: data,
+                    success: function(resp) {
+                        if(resp.status == "success") {
+                            $("#slide_container").html(resp.body);
+                            $("#itemContainer").trigger("update");
+                        }
+                    }
+                });
+
+                $('#explorer2').dialog('close');
+            },
+            commandsOptions : {
+                // configure value for "getFileCallback" used for editor integration
+                getfile : {
+                    // allow to return folders info
+                    onlyURL  : true,
+
+                    // allow to return multiple files info
+//                    multiple : true,
+
+                    // allow to return folders info
+                    folders  : false,
+
+                    // action after callback (close/destroy)
+                    oncomplete : ''
+                },
+            }
+        }).elfinder('instance');	
+        
+        $('#explorer2').dialog('open');
+    });
     
     $("#itemContainer").delegate(".move", "click", function(e) {
         e.preventDefault();
@@ -79,6 +165,12 @@ $(document).ready(function() {
     });
     
     $('#explorer').dialog({
+		autoOpen: false,
+		modal: true,
+		dialogClass: 'dialog',
+	});
+        
+    $('#explorer2').dialog({
 		autoOpen: false,
 		modal: true,
 		dialogClass: 'dialog',
@@ -119,7 +211,7 @@ $(document).ready(function() {
 
                 <h4>
                     <span class="icon16 icomoon-icon-pencil-2"></span>
-                    <span><?php echo $this->translate('Slides') ?> wymiary <?php echo $this->photoDimension; ?></span>
+                    <span><?php echo $this->translate('Slides') ?></span>
                     <div class="box-form right">
                         <a href="#" id="add_slide" class="btn btn-success btn-mini"><?php echo $this->translate('Add new') ?></a>
                     </div>
@@ -154,4 +246,5 @@ $(document).ready(function() {
 </div>
 
 <div id="explorer" class="dialog"><div id="elfinder"></div></div>
+<div id="explorer2" class="dialog"><div id="elfinder2"></div></div>
     

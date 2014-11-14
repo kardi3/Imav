@@ -3,7 +3,7 @@
 /**
  * Slider_Service_Slider
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Michał Folga <and.wilczynski@gmail.com>
  */
 class Slider_Service_Slider extends MF_Service_ServiceAbstract {
     
@@ -23,10 +23,30 @@ class Slider_Service_Slider extends MF_Service_ServiceAbstract {
         return $this->slideTable->findOneBy($field, $id, $hydrationMode);
     }
     
-    public function getAll($hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
+    public function getAll($hydrationMode = Doctrine_Core::HYDRATE_ARRAY) {
         $q = $this->sliderTable->getFullSliderQuery();
+        $q->andWhere('sl.level > ?', 0);
+        //$q->andWhere('l.level > ?', array(0));
         $q->orderBy('sl.lft');
         return $q->execute(array(), $hydrationMode);
+    }
+    
+    public function getAllForSlider($slugSlider, $hydrationMode = Doctrine_Core::HYDRATE_ARRAY) {
+        $q = $this->sliderTable->getFullSliderQuery();
+        $q->andWhere('s.slug = ?', $slugSlider);
+        $q->andWhere('sl.level > ?', 0);
+        //$q->andWhere('l.level > ?', array(0));
+        $q->orderBy('sl.lft');
+        return $q->execute(array(), $hydrationMode);
+    }
+    
+    public function getAllSlidesForSlider($sliderId, $hydrationMode = Doctrine_Core::HYDRATE_ARRAY) {
+//        $tree = $this->slideTable->getTree();
+//        $q = $this->slideTable->getTree()->getBaseQuery();
+//        $q->andWhere('base.level > ?', 0);
+//        $tree->setBaseQuery($q);
+//        $slides = $tree->fetchTree(array('root_id' => 1));
+//        var_dump("test"); exit;
     }
     
     public function getSlideTree() {
@@ -45,9 +65,15 @@ class Slider_Service_Slider extends MF_Service_ServiceAbstract {
     }
     
     public function getSlideForm(Slider_Model_Doctrine_Slide $slide = null) {
-        $form = new Slider_Form_Slide();
+        $form = new Slider_Form_SliderSlide();
         if(null != $slide) {
             $form->populate($slide->toArray());
+            $language='pl';
+             $i18nSubform = $form->translations->getSubForm($language);
+                if($i18nSubform) {
+                    $i18nSubform->getElement('title')->setValue($slide->Translation[$language]->title);
+                    $i18nSubform->getElement('content')->setValue($slide->Translation[$language]->content);
+                }
         }
         return $form;
     }
@@ -74,11 +100,17 @@ class Slider_Service_Slider extends MF_Service_ServiceAbstract {
                 $values[$key] = NULL;
             }
         }
+
         if(!$slide = $this->slideTable->getProxy($values['id'])) {
             $slide = $this->slideTable->getRecord();
         }
         
         $slide->fromArray($values);
+        $language = 'pl';
+        $slide->Translation[$language]->title = $values['translations'][$language]['title'];
+        $slide->Translation[$language]->slug = MF_Text::createUniqueTableSlug('Slider_Model_Doctrine_SlideTranslation', $values['translations'][$language]['title'], $slide->getId());
+        $slide->Translation[$language]->content = $values['translations'][$language]['content'];
+        
         $slide->save();
 
         return $slide;
@@ -97,5 +129,29 @@ class Slider_Service_Slider extends MF_Service_ServiceAbstract {
             }
         }
     }
+    
+    public function getTargetTransitionsSelectOptions() {
+        $result = array(
+            'boxslide' => 'boxslide',
+            'boxfade' => 'boxfade',
+            'slotzoom-horizontal' => 'slotzoom-horizontal',
+            'slotslide-horizontal' => 'slotslide-horizontal',
+            'slotfade-horizontal' => 'slotfade-horizontal',
+            'slotzoom-vertical' => 'slotzoom-vertical',
+            'slotslide-vertical' => 'slotslide-vertical',
+            'slotfade-vertical' => 'slotfade-vertical',
+            'curtain-1' => 'curtain-1',
+            'curtain-2' => 'curtain-2',
+            'curtain-3' => 'curtain-3',
+            'slideleft' => 'slideleft',
+            'slideright' => 'slideright',
+            'slideup' => 'slideup',
+            'slidedown' => 'slidedown',
+            'fade' => 'fade',
+            'random' => 'random'
+        );
+        return $result;
+    }
+    
 }
 

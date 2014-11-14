@@ -17,6 +17,7 @@ class Product_Model_Doctrine_CategoryTable extends Doctrine_Table
         return Doctrine_Core::getTable('Product_Model_Doctrine_Category');
     }
     
+    
     public function getCategoryQuery() {
         $q = $this->createQuery('cat');
         $q->addSelect('cat.*');
@@ -33,6 +34,4 @@ class Product_Model_Doctrine_CategoryTable extends Doctrine_Table
         $q->andWhere('cat.level = ?', 1);
         return $q;
     }
-    
-    
 }

@@ -26,6 +26,9 @@ Attraction:
       type: string(255)
     content:
       type: clob
+    gallery:
+      type: boolean
+      default: 0
     publish:
       type: boolean
       default: 1

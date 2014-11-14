@@ -11,8 +11,7 @@
  * @property string $slug
  * @property clob $description
  * @property string $extension
- * @property integer $photo_root_id
- * @property Media_Model_Doctrine_Photo $PhotoRoot
+ * @property integer $ad_id
  * @property Doctrine_Collection $Translation
  * 
  * @package    Admi
@@ -35,11 +34,22 @@ abstract class Media_Model_Doctrine_BaseVideoUrl extends Doctrine_Record
              'type' => 'string',
              'length' => '255',
              ));
+        $this->hasColumn('title', 'string', 255, array(
+             'type' => 'string',
+             'length' => '255',
+             ));
+        $this->hasColumn('slug', 'string', 255, array(
+             'type' => 'string',
+             'length' => '255',
+             ));
+        $this->hasColumn('description', 'clob', null, array(
+             'type' => 'clob',
+             ));
         $this->hasColumn('extension', 'string', 255, array(
              'type' => 'string',
              'length' => '255',
              ));
-        $this->hasColumn('photo_root_id', 'integer', 4, array(
+        $this->hasColumn('ad_id', 'integer', 4, array(
              'type' => 'integer',
              'length' => '4',
              ));
@@ -52,16 +62,25 @@ abstract class Media_Model_Doctrine_BaseVideoUrl extends Doctrine_Record
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('Media_Model_Doctrine_Photo as PhotoRoot', array(
-             'local' => 'photo_root_id',
+        $this->hasMany('Media_Model_Doctrine_VideoUrlTranslation as Translation', array(
+             'local' => 'id',
              'foreign' => 'id'));
 
-       
         $nestedset0 = new Doctrine_Template_NestedSet(array(
              'hasManyRoots' => true,
              'rootColumnName' => 'root_id',
              ));
-        
+        $i18n0 = new Doctrine_Template_I18n(array(
+             'fields' => 
+             array(
+              0 => 'title',
+              1 => 'slug',
+              2 => 'description',
+             ),
+             'tableName' => 'media_video_url_translation',
+             'className' => 'VideoUrlTranslation',
+             ));
         $this->actAs($nestedset0);
+        $this->actAs($i18n0);
     }
 }

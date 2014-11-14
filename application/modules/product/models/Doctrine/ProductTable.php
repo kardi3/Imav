@@ -18,20 +18,16 @@ class Product_Model_Doctrine_ProductTable extends Doctrine_Table
     }
     
     public function getProductQuery() {
-        $q = $this->createQuery('pro');
-        $q->addSelect('pro.*');
-        $q->addSelect('tr.*');
-        $q->addSelect('cat.*');
+        $q = $this->createQuery('p');
+        $q->addSelect('p.*');
+        $q->addSelect('pt.*');
+        $q->addSelect('c.*');
+        $q->addSelect('ct.*');
         $q->addSelect('pr.*');
-//        $q->addSelect('d.*');
-//        $q->addSelect('ctr.*');
-//        $q->addSelect('prod.*');
-        $q->leftJoin('pro.Translation tr');
-        $q->leftJoin('pro.Categories cat');
-        $q->leftJoin('cat.Translation ctr');
-//        $q->leftJoin('pro.Discount d');
-        $q->leftJoin('pro.PhotoRoot pr');
-        $q->leftJoin('pro.Producer prod');
+        $q->leftJoin('p.Translation pt');
+        $q->leftJoin('p.Category c');
+        $q->leftJoin('c.Translation ct');
+        $q->leftJoin('p.PhotoRoot pr');
         return $q;
     }
 
@@ -44,7 +40,7 @@ class Product_Model_Doctrine_ProductTable extends Doctrine_Table
         $q = $this->createQuery('pro');
         $q->addSelect('pro.*');
         $q->addSelect('cat.*');
-        $q->leftJoin('pro.Categories cat');
+        $q->leftJoin('pro.Category cat');
         $q->where('pro.status = ?', array(1));
         return $q;
     }
@@ -54,8 +50,7 @@ class Product_Model_Doctrine_ProductTable extends Doctrine_Table
         $q->addSelect('pro.*');
         $q->addSelect('cat.*');
         $q->addSelect('pr.*');
-        $q->leftJoin('pro.Categories cat');
-        $q->leftJoin('pro.Producer pr');
+        $q->leftJoin('pro.Category cat');
         $q->where('pro.status = ?', array(1));
         $q->groupBy('pro.id');
         $q->andWhere('pr.id = ?', $producerId);

@@ -1,8 +1,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
    
-    $('#category_id').select2();
-    
+   
      $('.section').hide();
      $('.contentSection').show();
      $('.btnList li').click(function(){
@@ -23,7 +22,7 @@ $(document).ready(function() {
 
                 <h4>
                     <span class="icon16 icomoon-icon-pencil"></span>
-                    <span><?php echo $this->translate('Add people') ?></span>
+                    <span><?php echo $this->translate('Add event') ?></span>
                 </h4>
                 
             </div>
@@ -80,12 +79,16 @@ $(document).ready(function() {
                     </span>
                     <span class="section optionsSection">
                         <?php echo $this->form->publish ?>
+                        <?php echo $this->form->gallery ?>
+                        <?php echo $this->form->student ?>
+                        <?php echo $this->form->student_accept ?>
                         <?php echo $this->form->publish_date->setAttrib('class', 'combiner-picker') ?>
+                        
                         <?php echo $this->form->id ?>
                     </span>
                     <div class="form-actions">
                         <?php echo $this->form->submit ?>
-                        <a href="<?php echo $this->adminUrl('list-event', 'district') ?>" class="btn"><?php echo $this->translate('Cancel') ?></a>
+                        <a href="<?php echo $this->adminUrl('list-event', 'event') ?>" class="btn"><?php echo $this->translate('Cancel') ?></a>
                     </div>
                 </form>
                 

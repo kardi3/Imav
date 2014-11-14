@@ -25,11 +25,24 @@ class Banner_Service_Banner extends MF_Service_ServiceAbstract {
        return $q->execute(array(),Doctrine_Core::HYDRATE_RECORD);
    }
    
+   public function getPositionBanners($position,$hydrationMode = Doctrine_Core::HYDRATE_RECORD){
+       $q = $this->bannerTable->createQuery('p');
+       $q->addWhere('p.status = 1');
+       $q->addWhere('p.date_from <= NOW()');
+       $q->addWhere('p.date_to > NOW()');
+       $q->addWhere('p.position = ?',$position);
+       return $q->execute(array(),$hydrationMode);
+   }
+   
     public function getBannerForm(Banner_Model_Doctrine_Banner $banner = null) {
-        $form = new Banner_Form_Banner();
+         $form = new Banner_Form_Banner();
+        
         
         if(null != $banner) {
-            $form->populate($banner->toArray());
+            $bannerArray = $banner->toArray();
+            $bannerArray['date_from'] = MF_Text::timeFormat($bannerArray['date_from'], 'd/m/Y H:i');
+            $bannerArray['date_to'] = MF_Text::timeFormat($bannerArray['date_to'], 'd/m/Y H:i');
+            $form->populate($bannerArray);
             
             $i18nService = MF_Service_ServiceBroker::getInstance()->getService('Default_Service_I18n');
             $languages = $i18nService->getLanguageList();
@@ -55,9 +68,11 @@ class Banner_Service_Banner extends MF_Service_ServiceAbstract {
         
         $i18nService = MF_Service_ServiceBroker::getInstance()->getService('Default_Service_I18n');
         
-        if(strpos($values['website'], 'http://') !== 0) {
+        if(strpos($values['website'], 'http://') !== 0 && strlen($values['website'])>0) {
           $values['website'] = 'http://' . $values['website'];
         }
+        $values['date_from'] = MF_Text::timeFormat($values['date_from'],'Y-m-d H:i:s', 'd/m/Y H:i');
+        $values['date_to'] = MF_Text::timeFormat($values['date_to'],'Y-m-d H:i:s', 'd/m/Y H:i');
         
         $banner->fromArray($values);
         $languages = $i18nService->getLanguageList();
@@ -68,7 +83,6 @@ class Banner_Service_Banner extends MF_Service_ServiceAbstract {
                 $banner->Translation[$language]->description = $values['translations'][$language]['description'];
             }
         }
-        
         $banner->save();
         
         return $banner;

@@ -71,26 +71,25 @@ class Media_Service_VideoUrl extends MF_Service_ServiceAbstract {
           
     public function createVideoFromUpload($values,$parent = null) {
         
-//        $i18nService = MF_Service_ServiceBroker::getInstance()->getService('Default_Service_I18n');
-//        $languages = $i18nService->getLanguageList();
+        $i18nService = MF_Service_ServiceBroker::getInstance()->getService('Default_Service_I18n');
+        $languages = $i18nService->getLanguageList();
         
+        if($parent)
+            $values['id'] = $parent['id'];
         if(!isset($values['id'])||!$video = $this->getVideo($values['id'])){
             $video = $this->videoTable->getRecord();
         }
         $video->fromArray($values);
-//        foreach($languages as $language) {
-//            $video->Translation[$language]->lang = $language;
-//                $video->Translation[$language]->title = $values['translations'][$language]['name'];
-//
-//                $video->Translation[$language]->description = $values['translations'][$language]['description'];
-//        }
+        foreach($languages as $language) {
+            $video->Translation[$language]->lang = $language;
+                $video->Translation[$language]->title = $values['translations'][$language]['name'];
+
+                $video->Translation[$language]->description = $values['translations'][$language]['description'];
+        }
         if(null != $parent) {
             if(is_integer($parent)) {
                 $parent = $this->videoTable->find($parent);
             } 
-            if($parent instanceof Media_Model_Doctrine_VideoUrl) {
-                $video->getNode()->insertAsLastChildOf($parent);
-            }
         } else {
             $tree = $this->videoTable->getTree($video);
         }
@@ -218,5 +217,16 @@ class Media_Service_VideoUrl extends MF_Service_ServiceAbstract {
     public static function createOffset() {
         return hexdec(hash('crc32', date('Y-m')));
     }
+    
+    public function getVideosWithAd($id,$hydrationMode = Doctrine_Core::HYDRATE_RECORD){
+       $q = $this->videoTable->createQuery('v');
+       $q->leftJoin('v.Ad a');
+       $q->addWhere('v.root_id = ?',$id);
+//       $q->addWhere('a.publish = 1');
+//       $q->addWhere('a.date_from <= NOW()');
+//       $q->addWhere('a.date_to > NOW()');
+       $q->addWhere('v.level = 1');
+       return $q->execute(array(),$hydrationMode);
+   }
 }
 

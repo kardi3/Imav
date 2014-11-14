@@ -24,6 +24,8 @@ class News_Service_Category extends MF_Service_ServiceAbstract{
     public function getCategory($id, $field = 'id', $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
         return $this->categoryTable->findOneBy($field, $id, $hydrationMode);
     }
+    
+   
    
     
     public function getCategoryForm(News_Model_Doctrine_Category $category = null) {

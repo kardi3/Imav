@@ -16,6 +16,8 @@ $(document).ready(function() {
             null,
             { sWidth: '200px' },
             { sWidth: '200px' },
+            { sWidth: '200px' },
+            { sWidth: '200px' },
             { "bSortable": false, sWidth: '50px' }
         ]
     });
@@ -49,6 +51,8 @@ $(document).ready(function() {
                 <table id="admin_table" cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" width="100%">
                     <thead>
                         <th><?php echo $this->translate('Name') ?></th>
+                        <th><?php echo $this->translate('Role') ?></th>
+                        <th><?php echo $this->translate('Roles') ?></th>
                         <th><?php echo $this->translate('Email') ?></th>
                         <th><?php echo $this->translate('Registered at') ?></th>
                         <th><?php echo $this->translate('Options') ?></th>

@@ -11,7 +11,7 @@ $(document).ready(function() {
         "bLengthChange": true,
         "sAjaxSource": "<?php echo $this->adminUrl('list-comment-data', 'news') ?>",
         "iDisplayLength": 50,
-        "aaSorting": [[ 0, "desc" ]],
+        "aaSorting": [[ 3, "desc" ]],
         "aoColumns": [
             { sWidth: '200px' },
             
@@ -74,16 +74,15 @@ $(document).ready(function() {
                 <table id="news_table" cellpadding="0" cellspacing="0" border="0" class=" display table table-bordered" width="100%">
                     <thead>
                         <tr>
-                            <th><?php echo $this->translate('News') ?></th>
-                            <th><?php echo $this->translate('Title') ?></th>
-                            <th><?php echo $this->translate('Content') ?></th>
+                            <th>Aktualność</th>
+                            <th>Użytkownik</th>
+                            <th>Komentarz</th>
                             <th><?php echo $this->translate('Created') ?></th>
                             <th><?php echo $this->translate('Ip') ?></th>
                             <th><?php echo $this->translate('Active') ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                         <?php echo $this->result; ?>
                     </tbody>
                 </table>
                 

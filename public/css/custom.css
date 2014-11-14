@@ -1,20 +1,168 @@
-.block_special_topic .title span{
-    float:right;
-    display:block;
-    margin-right:5px;
-    color:#808080;
+.dat-menu-container{
+    background: #828282;
+}
+.cat-wiadomosci{
+    background-color: #ef8722 !important;
+    color: #fff !important;
+}
+.cat-sport{
+    background-color: #ed2d00 !important;
+    color: #fff !important;
+}
+.cat-rozrywka{
+    background-color: #429d4a !important;
+    color: #fff !important;
+}
+.cat-kultura{
+    background-color: #276197 !important;
+    color:#fff !important;
+}
+.cat-reportaze{
+    background-color: #0193DD !important;
+    color:#fff !important;
+}
+.cat-wiadomosci-title{
+    color: #ef8722 !important;
+}
+.cat-sport-title{
+    color: #ed2d00 !important;
+}
+.cat-kultura-title{
+    color: #276197 !important;
+}
+.cat-rozrywka-title{
+    color: #429d4a !important;
+}
+.cat-reportaze-title{
+    color: #0193DD !important;
+}
+.cat-wiadomosci-main-title{
+    border-left:4px solid #ef8722 !important;
+}
+.cat-sport-main-title{
+    border-left:4px solid #ed2d00 !important;
+}
+.cat-kultura-main-title{
+    border-left:4px solid #276197 !important;
+}
+.cat-rozrywka-main-title{
+    border-left:4px solid #429d4a !important;
+}
+.cat-reportaze-main-title{
+    border-left:4px solid #0193DD !important;
+}
+.cat-wiadomosci-box{
+    border:1px solid #ef8722 !important;
+    color:#ef8722 !important;
+}
+.cat-sport-box{
+    border:1px solid #ed2d00 !important;
+    color: #ed2d00 !important;
+}
+.cat-kultura-box{
+    border:1px solid #276197 !important;
+    color: #276197 !important;
+}
+.cat-rozrywka-box{
+    border:1px solid #429d4a !important;
+    color: #429d4a !important;
+}
+.cat-reportaze-box{
+    border:1px solid #0193DD !important;
+    color: #0193DD !important;
 }
 
-.center{
-    text-align:center;
+.cat-wiadomosci-box:hover{
+    background: #ef8722 !important;
+    color:#fff !important;
+}
+.cat-sport-box:hover{
+    background:  #ed2d00 !important;
+    color: #fff !important;
+}
+.cat-kultura-box:hover{
+    background:  #276197 !important;
+    color: #fff !important;
+}
+.cat-rozrywka-box:hover{
+    background: #429d4a !important;
+    color: #fff !important;
+}
+.cat-reportaze-box:hover{
+    background: #0193DD !important;
+    color: #fff !important;
 }
 
-.margin-bottom-5{
-    margin-bottom:5px;
+.first-slide-heading{
+    background-color: #ed2d00;
+    color: #fff;
 }
-.margin-bottom-10{
+.second-slide-heading{
+    background-color: #ffd800; color: #232323;
+}
+.third-slide-heading{
+    background-color: #1985e1; color: #fff;
+}
+.fourth-slide-heading{
+    background-color: #429d4a; color: #fff;
+}
+div.contact-form-captcha{
+    width: 55%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.banner{
+    border-bottom: 1px dotted #ccc;
+    padding-bottom:40px;
     margin-bottom:10px;
 }
-.margin-bottom-15{
-    margin-bottom:15px;
+
+#video{
+    margin-bottom:20px;
+}
+.playBtn{
+    position:absolute;
+    margin: auto;
+    left:0;
+    top:0;
+    bottom:0;
+    right:0;
+    z-index:99;
+}
+
+/* video */
+/*
+.ult_vp_mainContainer.ult_vp_effect1 p{
+    margin:inherit;
+    font-size:9px;
+    color:#fff;
+     width: 100%; 
+    height: 100%; 
+    font-weight: bold;
+    font-size: 9px;
+    padding-left: 3px; 
+    padding-top: 13px; 
+    line-height:normal;
+}*/
+
+.cat-wiadomosci-hr{
+    color: #ef8722; border:none;
+    border-bottom:3px solid #ef8722 !important;
+}
+.cat-sport-hr{
+    color: #ed2d00; border:none;
+    border-bottom:3px solid #ed2d00 !important;
+}
+.cat-kultura-hr{
+    color: #276197; border:none;
+    border-bottom:3px solid #276197 !important;
+}
+.cat-rozrywka-hr{
+    color: #429d4a; border:none;
+    border-bottom:3px solid #429d4a !important;
+}
+.cat-reportaze-hr{
+    color: #0193DD; border:none;
+    border-bottom:3px solid #0193DD !important;
 }

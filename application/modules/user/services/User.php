@@ -8,10 +8,12 @@
 class User_Service_User extends MF_Service_ServiceAbstract {
     
     protected $userTable;
+    protected $userRoleTable;
     protected $userProfileTable;
     
     public function init() {
         $this->userTable = Doctrine_Core::getTable('User_Model_Doctrine_User');
+        $this->userRoleTable = Doctrine_Core::getTable('User_Model_Doctrine_Role');
         $this->userProfileTable = Doctrine_Core::getTable('User_Model_Doctrine_Profile');
         parent::init();
     }
@@ -66,9 +68,24 @@ class User_Service_User extends MF_Service_ServiceAbstract {
             }
         }
         $user->fromArray($values);
+        
+        $user->unlink('Roles');
+        foreach($values['roles'] as $role):
+            $user->link('Roles',$role);
+        endforeach;
         $user->save();
         
         return $user;
+    }
+    
+     public function prependRoleValues() {
+        $roles = $this->userRoleTable->findAll();
+        $result = array();
+        foreach($roles as $role):
+            $result[$role['slug']] = $role['name'];
+        endforeach;
+        
+        return $result;
     }
     
     public function createUserProfile(User_Model_User_Interface $user, $values = null) {

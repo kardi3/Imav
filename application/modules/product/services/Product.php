@@ -8,12 +8,16 @@
 class Product_Service_Product extends MF_Service_ServiceAbstract {
     
     protected $productTable;
-    protected $productRelatedTable;
     
     public function init() {
         $this->productTable = Doctrine_Core::getTable('Product_Model_Doctrine_Product');
-        $this->productRelatedTable = Doctrine_Core::getTable('Product_Model_Doctrine_ProductRelated');
         parent::init();
+    }
+    
+     public function getLastProduct($limit = 4, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
+        $q = $this->productTable->getProductQuery();
+        $q->limit($limit);
+        return $q->execute(array(), $hydrationMode);
     }
     
     public function getRelatedProduct($productId, $relateProductId) {    
@@ -23,114 +27,15 @@ class Product_Service_Product extends MF_Service_ServiceAbstract {
         return $q->fetchOne(array(), Doctrine_Core::HYDRATE_RECORD);
     }
     
-    public function getNewProducts() {    
+    public function getLastCategoryProduct($category_id,$limit = null, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
         $q = $this->productTable->getProductQuery();
-        $q->andWhere('new = 1');
-        $q->addWhere('pro.active = 1');
-        return $q->execute(array(), Doctrine_Core::HYDRATE_RECORD);
-    }
-    
-    public function getSliderProducts() {    
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('slider = 1');
-        $q->addWhere('pro.active = 1');
-        return $q->execute(array(), Doctrine_Core::HYDRATE_RECORD);
-    }
-    
-     public function getProductsToSend() {    
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('newsletter_send = 0');
-        return $q->execute(array(), Doctrine_Core::HYDRATE_RECORD);
-    }
-    
-    public function searchProducts($query) {    
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('pro.id = ? or tr.name like ?',array($query,'%'.$query.'%'));
-        return $q->execute(array(), Doctrine_Core::HYDRATE_RECORD);
-    }
-    
-    public function createEmptyProduct()
-    {
-        $product = $this->productTable->getRecord();
-        $product->fromArray(array('price' => 0));
-        $product->save();
-        return $product;
-    }
-    public function saveRelatedProductsFromArray($product, $values) {
-        foreach($values as $key => $value) {
-            if(!is_array($value) && strlen($value) == 0) {
-                $values[$key] = NULL;
-            }
-        }
-        
-        $oldRelatedProducts = $product->get("RelatedProducts")->toArray();
-        
-        $product->unlink('RelatedProducts');
-        $product->link('RelatedProducts', $values['product_id']);
-        $product->save();
-        
-        $newRelatedProducts = $product->get("RelatedProducts")->toArray();
-        foreach($newRelatedProducts as $newRelatedProduct):
-            foreach($oldRelatedProducts as $oldRelatedProduct):
-                if($newRelatedProduct['id'] == $oldRelatedProduct['id']):
-                    $related = $this->getRelatedProduct($product->getId(), $newRelatedProduct['id']);
-                    $related->setCounter($oldRelatedProduct['Product_Model_Doctrine_ProductRelated'][0]['counter']);
-                    $related->save();
-                endif;
-            endforeach;
-        endforeach;
-    }
-    
-    
-    public function saveRelates($product){
-        $relatedProducts = $product->get("RelatedProducts")->toArray();
-        foreach ($relatedProducts as $relatedProduct):
-            if($relatedProduct['id'] == 15):
-                $related = $this->getRelatedProduct($product->getId(), $relatedProduct['id']);
-                $counter = $related->getCounter();
-                $counter++;
-                $related->setCounter($counter);
-                $related->save();
-            endif;
-        endforeach;
-        $product->link('RelatedProducts', 15);
-        $product->save();
-    }
-    
-    
-    public function getRelatedProducts($relatedProductsIds){
-        $q = $this->productTable->getProductQuery();
-        $q->where('pro.id IN ?', array($relatedProductsIds));
-        if(is_array($relatedProductsIds)):
-            $q->addOrderBy('FIELD(pro.id, '.implode(', ', $relatedProductsIds).')');
-        endif; 
-        return $q->execute(array(), Doctrine_Core::HYDRATE_ARRAY);  
-    }
-    
-    public function getRelatedProductsIds($productId, $limit, $language, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
-        $q = $this->productRelatedTable->getRelatedProductQuery();
-        $q->andWhere('rp.product_id = ?', $productId);
-        $q->addOrderBy('rp.counter DESC');
-        $q->limit($limit);
+        $q->addWhere('p.category_id = ?',$category_id);
+        $q->orderBy('p.created_at DESC');
+        if($limit!=null)
+            $q->limit($limit);
         return $q->execute(array(), $hydrationMode);
     }
-    
-    
-    public function getRelateForm(Product_Model_Doctrine_Product $product = null) {
-        $form = new Product_Form_Relate();
-        if(null != $product) { 
-            $form->populate($product->toArray());
-        }
-        return $form;
-    }
-    
-    public function getChooseDimensionForm($dimensions = null){
-        $form = new Product_Form_ChooseDimension();
-        if($dimensions){
-            $form->addDimensions($dimensions);
-        }
-        return $form;
-    }
+  
     
     public function getTargetProductSelectOptionsToRelate($productId, $prependEmptyValue = false, $language = null) {
         $q = $this->productTable->getProductQuery();
@@ -164,7 +69,7 @@ class Product_Service_Product extends MF_Service_ServiceAbstract {
         $q = $this->productTable->getProductQuery();
         
 //        $q->andWhere('pro.' . $field . ' = ?', $id);
-        $q->andWhere('tr.' .$field.' = ?', $id);
+        $q->andWhere('pt.' .$field.' = ?', $id);
         return $q->fetchOne(array(), $hydrationMode);
     }
     
@@ -195,10 +100,6 @@ class Product_Service_Product extends MF_Service_ServiceAbstract {
         if(null != $product) {
             
             $productArray = $product->toArray();
-            
-            foreach($product['Categories'] as $category):
-                $productArray['category_id'][] = $category->id;
-            endforeach;
             
             $form->populate($productArray);
                  
@@ -269,9 +170,8 @@ class Product_Service_Product extends MF_Service_ServiceAbstract {
     }
     
     public function removeProduct(Product_Model_Doctrine_Product $product) {
-        $product->unlink('Categories');
+        $product->unlink('Category');
         $product->get('Translation')->delete();
-//        $product->get('DimensionPrices')->delete();
         $product->save();
         $product->delete();
     }
@@ -280,23 +180,7 @@ class Product_Service_Product extends MF_Service_ServiceAbstract {
         $q = $this->productTable->getProductQuery();
         return $q->execute(array(), $hydrationMode);
     }
-    public function getAllProductsGroupCollection($hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        $q = $this->productTable->getProductQuery();
-        $q->groupBy('col.id');
-        return $q->execute(array(), $hydrationMode);
-    }
-     public function getAllProductsGroupCollectionPromoted($hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        $q = $this->productTable->getProductQuery();
-        $q->where('col.promoted = 1');
-        $q->groupBy('col.id');
-        return $q->execute(array(), $hydrationMode);
-    }
-    public function getCollectionProducts($id_collection,$limit=1500,$hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        $q = $this->productTable->getProductQuery();
-        $q->where('col.id = ?',$id_collection);
-        $q->limit('limit ?',$limit);
-        return $q->execute(array(), $hydrationMode);
-    }
+  
     public function getTargetProductSelectOptions($prependEmptyValue = false, $language = null) {
         $items = $this->getAllProducts();
         $result = array();
@@ -319,100 +203,6 @@ class Product_Service_Product extends MF_Service_ServiceAbstract {
         return $result;
     }
     
-//    public function getUnSelectedDiscountSelectOptions($discountId, $language = null) {
-//        $q = $this->productTable->getProductQuery();
-//        $q->andWhere('pro.discount_id != ? OR pro.discount_id IS NULL', $discountId);
-//        $items = $q->execute(array(), $hydrationMode);
-//        $result = array();
-//        foreach($items as $item) {
-//                $result[$item->getId()] = $item->Translation[$language]->name;
-//        }
-//        return $result;
-//    }
-    
-    public function getUnSelectedDiscountSelectOptions($discountId, $language = null, $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('pro.discount_id != ? OR pro.discount_id IS NULL', $discountId);
-        $items = $q->execute(array(), $hydrationMode);
-        $result = array();
-        foreach($items as $item) {
-            if($item['dimensions']){
-                foreach($item['DimensionPrices'] as $dimensionPrice){
-                    if($dimensionPrice['discount_id']) continue;
-                    $w = $dimensionPrice['Dimension']['width'];
-                    $h = $dimensionPrice['Dimension']['height'];
-                    $result['d'.$dimensionPrice->getId()] = $item->Translation[$language]->name.' ('.$w.'cm x '.$h.'cm)';
-                }
-            }else{
-                $result[$item->getId()] = $item->Translation[$language]->name;
-            }
-        }
-        return $result;
-    }
-    
-    public function getSelectedDiscountSelectOptions($discountId, $language = null, $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        $q = $this->productTable->getProductQuery();
-//        $q->andWhere('pro.discount_id = ?', $discountId);
-        $items = $q->execute(array(), $hydrationMode);
-        $result = array();
-        foreach($items as $item) {
-            if($item['discount_id'] == $discountId){
-                $result[$item->getId()] = $item->Translation[$language]->name;
-            }else{
-                if($item['dimensions'] && $item['DimensionPrices']->toArray()){
-                    foreach($item['DimensionPrices'] as $dimensionPrice){
-                        if(!$dimensionPrice['discount_id']) continue;
-                            $w = $dimensionPrice['Dimension']['width'];
-                            $h = $dimensionPrice['Dimension']['height'];
-                            $result['d'.$dimensionPrice->getId()] = $item->Translation[$language]->name.' ('.$w.'cm x '.$h.'cm)';
-                    }
-                }
-            }
-//            if($item['dimensions'] && $item['DimensionPrices']->toArray()){
-//                foreach($item['DimensionPrices'] as $dimensionPrice){
-//                    if(!$dimensionPrice['discount_id']) continue;
-//                    $w = $dimensionPrice['Dimension']['width'];
-//                    $h = $dimensionPrice['Dimension']['height'];
-//                    $result['d'.$dimensionPrice->getId()] = $item->Translation[$language]->name.' ('.$w.'cm x '.$h.'cm)';
-//                }
-//            }elseif($item['discount_id']){
-//                $result[$item->getId()] = $item->Translation[$language]->name;
-//            }
-        }
-        return $result;
-    }
-    
-    public function unSelectDiscountProducts($selectedProducts, $newSelectedProducts){
-        foreach($selectedProducts as $key => $selectedProduct):
-            $flag = false;
-            if(!is_numeric($key)) continue;
-            foreach($newSelectedProducts as $newSelectedProduct):
-                if ($key == $newSelectedProduct):
-                    $flag = true;
-                endif;
-            endforeach;
-            if ($flag == false):
-                $product = $this->getProduct($key);
-                $product->setDiscountId(NULL);
-                $product->save();
-            endif;
-        endforeach;
-    }
-    
-    public function saveAssignedDiscountsFromArray($values, $discountId){
-        foreach($values as $key => $value) {
-            if(!is_array($value) && strlen($value) == 0) {
-                $values[$key] = NULL;
-            }
-        }
-        $selectedProducts = $this->getSelectedDiscountSelectOptions($discountId);
-        $this->unSelectDiscountProducts($selectedProducts, $values);
-        foreach($values as $value):
-            $product = $this->getProduct($value);
-            $product->setDiscountId($discountId);
-            $product->save();
-        endforeach;
-    }
     
     public function getAllProductsForCount($countOnly = false) {
         if(true == $countOnly) {
@@ -428,33 +218,11 @@ class Product_Service_Product extends MF_Service_ServiceAbstract {
         $q->addOrderBy('rand()');
         return $q;
     }
-    public function getNextProduct(Product_Model_Doctrine_Product $product) {
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('cat.id = ?', $product['Categories'][0]->getId());
-        $q->addWhere('pro.id < ?',$product->getId());
-        return $q->fetchOne(array(),Doctrine_Core::HYDRATE_ARRAY);
-    }
     
-    public function getPreviousProduct(Product_Model_Doctrine_Product $product) {
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('cat.id = ?', $product['Categories'][0]->getId());
-        $q->addWhere('pro.id > ?',$product->getId());
-        return $q->fetchOne(array(),Doctrine_Core::HYDRATE_ARRAY);
-    }
     
-     public function getCatId($catId,$hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('cat.id = ?',$catId);
-        return $q->execute(array(), $hydrationMode);
-    }
     
-    public function getProducerProducts($producerId) {
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('prod.id = ?', $producerId);
-        $q->addOrderBy('rand()');
-        return $q;
-    }
     
+     
     public function getPreSortedProductPaginationQuery($productIds) {
         $q = $this->productTable->getProductQuery();
         $q->where('pro.id IN ?', array($productIds));
@@ -473,55 +241,7 @@ class Product_Service_Product extends MF_Service_ServiceAbstract {
         return $q;  
     }
     
-    public function getIdProducts($categoryId, $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        $q = $this->productTable->getIdsProductsQuery();
-        $q->andWhere('cat.id = ?', $categoryId);
-        $q->addOrderBy('rand()');
-        return $q->execute(array(), $hydrationMode);
-    }
     
-    public function getMostFrequenltyPurchasedProducts($limit, $language, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('tr.lang = ?', $language);
-      //  $q->andWhere('pro.most_frequently_purchased = ?', 1);
-        $q->addOrderBy('pro.created_at');
-        $q->limit($limit);
-        return $q->execute(array(), $hydrationMode);
-    }
-    
-    public function getCategoryBestSellers($categoryId, $limit, $language, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('tr.lang = ?', $language);
-        $q->andWhere('cat.id = ?', $categoryId);
-      //  $q->andWhere('pro.most_frequently_purchased = ?', 1);
-        $q->addOrderBy('pro.created_at');
-        $q->limit($limit);
-        return $q->execute(array(), $hydrationMode);
-    }
-    
-    public function getProductDiscounts($limit, $language, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('tr.lang = ?', $language);
-        $q->andWhere('pro.discount_id IS NOT NULL');
-        $q->addOrderBy('d.amount_discount');
-        $q->limit($limit);
-        return $q->execute(array(), $hydrationMode);
-    }
-    
-    public function getProductPromotions($limit, $language){
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('tr.lang = ?', $language);
-        $q->andWhere('pro.promotion = 1');
-        $products = $q->execute(array(), Doctrine_Core::HYDRATE_RECORD);
-        return $products; 
-    }
-    public function getPromotedProducts($language='pl'){
-        $q = $this->productTable->getProductQuery();
-        $q->andWhere('tr.lang = ?', $language);
-        $q->andWhere('pro.promoted = 1');
-        $products = $q->execute(array(), Doctrine_Core::HYDRATE_RECORD);
-        return $products; 
-    }
     
     public function getPromotionProducts($language='pl'){
         $q = $this->productTable->getProductQuery();
@@ -531,23 +251,5 @@ class Product_Service_Product extends MF_Service_ServiceAbstract {
         $products = $q->execute(array(), Doctrine_Core::HYDRATE_RECORD);
         return $products; 
     }
-    
-    public function getProducerIdProducts($producerId, $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        $q = $this->productTable->getProducerIdsProductsQuery($producerId);
-        $q->addOrderBy('rand()');
-        return $q->execute(array(), $hydrationMode);
-    }
-       public function getPopularProducts($language) {    
-        $q = $this->productTable->getProductQuery();
-    //    $q->where('tr.lang = ?', $language);
-        $q->where('pro.purchased_number > 0');
-        $q->orderBy('pro.purchased_number DESC');
-        $q->limit(3);
-        
-        return $q->execute(array(), Doctrine_Core::HYDRATE_RECORD);
-    }
-    
-    
-    
 }
 ?>

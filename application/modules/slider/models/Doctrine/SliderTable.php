@@ -20,10 +20,12 @@ class Slider_Model_Doctrine_SliderTable extends Doctrine_Table
     public function getFullSliderQuery() {
         $q = $this->createQuery('s')
                 ->select('s.*')
-                ->from('Slider_Model_Doctrine_Slider s INDEXBY s.id')
+               // ->from('Slider_Model_Doctrine_SliderSerwis7 s INDEXBY s.id')
                 ->addSelect('sl.*')
+                ->addSelect('l.*')
                 ->addSelect('pr.*')
                 ->leftJoin('s.Slides sl')
+                ->leftJoin('sl.Layers l')
                 ->leftJoin('sl.PhotoRoot pr')
                 ;
         return $q;

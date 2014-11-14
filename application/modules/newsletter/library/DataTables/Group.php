@@ -3,7 +3,7 @@
 /**
  * Newsletter_DataTables_Group
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Andrzej Wilczyński <and.wilczynski@gmail.com>
  */
 class Newsletter_DataTables_Group extends Default_DataTables_DataTablesAbstract {
     

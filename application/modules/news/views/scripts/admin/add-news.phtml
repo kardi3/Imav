@@ -10,6 +10,9 @@ $(document).ready(function() {
         $('.section').hide();
         $('.'+rel).show();
      });
+     
+     
+     $('#tag_id').select2();
 });
 </script>
 
@@ -28,7 +31,11 @@ $(document).ready(function() {
                 
             </div>
             <div class="content clearfix">
-                
+                <?php if($this->form->isErrors()): ?>
+                <span class="errorMessage">
+                    Błąd
+                </span>
+                  <?php endif; ?>
                 <ul class="btnList">
                     <li rel="contentSection"><button class="btn" type="button">Treść</button></li>
                     <li rel="optionsSection"><button class="btn" type="button">Opcje</button></li>
@@ -80,8 +87,14 @@ $(document).ready(function() {
                     </span>
                     <span class="section optionsSection">
                         <?php echo $this->form->publish ?>
+                        <?php echo $this->form->gallery ?>
+                        <?php echo $this->form->student ?>
+                        <?php echo $this->form->student_accept ?>
                         <?php echo $this->form->publish_date->setAttrib('class', 'combiner-picker') ?>
                         <?php echo $this->form->category_id->setAttrib('class', 'nostyle') ?>
+                        <?php echo $this->form->group_id ?>
+                        <?php echo $this->form->tag_id->setAttrib('class', 'nostyle') ?>
+                        <?php echo $this->form->show_views ?>
                         <?php echo $this->form->id ?>
                     </span>
                     <div class="form-actions">

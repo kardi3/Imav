@@ -1,117 +1,57 @@
- <!-- Load javascripts at bottom, this will reduce page load time -->
-    <!-- BEGIN CORE PLUGINS (REQUIRED FOR ALL PAGES) -->
-    <!--[if lt IE 9]>
-    <script src="assets/plugins/respond.min.js"></script>  
-    <![endif]-->  
-    
-    <script src="/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>      
-    <script src="/assets/frontend/layout/scripts/back-to-top.js" type="text/javascript"></script>
-    <!-- END CORE PLUGINS -->
 
-    <!-- BEGIN PAGE LEVEL JAVASCRIPTS (REQUIRED ONLY FOR CURRENT PAGE) -->
-    <script src="/assets/global/plugins/fancybox/source/jquery.fancybox.pack.js" type="text/javascript"></script><!-- pop up -->
-    <script src="/assets/global/plugins/carousel-owl-carousel/owl-carousel/owl.carousel.min.js" type="text/javascript"></script><!-- slider for products -->
+		<script type="text/javascript" src="/assets/jscript/snap.svg-min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/theme-scripts.js"></script>
+		<script type="text/javascript" src="/assets/jscript/lightbox.js"></script>
+		<script type="text/javascript" src="/assets/jscript/owl.carousel.min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/SmoothScroll.min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/iscroll.js"></script>
+		<script type="text/javascript" src="/assets/jscript/modernizr.custom.50878.js"></script>
+		<script type="text/javascript" src="/assets/jscript/dat-menu.js"></script>
+<script type="text/javascript" src="/plugins/lightview/js/lightview/lightview.js"></script>
+		<script>
+			jQuery(document).ready(function() {
+				jQuery(".ot-slider").owlCarousel({
+					items : 1,
+					autoPlay : false,
+					stopOnHover : true,
+					navigation : true,
+					lazyLoad : true,
+					singleItem : true,
+					pagination : false
+				});
+                                jQuery(".gallery-shortcode-photos").owlCarousel({
+					items : 3,
+					autoPlay : false,
+					stopOnHover : true,
+					navigation : false,
+					lazyLoad : true,
+					singleItem : false,
+					pagination : true
+				});
 
-    <!-- BEGIN RevolutionSlider -->
-    <script src="/assets/global/plugins/slider-revolution-slider/rs-plugin/js/jquery.themepunch.plugins.min.js" type="text/javascript"></script>
-    <script src="/assets/global/plugins/slider-revolution-slider/rs-plugin/js/jquery.themepunch.revolution.min.js" type="text/javascript"></script>
-    <script src="/assets/frontend/pages/scripts/revo-slider-init.js" type="text/javascript"></script>
-    <!-- END RevolutionSlider -->
+				jQuery(".similar-articles-list .similar-articles").owlCarousel({
+					items : 4,
+					autoPlay : false,
+					stopOnHover : true,
+					navigation : false,
+					lazyLoad : true,
+					singleItem : false,
+					pagination : true
+				});
+				
+			});
+		</script>
 
-    <script src="/assets/frontend/layout/scripts/layout.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-            Layout.init();    
-            Layout.initOWL();
-            Layout.initTwitter();    
-            
-           
-        });
-    </script>
-    <!-- END PAGE LEVEL JAVASCRIPTS -->
-<footer>
-    <!-- BEGIN PRE-FOOTER -->
-    <div class="pre-footer">
-      <div class="container">
-        <div class="row">
-     
-          <!-- BEGIN BOTTOM CONTACTS -->
-          <div class="col-md-12 col-sm-12 pre-footer-col">
-           
-                <div class="header">
-        <div class="headerAddress">
-           <a href="/"><img src="/img/_log1.png" alt='F.H.U. "Dodus" logo' style='' class="mainLogo"></a>
-           <div itemscope itemtype="http://schema.org/FurnitureStore">
-               <div class="addressData">
-                      <span itemprop="name"><?php echo $this->company_name; ?></span>
-                      <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                        <span itemprop="streetAddress"><?php echo $this->company_address; ?></span>,
-                        <span itemprop="postalCode"><?php echo $this->company_postal_code; ?></span>
-                        <span itemprop="addressLocality"><?php echo $this->company_city; ?></span>
-                      </div>
-               
-              | 
-              <div class="contactPoint" itemprop="ContactPoint" itemscope itemtype="http://schema.org/ContactPoint">
-                  <a class="company_mail" href="mailto:<?php echo $this->contact_email; ?>"><span itemprop="email"><?php echo $this->contact_email; ?></span></a>
-                  
-                  
-              </div>
-              </div>
-              <div class="company_phone" itemprop="ContactPoint" itemscope itemtype="http://schema.org/ContactPoint">
-                  <img src="/img/_phone.png" />
-                        <span itemprop="telephone"><?php echo $this->company_phone; ?></span>
-                
-              </div>
-            </div>
-
-      </div>
-        <!--<a class="site-logo" href="/"></a>-->
-        
-        
-      </div>
-            
-          </div>
-          <!-- END BOTTOM CONTACTS -->
-
-          <!-- BEGIN TWITTER BLOCK --> 
-          
-          <!-- END TWITTER BLOCK -->
-        </div>
-      </div>
-    </div>
-    <!-- END PRE-FOOTER -->
-
-    <!-- BEGIN FOOTER -->
-    <div class="footer">
-      <div class="container">
-        <div class="row">
-          <!-- BEGIN COPYRIGHT -->
-          <div class="col-md-6 col-sm-6 padding-top-10 footer_col">
-            <?php echo date('Y'); ?> © <a href="http://varts.pl">varts.pl</a>
-          </div>
-          <!-- END COPYRIGHT -->
-          <!-- BEGIN PAYMENTS -->
-          <div class="col-md-6 col-sm-6">
-            <ul class="social-footer list-unstyled list-inline pull-right">
-              <?php if(strlen($this->facebook_url)): ?>
-                  <li><a href="<?php echo $this->facebook_url; ?>"><i class="fa fa-facebook"></i></a></li>
-              <?php endif; ?>
-              <?php if(strlen($this->googleplus_url)): ?>
-                  <li><a href="<?php echo $this->googleplus_url; ?>"><i class="fa fa-google-plus"></i></a></li>
-              <?php endif; ?>
-              <?php if(strlen($this->twitter_url)): ?>
-                  <li><a href="<?php echo $this->twitter_url; ?>"><i class="fa fa-twitter"></i></a></li>
-              <?php endif; ?>
-              
-            </ul>  
-          </div>
-          <!-- END PAYMENTS -->
-        </div>
-      </div>
-    </div>
-    <!-- END FOOTER -->
-
-    
-
-    
-</footer>
+<footer class="footer">
+				
+				<div class="footer-copyright">
+					<!-- BEGIN .wrapper -->
+					<div class="wrapper">
+						<p class="right">Designed by <strong><a href="varts.pl" target="_blank">varts.pl</a></strong></p>
+						<p>&copy; All Rights Reserved <strong>IMAV</strong></p>
+					<!-- END .wrapper -->
+					</div>
+				</div>
+				
+			<!-- END .footer -->
+			</footer>

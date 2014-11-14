@@ -11,10 +11,11 @@
     </a>
     <?php endif; ?>
     <div class="actionBtn">
-        <a class="move" href="<?php echo $this->adminUrl('move-slider-slide', 'slider', array('slider' => $this->slider->getId(), 'id' => $slide->getId(), 'dir' => 'up')) ?>" class="move" title="<?php echo $this->translate('Move back'); ?>"><span class="icon16 minia-icon-arrow-left white"></span></a>
+        <a href="<?php echo $this->adminUrl('move-slider-slide', 'slider', array('slider' => $this->slider->getId(), 'id' => $slide->getId(), 'dir' => 'up')) ?>" class="move" title="<?php echo $this->translate('Move back'); ?>"><span class="icon16 minia-icon-arrow-left white"></span></a>
         <a href="<?php echo $this->adminUrl('edit-slide', 'slider', array('slider' => $this->slider->getId(), 'id' => $slide->getId())) ?>" class="edit" title="<?php echo $this->translate('Edit'); ?>" ><span class="icon16 icomoon-icon-pencil-2 white"></span></a>
+        <a href="<?php echo $this->adminUrl('edit-slide-photo', 'slider', array('slider' => $this->slider->getId(), 'id' => $slide->getId())) ?>" class="edit-photo" id="<?php echo $slide->getId(); ?>" title="<?php echo $this->translate('Edit'); ?>" ><span class="icon16 iconic-icon-cursor white"></span></a>
         <a href="<?php echo $this->adminUrl('delete-slider-slide', 'slider', array('slider' => $this->slider->getId(), 'id' => $slide->getId())) ?>" class="delete" title="<?php echo $this->translate('Delete') ?>"><span class="icon16 icomoon-icon-cancel-4 white"></span></a>
-        <a class="move" href="<?php echo $this->adminUrl('move-slider-slide', 'slider', array('slider' => $this->slider->getId(), 'id' => $slide->getId(), 'dir' => 'down')) ?>" class="move" title="<?php echo $this->translate('Move forward'); ?>"><span class="icon16 minia-icon-arrow-right white"></span></a>
+        <a href="<?php echo $this->adminUrl('move-slider-slide', 'slider', array('slider' => $this->slider->getId(), 'id' => $slide->getId(), 'dir' => 'down')) ?>" class="move" title="<?php echo $this->translate('Move forward'); ?>"><span class="icon16 minia-icon-arrow-right white"></span></a>
     </div>
 </li>
 <?php endforeach; ?>

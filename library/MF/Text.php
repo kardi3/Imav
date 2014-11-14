@@ -38,8 +38,38 @@ class MF_Text
           
           if($counter == 0 || $counter >4)
               return $string."y";
-          if($counter == 2 || $counter == 3)
+          if($counter == 2 || $counter == 3 || $counter == 4)
               return $string."e";
+    }
+    
+    public static function sufixCheck2($string, $counter) {
+          if($counter==1)
+              return $string."nie";
+          
+          if($counter == 0 || $counter >4)
+              return $string."ń";
+          if($counter == 2 || $counter == 3 || $counter == 4)
+              return $string."nia";
+    }
+    
+    public static function getCatColor($categorySlug) {
+          switch($categorySlug):
+              case "wiadomosci":
+                  echo $color = "#ef8722";
+                  break;
+              case "sport":
+                  echo $color = "#ed2d00";
+                  break;
+              case "kultura":
+                  echo $color = "#276197";
+                  break;
+              case "rozrywka":
+                  echo $color = "#429d4a";
+                  break;
+              case "reportaze":
+                  echo $color = "#0193DD";
+                  break;
+          endswitch;
     }
 
     public static function createUniqueTableSlug($table, $string, $id = 0, $toLower = true, $space = '-') {
@@ -156,7 +186,7 @@ class MF_Text
             return $dateTime->format($outputFormat);
     }
     
-    public static function polishTimeFormat($time, $outputFormat, $inputFormat = 'Y-m-d H:i:s') {
+    public static function polishTimeFormat($time, $outputFormat = 'j M Y', $inputFormat = 'Y-m-d H:i:s') {
         if(!$time) 
             return false;
         if($dateTime = DateTime::createFromFormat($inputFormat, $time))

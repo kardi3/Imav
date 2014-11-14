@@ -76,6 +76,7 @@ class News_Service_Comment extends MF_Service_ServiceAbstract{
     public function getNewsComments($news_id, $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
         $q = $this->commentTable->createQuery('c');
         $q->addWhere('c.news_id = ?',$news_id);
+        $q->orderBy('c.id DESC');
         return $q->execute(array(), $hydrationMode);
     }
     
@@ -96,9 +97,7 @@ class News_Service_Comment extends MF_Service_ServiceAbstract{
         }
             
         $comment = $this->commentTable->getRecord();
-       
-        $values['ip'] = $_SERVER['REMOTE_ADDR'];
-        
+        $values['user_ip'] = $_SERVER['REMOTE_ADDR'];
         $comment->fromArray($values);
  
         $comment->save();

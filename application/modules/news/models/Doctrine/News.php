@@ -14,11 +14,13 @@ class News_Model_Doctrine_News extends News_Model_Doctrine_BaseNews
 {
      public static $newsPhotoDimensions = array(
         '126x126' => 'Photo in admin panel',                  // admin
-        '400x' => 'Main photo',
-        '610x292' => 'Big photo',
-        '67x45' => 'Miniature photo',
-        '256x122' => 'Small photo',
-        '130x130' => 'Gallery'
+        '265x181' => 'Gorące newsy(265x181)',
+        '74x74' => 'Najnowsze informacje(74x74)',
+        '406x250' => 'Kategoria - pierwszy news(406x250)',
+        '61x61' => 'Kategoria - pozostałe newsy(61x61)',
+        '829x528' => 'Pojedynczy news - główne(829x528)',
+        '263x188' => 'Pojedynczy news - galeria(263x188)',
+        '173x130' => 'Powiązane artykuły(173x130)',
     );
     
     public static function getNewsPhotoDimensions() {
@@ -69,7 +71,10 @@ class News_Model_Doctrine_News extends News_Model_Doctrine_BaseNews
             'foreign' => 'id'
         ));
         
-     
+     $this->hasMany('Media_Model_Doctrine_VideoUrl as Videos', array(
+            'local' => 'video_root_id',
+            'foreign' => 'root_id'
+        ));
         
          $this->hasOne('Media_Model_Doctrine_VideoUrl as VideoRoot', array(
             'local' => 'video_root_id',

@@ -16,4 +16,19 @@ class Newsletter_Model_Doctrine_GroupTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('Newsletter_Model_Doctrine_Group');
     }
+    
+    public function getGroupQuery() {
+        $q = $this->createQuery('g');
+        $q->addSelect('g.*');
+        return $q;
+    }
+    
+    public function getGroupSubscribersQuery($groupId){
+        $q = $this->createQuery('g');
+        $q->addSelect('g.*');
+        $q->addSelect('s.*');
+        $q->leftJoin('g.Subscribers s');
+        $q->andWhere('g.id = ?', $groupId);
+        return $q;
+    }
 }

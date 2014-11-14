@@ -119,6 +119,8 @@ VideoUrl:
       type: clob
     extension:
       type: string(255)
+    ad_id:
+      type: integer(4)
 VideoUrlTranslation:
   tableName: media_video_url_translation
   columns:

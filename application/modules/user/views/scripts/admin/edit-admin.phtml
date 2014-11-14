@@ -1,3 +1,8 @@
+<script>
+    $(document).ready(function(){
+        $('#roles').select2();
+    });
+</script>
 <div class="row-fluid">
 
         <div class="box">
@@ -34,6 +39,7 @@
                     
                     <?php echo $this->form->first_name ?>
                     <?php echo $this->form->last_name ?>
+                <?php echo $this->form->roles->setAttrib('class','nostyle') ?>
                     <?php echo $this->form->email ?>
                     
                     <div class="form-actions">

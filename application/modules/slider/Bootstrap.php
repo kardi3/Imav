@@ -3,7 +3,7 @@
 /**
  * Bootstrap
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Andrzej Wilczyński <and.wilczynski@gmail.com>
  */
 class Slider_Bootstrap extends Zend_Application_Module_Bootstrap {
     
@@ -26,7 +26,8 @@ class Slider_Bootstrap extends Zend_Application_Module_Bootstrap {
     
     protected function _initSliders() {
         $sliders = array(
-            'main' => 'Main slider'
+            'main' => 'Main slider',
+            'second' => 'Second slider'
         );
         $this->getApplication()->getContainer()->set('sliders', $sliders);
         

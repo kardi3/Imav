@@ -17,20 +17,125 @@
            <tuv xml:lang="pl"><seg>2 miesiące</seg></tuv>
        </tu>
        
+       <tu tuid='Date from'>
+           <tuv xml:lang="pl"><seg>Data od</seg></tuv>
+       </tu>
+       <tu tuid='Data do'>
+           <tuv xml:lang="pl"><seg>Data do</seg></tuv>
+       </tu>
        <tu tuid='3 months'>
            <tuv xml:lang="pl"><seg>3 miesiące</seg></tuv>
        </tu>
        <tu tuid='Register'>
            <tuv xml:lang="pl"><seg>Rejestracja</seg></tuv>
        </tu>
+       <tu tuid='Video url'>
+           <tuv xml:lang="pl"><seg>Adres url video</seg></tuv>
+       </tu>
+       <tu tuid='Date to'>
+           <tuv xml:lang="pl"><seg>Data do</seg></tuv>
+       </tu>
+       <tu tuid='Add news'>
+           <tuv xml:lang="pl"><seg>Dodaj aktualność</seg></tuv>
+       </tu>
+       <tu tuid='Edit news'>
+           <tuv xml:lang="pl"><seg>Edytuj aktualność</seg></tuv>
+       </tu>
+       <tu tuid='Video name'>
+           <tuv xml:lang="pl"><seg>Nazwa video</seg></tuv>
+       </tu>
        <tu tuid='About us'>
            <tuv xml:lang="pl"><seg>O nas</seg></tuv>
+       </tu>
+       <tu tuid='Student accept'>
+           <tuv xml:lang="pl"><seg>Akceptacja</seg></tuv>
+       </tu>
+       <tu tuid='Group'>
+           <tuv xml:lang="pl"><seg>Grupa</seg></tuv>
+       </tu>
+       <tu tuid='Configuration'>
+           <tuv xml:lang="pl"><seg>Konfiguracja</seg></tuv>
+       </tu>
+       <tu tuid='Advertisment'>
+           <tuv xml:lang="pl"><seg>Reklama</seg></tuv>
+       </tu>
+       <tu tuid='Company information'>
+           <tuv xml:lang="pl"><seg>Informacje o firmie</seg></tuv>
        </tu>
        <tu tuid='Your email has been successfully registered'>
            <tuv xml:lang="pl"><seg>Twój adres email został pomyślnie zapisany</seg></tuv>
        </tu>
        <tu tuid='This email is already in our database'>
            <tuv xml:lang="pl"><seg>Ten adres email jest już zarejestrowany</seg></tuv>
+       </tu>
+       <tu tuid='Videos'>
+           <tuv xml:lang="pl"><seg>Filmy</seg></tuv>
+       </tu>
+       <tu tuid='Attractions'>
+           <tuv xml:lang="pl"><seg>Atrakcje</seg></tuv>
+       </tu>
+       <tu tuid='Add attraction'>
+           <tuv xml:lang="pl"><seg>Dodaj atrakcje</seg></tuv>
+       </tu>
+       <tu tuid='Edit attraction'>
+           <tuv xml:lang="pl"><seg>Edytuj atrakcje</seg></tuv>
+       </tu>
+       <tu tuid='Add ip'>
+           <tuv xml:lang="pl"><seg>Dodaj adres IP</seg></tuv>
+       </tu>
+       <tu tuid='Edit ip'>
+           <tuv xml:lang="pl"><seg>Edytuj adres IP</seg></tuv>
+       </tu>
+       <tu tuid='Event date'>
+           <tuv xml:lang="pl"><seg>Data wydarzenia</seg></tuv>
+       </tu>
+       <tu tuid='Events'>
+           <tuv xml:lang="pl"><seg>Wydarzenia</seg></tuv>
+       </tu>
+       <tu tuid='All subscribers'>
+           <tuv xml:lang="pl"><seg>Wszyscy subskrybenci</seg></tuv>
+       </tu>
+       <tu tuid='Edit message'>
+           <tuv xml:lang="pl"><seg>Edytuj wiadomość</seg></tuv>
+       </tu>
+        <tu tuid='Add event'>
+           <tuv xml:lang="pl"><seg>Dodaj wydarzenie</seg></tuv>
+       </tu>
+        <tu tuid='Edit event'>
+           <tuv xml:lang="pl"><seg>Edytuj wydarzenie</seg></tuv>
+       </tu>
+       <tu tuid='Position'>
+           <tuv xml:lang="pl"><seg>Pozycja</seg></tuv>
+       </tu>
+       <tu tuid='Send message'>
+           <tuv xml:lang="pl"><seg>Wyślij wiadomość</seg></tuv>
+       </tu>
+       <tu tuid='Progress'>
+           <tuv xml:lang="pl"><seg>Postęp</seg></tuv>
+       </tu>
+       <tu tuid='Main page'>
+           <tuv xml:lang="pl"><seg>Pokaż na głównej</seg></tuv>
+       </tu>
+       <tu tuid='News group'>
+           <tuv xml:lang="pl"><seg>Grupy aktualności</seg></tuv>
+       </tu>
+       <tu tuid='Add group'>
+           <tuv xml:lang="pl"><seg>Dodaj grupę</seg></tuv>
+       </tu>
+       <tu tuid='Edit group'>
+           <tuv xml:lang="pl"><seg>Edytuj grupę</seg></tuv>
+       </tu>
+       <tu tuid='Edit gallery'>
+           <tuv xml:lang="pl"><seg>Edytuj galerie</seg></tuv>
+       </tu>
+       <tu tuid='Add gallery'>
+           <tuv xml:lang="pl"><seg>Dodaj galerie</seg></tuv>
+       </tu>
+       <tu tuid='Breaking news'>
+           <tuv xml:lang="pl"><seg>Ważny news</seg></tuv>
+       </tu>
+       <tu tuid='Add video'>
+           <tuv xml:lang="pl"><seg>Dodaj film</seg></tuv>
        </tu>
        <tu tuid='Active'>
            <tuv xml:lang="pl"><seg>Aktywny</seg></tuv>
@@ -39,13 +144,25 @@
            <tuv xml:lang="pl"><seg>Galeria</seg></tuv>
        </tu>
        <tu tuid='Visible on site'>
-           <tuv xml:lang="pl"><seg>Widoczny na stronie</seg></tuv>
+           <tuv xml:lang="pl"><seg>Aktywny</seg></tuv>
        </tu>
        <tu tuid='Read more...'>
            <tuv xml:lang="pl"><seg>Czytaj więcej...</seg></tuv>
        </tu>
        <tu tuid='Go back to article list'>
            <tuv xml:lang="pl"><seg>Powrót do listy artykułów</seg></tuv>
+       </tu>
+       <tu tuid='Created'>
+           <tuv xml:lang="pl"><seg>Utworzony</seg></tuv>
+       </tu>
+       <tu tuid='Updated'>
+           <tuv xml:lang="pl"><seg>Aktualizacja</seg></tuv>
+       </tu>
+       <tu tuid='Edit news'>
+           <tuv xml:lang="pl"><seg>Edycja aktualności</seg></tuv>
+       </tu>
+       <tu tuid='Save and stay'>
+           <tuv xml:lang="pl"><seg>Zapisz i zostań</seg></tuv>
        </tu>
        <tu tuid='Change status'>
            <tuv xml:lang="pl"><seg>Zmień status</seg></tuv>

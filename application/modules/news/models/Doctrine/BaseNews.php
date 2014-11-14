@@ -12,15 +12,23 @@
  * @property string $slug
  * @property clob $content
  * @property boolean $publish
+ * @property boolean $gallery
+ * @property boolean $breaking_news
  * @property timestamp $publish_date
  * @property integer $photo_root_id
  * @property integer $metatag_id
  * @property integer $video_root_id
  * @property integer $category_id
+ * @property boolean $student
+ * @property boolean $student_accept
+ * @property integer $group_id
  * @property integer $views
+ * @property boolean $show_views
  * @property Doctrine_Collection $Translation
  * @property News_Model_Doctrine_Category $Category
  * @property Doctrine_Collection $Comments
+ * @property News_Model_Doctrine_Group $Group
+ * @property Doctrine_Collection $Tags
  * 
  * @package    Admi
  * @subpackage News
@@ -61,6 +69,14 @@ abstract class News_Model_Doctrine_BaseNews extends Doctrine_Record
              'type' => 'boolean',
              'default' => 1,
              ));
+        $this->hasColumn('gallery', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => 0,
+             ));
+        $this->hasColumn('breaking_news', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => 0,
+             ));
         $this->hasColumn('publish_date', 'timestamp', null, array(
              'type' => 'timestamp',
              ));
@@ -80,9 +96,25 @@ abstract class News_Model_Doctrine_BaseNews extends Doctrine_Record
              'type' => 'integer',
              'length' => '4',
              ));
+        $this->hasColumn('student', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => 0,
+             ));
+        $this->hasColumn('student_accept', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => 0,
+             ));
+        $this->hasColumn('group_id', 'integer', 4, array(
+             'type' => 'integer',
+             'length' => '4',
+             ));
         $this->hasColumn('views', 'integer', 11, array(
              'type' => 'integer',
              'length' => '11',
+             ));
+        $this->hasColumn('show_views', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => 1,
              ));
 
         $this->option('type', 'MyISAM');
@@ -104,6 +136,15 @@ abstract class News_Model_Doctrine_BaseNews extends Doctrine_Record
         $this->hasMany('News_Model_Doctrine_Comment as Comments', array(
              'local' => 'id',
              'foreign' => 'news_id'));
+
+        $this->hasOne('News_Model_Doctrine_Group as Group', array(
+             'local' => 'group_id',
+             'foreign' => 'id'));
+
+        $this->hasMany('News_Model_Doctrine_Tag as Tags', array(
+             'refClass' => 'News_Model_Doctrine_NewsTag',
+             'local' => 'news_id',
+             'foreign' => 'tag_id'));
 
         $i18n0 = new Doctrine_Template_I18n(array(
              'fields' => 

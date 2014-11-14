@@ -8,15 +8,9 @@
 class Product_DataTables_Adapter_Category extends Default_DataTables_Adapter_AdapterAbstract {
     
     protected function getBaseQuery() {
-        $q = $this->table->createQuery('x');
-        $q->leftJoin('x.Translation t');
-        $q->addOrderBy('x.lft ASC');
-        
-        if($id = $this->request->getParam('id')) {
-            if($parent = $this->table->findOneBy('id', $id)) {
-                $q->andWhere('x.lft > ? AND x.rgt < ? AND x.level = ?', array($parent['lft'], $parent['rgt'], $parent['level']+1));
-            }
-        }
+        $q = $this->table->createQuery('c');
+        $q->leftJoin('c.Translation ct');
+       
         return $q;
     }
     

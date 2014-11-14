@@ -12,7 +12,7 @@
 
     <div class="actionBtn">
         <a class="move" href="<?php echo $this->adminUrl('move-product-photo', 'product', array('id' => $photo->id, 'move' => 'up', 'product' => $this->product->id)) ?>"><span class="icon16 minia-icon-arrow-left white"></span></a>
-        <a href="#" class="edit"><span class="icon16 icomoon-icon-pencil-2 white"></span></a>
+         <a href="<?php echo $this->adminUrl('edit-product-photo', 'product', array('product-id' => $this->product->getId(), 'id' => $photo->getId())) ?>" class="edit"><span class="icon16 icomoon-icon-pencil-2 white"></span></a>
         <a href="#" rel="<?php echo $photo['id']; ?>" class="delete"><span class="icon16 icomoon-icon-cancel-4 white"></span></a>
         <a class="move" href="<?php echo $this->adminUrl('move-product-photo', 'product', array('id' => $photo->id, 'move' => 'down', 'product' => $this->product->id)) ?>"><span class="icon16 minia-icon-arrow-right white"></span></a>
     </div>

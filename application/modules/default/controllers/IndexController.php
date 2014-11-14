@@ -10,8 +10,24 @@ class Default_IndexController extends MF_Controller_Action
     
     public function layoutAction() { 
         $i18nService = $this->_service->getService('Default_Service_I18n');
-        $settingService = $this->_service->getService('Default_Service_Setting');
         $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        $menuService = $this->_service->getService('Menu_Service_Menu');
+        
+        
+        if(!$menu = $menuService->getMenu(1)) {
+            throw new Zend_Controller_Action_Exception('Menu not found');
+        }
+        
+        if(!$submenu = $menuService->getMenu(2)) {
+            throw new Zend_Controller_Action_Exception('Submenu not found');
+        }
+        
+        $treeRoot = $menuService->getMenuItemTree($menu, $this->view->language);
+        $tree = $treeRoot[0]->getNode()->getChildren();
+    
+        $subtreeRoot = $menuService->getMenuItemTree($submenu, $this->view->language);
+        $submenu_tree = $subtreeRoot[0]->getNode()->getChildren();
         
         $route = $this->getFrontController()->getRouter()->getCurrentRouteName();
         
@@ -19,61 +35,75 @@ class Default_IndexController extends MF_Controller_Action
         
         $pageService = $this->_service->getService('Page_Service_Page');
 
-       if(!$footer = $pageService->getI18nPage('footer', 'type', $this->view->language, Doctrine_Core::HYDRATE_RECORD)) {
-            throw new Zend_Controller_Action_Exception('Footer not found');
-        }
+        $topBanners = $bannerService->getPositionBanners('Gora');
+        $mainBanners = $bannerService->getPositionBanners('Glowna');
+        $sidebarTopBanners = $bannerService->getPositionBanners('Sidebar1');
+        $sidebarBottomBanners = $bannerService->getPositionBanners('Sidebar2');
         
+//       if(!$footer = $pageService->getI18nPage('footer', 'type', $this->view->language, Doctrine_Core::HYDRATE_RECORD)) {
+//            throw new Zend_Controller_Action_Exception('Footer not found');
+//        }
+//        
         if(!$homepage = $pageService->getI18nPage('homepage', 'type', $this->view->language, Doctrine_Core::HYDRATE_RECORD)) {
             throw new Zend_Controller_Action_Exception('Homepage not found');
         }
-        $settings = $settingService->getAllSettingsArray();
         
-        if(isset($_POST['newsletter_submit'])){
+        if(isset($_POST['sign_newsletter'])){
             
             $values = array(
-                'name' => $_POST['newsletter_mail'],
-                'email' => $_POST['newsletter_mail']
+                'name' => $_POST['email'],
+                'email' => $_POST['email']
             );
             try{
-                $subscriberService->saveSubscriberFromArray($values);
-                $_POST['newsletter_success'] = "Your email has been successfully registered";
+                if(!$subscriber = $subscriberService->getSubscriber($values['email'],'email')){
+         
+                    
+                        $values['token'] = MF_Text::createUniqueToken($values['salt'].$values['email']);
+                $subscriber = $subscriberService->saveSubscriberFromArray($values);
+                $subscriber->link('Groups',1);
+                $subscriber->save();
+                $this->view->messages()->add('Twój mail został dodany do naszej bazy subskrybentów');
+                   
+        }
+        else{
+                $this->view->messages()->add('Ten mail jest już w naszej bazie','error');
+            
+        }
             }
             catch(Exception $e){
+                var_dump($e->getMessage());exit;
                 if($e->getCode()=="23000"){
                     $_POST['newsletter_error'] = "Your email is already in our database";
                 }
             }
         }
-//       var_dump(Zend_Controller_Front::getInstance()->getRouter()->getCurrentRouteName());exit;
         $this->view->assign('footer', $footer);
         $this->view->assign('homepage', $homepage);
         $this->view->assign('activeLanguages', $activeLanguages);
         
+        $this->view->assign('menu', $menu);
+        $this->view->assign('submenu_tree', $submenu_tree);
+        $this->view->assign('tree', $tree);
         $this->view->assign('route', $route);
+        $this->view->assign('topBanners', $topBanners);
+        $this->view->assign('mainBanners', $mainBanners);
+        $this->view->assign('sidebarTopBanners', $sidebarTopBanners);
+        $this->view->assign('sidebarBottomBanners', $sidebarBottomBanners);
         
-        $this->_helper->actionStack('main', 'index', 'slider');
-        $this->_helper->actionStack('last-news-slider', 'index', 'news');
-        $this->_helper->actionStack('last-news-top', 'index', 'news');
+        
+        $this->_helper->actionStack('banner-right', 'index', 'banner');
+        $this->_helper->actionStack('breaking-news', 'index', 'news');
         $this->_helper->actionStack('last-categories-news', 'index', 'news');
-        $this->_helper->actionStack('popular-news', 'index', 'news');
-        $this->_helper->actionStack('calendar', 'index', 'district');
-        $this->_helper->actionStack('random-person', 'index', 'district');
-        $this->_helper->actionStack('special-topic', 'index', 'district');
-        $this->_helper->actionStack('main-menu');
+        $this->_helper->actionStack('last-news-sidebar', 'index', 'news');
+        $this->_helper->actionStack('slider');
+        $this->_helper->actionStack('main-page-galleries', 'index', 'gallery');
+        $this->_helper->actionStack('next-events', 'index', 'district');
         $this->_helper->viewRenderer->setNoRender();
     }
     
     public function indexAction() {
         $pageService = $this->_service->getService('Page_Service_Page');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
-        $productService = $this->_service->getService('Product_Service_Product');
-        
-        $photoDimensionService = $this->_service->getService('Default_Service_PhotoDimension');
-        $photoDimension = $photoDimensionService->getElementDimension('productmain');
-        $newProducts = $productService->getNewProducts();
-        $promotionProducts = $productService->getPromotionProducts();
-        
-        
         if(!$homepage = $pageService->getI18nPage('homepage', 'type', $this->view->language, Doctrine_Core::HYDRATE_RECORD)) {
             throw new Zend_Controller_Action_Exception('Page not found');
         }
@@ -84,10 +114,8 @@ class Default_IndexController extends MF_Controller_Action
         
         $this->view->assign('homepage', $homepage);
 
+        $this->_helper->actionStack('last-news', 'index', 'news');
         $this->_helper->actionStack('layout', 'index', 'default');
-        $this->view->assign('photoDimension', $photoDimension);
-        $this->view->assign('newProducts', $newProducts);
-        $this->view->assign('promotionProducts', $promotionProducts);
     }
     
      
@@ -104,7 +132,7 @@ class Default_IndexController extends MF_Controller_Action
     
     public function contactAction() {
         
-        $this->_helper->layout->setLayout('page');
+        $this->_helper->layout->setLayout('gallery');
         
         $pageService = $this->_service->getService('Page_Service_Page');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
@@ -126,7 +154,7 @@ class Default_IndexController extends MF_Controller_Action
             throw new Zend_Controller_Action_Exception('Page not found');
         }
  
-        $contactEmail = $settings['contact_email'];
+        $contactEmail = $this->getInvokeArg('bootstrap')->getOption('contact_email');
         
         if ($page != NULL):
             $metatagService->setViewMetatags($page->get('Metatag'), $this->view);
@@ -146,26 +174,19 @@ class Default_IndexController extends MF_Controller_Action
                 'imgUrl' => $this->view->serverUrl() . '/captcha/',  
             )
         ));
-        
-          if($this->getRequest()->isPost()) {
-            if($form->isValid($this->getRequest()->getPost())) {
-                try {
+          if(isset($_POST['submit_contact'])) {
                     $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
                     
                     if(!strlen($contactEmail)){
                         $this->_helper->redirector->gotoUrl($this->view->url(array('success' => 'fail'), 'domain-contact'));
                     }
-                    $values = $form->getValues();
+                    $values = $_POST;
                     $serviceService->sendMail($values,$contactEmail);
                     
-                    $form->reset();
                     $this->view->messages()->add($this->view->translate('Message sent'));
+                    $this->_helper->redirector->gotoUrl($this->view->url(array('success' => 'fail'), 'domain-contact'));
                   
-                } catch(Exception $e) {
-                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
-                    $this->_service->get('log')->log($e->getMessage(), 4);
-                }
-         }}
+         }
 
         $this->view->assign('form', $form);
         $this->view->assign('page', $page);
@@ -247,7 +268,16 @@ class Default_IndexController extends MF_Controller_Action
         $this->_helper->actionStack('layout', 'index', 'default');
     }
  
-    
+    public function sliderAction() {
+        $this->_helper->viewRenderer->setResponseSegment('slider');
+        $sliderService = $this->_service->getService('Slider_Service_Slider');
+        $slideLayerService = $this->_service->getService('Slider_Service_SlideLayer');
+        $mainSlides = $sliderService->getSlideTree();
+        $mainSlides = $mainSlides->fetchTree(array('root_id' => 1));
+        unset($mainSlides[0]);
+        $this->view->assign('mainSlides',$mainSlides);
+        $this->_helper->viewRenderer->setResponseSegment('slider');
+    }
     
     
     public function bannerAction() {
@@ -286,54 +316,6 @@ class Default_IndexController extends MF_Controller_Action
     }
     
     
-    public function resultsSearchingAction() {    
-        $searchService = $this->_service->getService('Default_Service_Search');
-        $producerService = $this->_service->getService('Producer_Service_Producer');
-        $productService = $this->_service->getService('Product_Service_Product');
-        $newsService = $this->_service->getService('News_Service_News');
-        
-        $form = $searchService->getSearchMainForm();
-        $form->getElement('phrase')->setAttrib('class', 'search');
-        
-        if($this->getRequest()->getParam('phrase')) { 
-            if($form->isValid($this->getRequest()->getParams())) {
-
-              $this->_service->get('doctrine')->getCurrentConnection()->setCharset('utf8');
-                
-              $phrase = $form->getElement('phrase')->getValue();
-              
-              $news = $newsService->searchNews($phrase,  Doctrine_Core::HYDRATE_ARRAY);
-              $producers = $producerService->searchProducers($phrase,  Doctrine_Core::HYDRATE_ARRAY);
-              $products = $productService->searchProducts($phrase,  Doctrine_Core::HYDRATE_ARRAY);
-              $results = array();
-              $results = array_merge($producers, $products, $news);
-              $counter = count($results);
-              uasort($results, array('self', 'sortByTitle'));
-            }
-        }   
-       // $phrase = $this->getRequest()->getParam('phrase');
-
-        //$query = http_build_query($results);
-        if ($phrase == NULL):
-            $results = array();
-            $counter = count($results);
-        endif;
-        
-        $adapter = new Zend_Paginator_Adapter_Array($results);
-        $paginator = new Zend_Paginator($adapter);
-        $paginator->setCurrentPageNumber($this->getRequest()->getParam('page', 1));
-        $paginator->setItemCountPerPage(self::$resultsCountPerPage);
-        
-        $this->view->assign('counter', $counter); 
-        $this->view->assign('phrase', $phrase);  
-        $this->view->assign('paginator', $paginator); 
-        
-        $this->_helper->actionStack('layout', 'index', 'default');
-    }
-    
-    public static function sortByTitle($array1, $array2) {
-        return strcmp($array1['search_title'], $array2['search_title']);
-    }
     public function newsletterAction()
     {
         $newsletterService = $this->_service->getService('Default_Service_Newsletter');
@@ -351,7 +333,6 @@ class Default_IndexController extends MF_Controller_Action
                     $this->_service->get('doctrine')->getCurrentConnection()->rollback();
                     $this->_service->get('log')->log($e->getMessage(), 4);
                 }
-             //   Zend_Debug::dump($modelCart->getPrices());
          }}
         $this->view->assign('form',$form);
    
@@ -359,23 +340,7 @@ class Default_IndexController extends MF_Controller_Action
     
     public function mainMenuAction() {
         
-        $menuService = $this->_service->getService('Menu_Service_Menu');
-        
-        $i18nService = $this->_service->getService('Default_Service_I18n');
-
-        $adminLanguage = $i18nService->getAdminLanguage();
-        
-        if(!$menu = $menuService->getMenu(1)) {
-            throw new Zend_Controller_Action_Exception('Menu not found');
-        }
-        
-        $treeRoot = $menuService->getMenuItemTree($menu, $adminLanguage->getId());
-        $tree = $treeRoot[0]->getNode()->getChildren();
-    
-        $this->view->assign('root', $root);
-        $this->view->assign('menu', $menu);
-        $this->view->assign('tree', $tree);
-        
-        $this->_helper->viewRenderer->setResponseSegment('mainMenu');
+      
     }
+    
 }

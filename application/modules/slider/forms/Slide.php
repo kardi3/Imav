@@ -3,11 +3,12 @@
 /**
  * Slider_Form_Slide
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Andrzej Wilczyński <and.wilczynski@gmail.com>
  */
 class Slider_Form_Slide extends Admin_Form {
     
     public function init() {
+         
         $id = $this->createElement('hidden', 'id');
         $id->setDecorators(array('ViewHelper'));
         
@@ -70,6 +71,9 @@ class Slider_Form_Slide extends Admin_Form {
         $link->setLabel('URL');
 //        $link->setDecorators(self::$textDecorators);
         
+       
+       
+        
         $submit = $this->createElement('button', 'submit');
         $submit->setLabel('Save');
         $submit->setDecorators(array('ViewHelper'));
@@ -83,6 +87,7 @@ class Slider_Form_Slide extends Admin_Form {
             $titlePosX,
             $titlePosY,
             $description,
+            $newsId,
             $descriptionSize,
             $descriptionColor,
             $descriptionBgColor,

@@ -67,13 +67,19 @@ class Admin_IndexController extends MF_Controller_Action
         
         $userService = $this->_service->getService('User_Service_User');
         $categoryService = $this->_service->getService('Product_Service_Category');
+        $newsService = $this->_service->getService('News_Service_News');
         
 
         
         $categoryCount = $categoryService->getAllCategories()->count();
         $this->view->assign('categoryCount', $categoryCount);
         
+        $newsCount = $newsService->getAllNews(true);
+       $this->view->assign('newsCount', $newsCount);
        
+       
+        $studentNewsCount = $newsService->getAllNewStudentNews(true);
+       $this->view->assign('studentNewsCount', $studentNewsCount);
         
         if(!$this->view->adminTitle && $current = $this->view->navigation()->findOneBy('active', true)) {
             $this->view->adminTitle = $this->view->translate($current->getLabel());

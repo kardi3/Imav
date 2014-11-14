@@ -7,6 +7,23 @@
  */
 class Admin_Form extends Zend_Form
 {
+     public static $fileDecorators = array(
+        'File',
+        array('Label', array('class' => 'form-label span4')),
+        array(array('ElementWrapper' => 'HtmlTag'), array('tag' => 'div', 'class' => 'row-fluid')),
+        array(array('SpanWrapper' => 'HtmlTag'), array('tag' => 'div', 'class' => 'span12')),
+        array(array('RowWrapper' => 'HtmlTag'), array('tag' => 'div', 'class' => 'form-row row-fluid')),
+    );
+     
+      public static $radioDecorators = array(
+       'ViewHelper',
+        array('Errors'),
+        array(array('ElementWrapper' => 'HtmlTag'), array('tag' => 'div', 'class' => 'controls radio-list')),
+        array('Label', array('class' => 'control-label')),
+        array(array('Wrapper' => 'HtmlTag'), array('tag' => 'div', 'class' => 'control-group importance-group'))
+    
+    );
+     
     public static $textDecorators = array(
         'ViewHelper',
         'Errors',

@@ -12,6 +12,16 @@
  */
 class Banner_Model_Doctrine_Banner extends Banner_Model_Doctrine_BaseBanner
 {
+      public static $bannerPhotoDimensions = array(
+        '126x126' => 'Zdjęcie w panelu administracyjnym', // admin
+       
+    );
+    
+    
+    public static function getBannerPhotoDimensions() {
+        return self::$bannerPhotoDimensions;
+    }
+    
     public function setId($id) {
         $this->_set('id', $id);
     }
@@ -46,6 +56,12 @@ class Banner_Model_Doctrine_Banner extends Banner_Model_Doctrine_BaseBanner
             'local' => 'photo_root_id',
             'foreign' => 'root_id'
         ));
+        
+        $this->hasOne('Media_Model_Doctrine_Attachment as AttachmentRoot', array(
+            'local' => 'attachment_root_id',
+            'foreign' => 'id'
+        ));
+        
         $this->hasOne('Default_Model_Doctrine_Metatag as Metatags', array(
             'local' => 'metatag_id',
             'foregin' => 'id'

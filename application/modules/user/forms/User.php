@@ -43,9 +43,11 @@ class User_Form_User extends Admin_Form
 
         $role = $this->createElement('radio', 'role');
         $role->setLabel('Role');
-        $role->setDecorators(self::$textDecorators);
+        $role->setDecorators(self::$radioDecorators);
         $role->setRequired();
         $role->setAttrib('class', 'span8');
+        $role->addMultiOption('admin','admin');
+        $role->addMultiOption('redaktor','redaktor');
 
         $active = $this->createElement('checkbox', 'active');
         $active->setLabel('Active');
@@ -53,6 +55,14 @@ class User_Form_User extends Admin_Form
         $active->setRequired();
         $active->setAttrib('class', 'span8');
 
+        $roles = $this->createElement('select', 'roles');
+        $roles->setLabel('Uprawnienia redaktora');
+        $roles->setDecorators(self::$selectDecorators);
+        $roles->setRequired();
+        $roles->setAttrib('class', 'span8');
+        $roles->setAttrib('multiple','multiple');
+        $roles->setIsArray(true);
+        
         $submit = $this->createElement('button', 'submit');
         $submit->setLabel('Save');
         $submit->setDecorators(array('ViewHelper'));
@@ -64,8 +74,9 @@ class User_Form_User extends Admin_Form
             $firstName,
             $lastName,
             $username,
-            $email,
             $role,
+            $email,
+            $roles,
             $active,
             $submit
         ));

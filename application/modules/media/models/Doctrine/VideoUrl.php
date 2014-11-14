@@ -62,6 +62,10 @@ class Media_Model_Doctrine_VideoUrl extends Media_Model_Doctrine_BaseVideoUrl
             'foreign' => 'id'
         ));
         
+        $this->hasOne('Banner_Model_Doctrine_Ad as Ad', array(
+            'local' => 'ad_id',
+            'foreign' => 'id'
+        ));
         
         parent::setUp();
     }

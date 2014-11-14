@@ -3,7 +3,10 @@
     <div class="grid_12">
  
          <div class="box">
-            
+            Rodzaje bannerów: <br />
+            Sidebar1 - prawa strona u góry (300x250)<br />
+            MainFirst, MainSecond itp.  - strona głowna, między kategoriami (728x90px)<br />
+            UnderNews - banner pod treścią newsa (728x90px)<br />
             <div class="title">
 
                 <h4>
@@ -35,7 +38,7 @@
                         <?php if($this->form->translations->getSubForm($language)): ?>
                             <?php echo $this->form->translations->getSubForm($language)->name ?>
                         <?php endif; ?>
-                            
+                            <?php /*
                         <div class="title" style ="margin-top: 30px;">
 
                             <h4>
@@ -49,11 +52,15 @@
                             <?php echo $this->form->metatags->translations->getSubForm($language)->meta_description; ?>
                             <?php echo $this->form->metatags->translations->getSubForm($language)->meta_keywords; ?>
                         </div>
-
+                        */ ?>
                         </div>
                         <?php endforeach; ?>
                     </div>
-                    
+                    <br />
+                    <?php echo $this->form->photo ?>
+                    <?php echo $this->form->date_from ?>
+                    <?php echo $this->form->date_to ?>
+                    <?php echo $this->form->position ?>
                     <?php echo $this->form->website ?>
                     <?php echo $this->form->id ?>
                     

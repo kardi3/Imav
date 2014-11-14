@@ -13,6 +13,10 @@ class Gallery_Form_Gallery extends Admin_Form {
         $id = $this->createElement('hidden', 'id');
         $id->setDecorators(array('ViewHelper'));
                 
+        $categoryId = $this->createElement('select', 'category_id');
+        $categoryId->setLabel('Category');
+        $categoryId->setDecorators(self::$selectDecorators);
+        
         $languages = $i18nService->getLanguageList();
         
         $translations = new Zend_Form_SubForm();
@@ -24,20 +28,20 @@ class Gallery_Form_Gallery extends Admin_Form {
                 'FormElements'
             ));
 
-            $name = $translationForm->createElement('text', 'name');
-            $name->setBelongsTo($language);
-            $name->setLabel('Title');
-            $name->setDecorators(self::$textDecorators);
-            $name->setAttrib('class', 'span8');
+            $title = $translationForm->createElement('text', 'title');
+            $title->setBelongsTo($language);
+            $title->setLabel('Title');
+            $title->setDecorators(self::$textDecorators);
+            $title->setAttrib('class', 'span8');
 
-            $description = $translationForm->createElement('textarea', 'description');
-            $description->setBelongsTo($language);
-            $description->setLabel('Content');
-            $description->setDecorators(self::$tinymceDecorators);
+            $content = $translationForm->createElement('textarea', 'content');
+            $content->setBelongsTo($language);
+            $content->setLabel('Content');
+            $content->setDecorators(self::$tinymceDecorators);
 
             $translationForm->setElements(array(
-                $name,
-                $description
+                $title,
+                $content
             ));
 
             $translations->addSubForm($translationForm, $language);
@@ -52,7 +56,8 @@ class Gallery_Form_Gallery extends Admin_Form {
         
         $this->setElements(array(
             $id,
-            $submit
+            $submit,
+            $categoryId
         ));
 		
     }

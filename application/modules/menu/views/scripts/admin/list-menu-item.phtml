@@ -10,7 +10,7 @@ $(document).ready(function() {
         "bProcessing": true,
         "bServerSide": true,
         "bLengthChange": false,
-        "sAjaxSource": "<?php echo $this->adminUrl('list-menu-item-data', 'menu', array('menu' => $this->menu['id'])) ?>",
+        "sAjaxSource": "<?php echo $this->adminUrl('list-menu-item-data', 'menu', array('id' => $this->menu['id'])) ?>",
         "aaSorting": [[ 0, "desc" ]],
         "aoColumns": [
             null,

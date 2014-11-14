@@ -1,0 +1,85 @@
+<div class="block_breadcrumbs">
+    <ul>
+        <li><a href="/">Strona głowna</a></li>
+        <li>Aktualności</li>
+    </ul>
+</div>
+<div class="separator" style="height:30px;"></div>
+<h3 style="font-size:16px;">Ostatnie aktualności</h3>
+<div class="line_4" style="margin:-4px 0px 18px;"></div>
+<div class="block_home_col_1">
+    <?php foreach($this->lastNews as $key => $news): 
+        $photoRoot = $news['PhotoRoot'];
+        if($key%2!=0)
+            continue;
+        ?>
+    <div class="block_home_post">
+            <div class="pic">
+                    <a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>" class="">
+                            <img src="/media/photos/<?php echo $photoRoot['offset'];?>/67x45/<?php echo $photoRoot['filename']; ?>" alt="">
+                            <span></span>
+                    </a>
+            </div>
+
+            <div class="text">
+                    <p class="title"><a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>"><?php echo $news['Translation'][$this->language]['title']; ?></a></p>
+                    <div class="date"><p><?php echo MB_substr(strip_tags($news['Translation'][$this->language]['content']),0,60,'UTF-8'); ?></p></div>
+                    
+            </div>
+    </div>
+    <div class="line_3" style="margin:14px 0px 17px;"></div>
+
+    <?php endforeach; ?>
+
+</div>
+<div class="block_home_col_2">
+    <div class="line_3 first" style="margin:14px 0px 17px;"></div>
+
+     <?php foreach($this->lastNews as $key => $news): 
+        if($key%2!=1)
+            continue;
+        ?>
+    <div class="block_home_post">
+            <div class="pic">
+                    <a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>" class="">
+                            <img src="/media/photos/<?php echo $photoRoot['offset'];?>/67x45/<?php echo $photoRoot['filename']; ?>" alt="">
+                            <span></span>
+                    </a>
+            </div>
+
+            <div class="text">
+                    <p class="title"><a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>"><?php echo $news['Translation'][$this->language]['title']; ?></a></p>
+                    <div class="date"><p><?php echo MB_substr(strip_tags($news['Translation'][$this->language]['content']),0,60,'UTF-8'); ?></p></div>
+                    
+            </div>
+    </div>
+    <div class="line_3" style="margin:14px 0px 17px;"></div>
+
+    <?php endforeach; ?>
+</div>
+<div class="clearboth"></div>
+<?php foreach($this->newsList as $category => $newses): ?>
+    <h3 style="font-size:16px;"><?php echo $category; ?></h3>
+    <div class="line_4" style="margin:-4px 0px 18px;"></div>
+    <div class="block_topic_news">
+        <?php foreach($newses as $news): 
+            $photoRoot = $news['PhotoRoot'];
+            ?>
+                                    <article class="block_topic_post">
+                                        <p class="title"><a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>"><?php echo $news['Translation'][$this->language]['title']; ?></a></p>
+                                        <div class="f_pic"><a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>" class="scale"><img src="/media/photos/<?php echo $photoRoot['offset'];?>/256x122/<?php echo $photoRoot['filename']; ?>" alt=""></a></div>
+                                    <p class="text"><?php echo MF_Text::truncate(strip_tags($news['Translation'][$this->language]['content']),100,'letters'); ?></p>
+                                    <div class="info">
+                                           <div class="date"><p><?php echo MF_Text::polishTimeFormat($news['publish_date'],'d M Y'); ?></p></div>
+
+                                    </div>
+                                </article>
+        <?php endforeach; ?>
+     </div>
+    
+<div class="separator" style="height:15px;"></div>
+    <div class="text-align-right">
+            <a class="lnk_all_news" href="<?php echo $this->url(array('category' => $newses[0]['Category']['slug']),'domain-list-category-news'); ?>">Zobacz starsze aktualności</a>
+    </div>
+     <div class="line_3" style="margin:20px 0px 24px;"></div>
+<?php endforeach; ?>

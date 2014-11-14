@@ -3,13 +3,13 @@
 /**
  * Newsletter_DataTables_Adapter_Group
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Andrzej Wilczyński <and.wilczynski@gmail.com>
  */
 class Newsletter_DataTables_Adapter_Group extends Default_DataTables_Adapter_AdapterAbstract {
     
     public function getBaseQuery() {
-        $q = $this->table->createQuery('x');
-        $q->select('x.*');
+        $q = $this->table->createQuery('g');
+        $q->select('g.*');
         return $q;
     }
 }

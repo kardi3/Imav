@@ -68,50 +68,25 @@ class Media_Service_Attachment extends MF_Service_ServiceAbstract {
         }
     }
           
-    public function createAttachmentFromUpload($uploadFileIndex, $name, $title = null,$parent = null) {
-        $i18nService = MF_Service_ServiceBroker::getInstance()->getService('Default_Service_I18n');
-        $languages = $i18nService->getLanguageList();
-        
-        $offset = self::createOffset();
-        $offsetDir = $this->attachmentsDir . DIRECTORY_SEPARATOR . $offset;
-        if(!is_dir($offsetDir)) {
-            @mkdir($this->attachmentsDir . DIRECTORY_SEPARATOR . $offset);
-        }
-      
+   public function createAttachmentFromUpload($uploadFileIndex, $name, $title = null, $languageAdmin) {
         $pathinfo = pathinfo($name);
         $extension = $pathinfo['extension'];
-        $name = MF_Text::createSlug($pathinfo['filename']);
-        $filename = $this->createUniquefileName($name.".".$extension);
+        $name = MF_Text::createSlug($name);
+        $filename = $this->createUniquefileName($pathinfo['basename']);
         $title = null == $title ? pathinfo($name, PATHINFO_FILENAME) : $title;
-        
-        if(move_uploaded_file($_FILES[$uploadFileIndex]['tmp_name'], $offsetDir . DIRECTORY_SEPARATOR . $filename)) {
-            if($this->createAttachmentFile($offsetDir . DIRECTORY_SEPARATOR . $filename, $offset, $filename)) {
+
+        if(@move_uploaded_file($_FILES[$uploadFileIndex]['tmp_name'], $this->attachmentsDir . DIRECTORY_SEPARATOR . $filename)) {
+//            if($this->createAttachmentFile($filename, $filename)) {
                 $attachment = $this->attachmentTable->getRecord();
                 $attachment->setFilename($filename);
-                $attachment->setOffset($offset);
-                foreach($languages as $language) {
-                        $attachment->Translation[$language]->title = $filename;
-                        $attachment->Translation[$language]->slug = MF_Text::createUniqueTableSlug('Media_Model_Doctrine_AttachmentTranslation', $filename);
-                }
+                $attachment->Translation[$languageAdmin]->title = $title;
+                $attachment->Translation[$languageAdmin]->slug = MF_Text::createUniqueTableSlug('Media_Model_Doctrine_AttachmentTranslation', $title, $attachment->getId());
+                $attachment->setExtension($extension);
                 $attachment->save();
-               if(null != $parent) {
-                    if(is_integer($parent)) {
-                        $parent = $this->attachmentTable->find($parent);
-                    } 
-                    if($parent instanceof Media_Model_Doctrine_Attachment) {
-                        $attachment->getNode()->insertAsLastChildOf($parent);
-                    }
-                } else {
-                    $tree = $this->attachmentTable->getTree();
-                    $tree->createRoot($attachment);
-                }
-
                 return $attachment;
-            }
+//            }
         }
-        
     }
-    
     public function createAttachmentFile($filePath, $offset = '', $name = null) {
         if(file_exists($filePath)) {
             $offsetDir = realpath($this->attachmentsDir . DIRECTORY_SEPARATOR . $offset);

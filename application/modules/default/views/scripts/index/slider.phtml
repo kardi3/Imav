@@ -1,1 +1,92 @@
+<div class="ot-slider owl-carousel">
+    
+        <?php for($i=1;$i<count($this->mainSlides)+1;$i=$i+4): ?>
+        <div class="ot-slide">
+                <div class="ot-slider-layer first">
+                    <?php $slide = $this->mainSlides[$i];
+                        if($slide['target_type'] == "news_target"):
+                            $url = $this->url(array('slug' => $slide['News']['Translation'][$this->language]['slug']),'domain-news-article'); 
+                        elseif($slide['target_type'] == "custom_url"):
+                            $url = $slide['target_href'];
+                        else:
+                            $url = "#";
+                        endif; 
+                        ?>
+                    
+                    
+                        <a href="<?php echo $url; ?>">
+                                    <strong>
+                                        <?php if($slide['target_type'] == "news_target"): ?>
+                                            <i class="cat-<?php echo $slide['News']['Category']['slug'];?>"><?php echo $slide['News']['Category']['title'];?></i>
+                                        <?php endif; ?>
+                                        <?php echo strip_tags($slide['Translation'][$this->language]['content']);?>
+                                    </strong>
+                                    <img src="/media/photos/<?php echo $slide['PhotoRoot']['offset'];?>/516x368/<?php echo $slide['PhotoRoot']['filename'];?>" alt="">
+                               
+                        </a>
+                </div>
+            <?php $slide = $this->mainSlides[$i+1];
+                        if($slide['target_type'] == "news"):
+                            $url = $this->url(array('slug' => $slide['News']['Translation'][$this->language]['slug']),'domain-news-article'); 
+                        elseif($slide['target_type'] == "custom_url"):
+                            $url = $slide['target_href'];
+                        else:
+                            $url = "#";
+                        endif; ?>
+                <div class="ot-slider-layer second">
+                        <a href="<?php echo $url; ?>">
+                            
+                                    <strong>
+                                        <?php if($slide['target_type'] == "news_target"): ?>
+                                            <i class="cat-<?php echo $slide['News']['Category']['slug'];?>"><?php echo $slide['News']['Category']['title'];?></i>
+                                        <?php endif; ?>
+                                        <?php echo strip_tags($slide['Translation'][$this->language]['content']);?>
+                                    </strong>
+                                <img src="/media/photos/<?php echo $slide['PhotoRoot']['offset'];?>/247x368/<?php echo $slide['PhotoRoot']['filename'];?>" alt="">
+                        </a>
+                </div>
+            <?php $slide = $this->mainSlides[$i+2];
+                        if($slide['target_type'] == "news"):
+                            $url = $this->url(array('slug' => $slide['News']['Translation'][$this->language]['slug']),'domain-news-article'); 
+                        elseif($slide['target_type'] == "custom_url"):
+                            $url = $slide['target_href'];
+                        else:
+                            $url = "#";
+                        endif; ?>
+                <div class="ot-slider-layer third">
+                        <a href="<?php echo $url; ?>">
+                                    <strong>
+                                        <?php if($slide['target_type'] == "news_target"): ?>
+                                            <i class="cat-<?php echo $slide['News']['Category']['slug'];?>"><?php echo $slide['News']['Category']['title'];?></i>
+                                        <?php endif; ?>
+                                        <?php echo strip_tags($slide['Translation'][$this->language]['content']);?>
+                                    </strong>
+                                <img src="/media/photos/<?php echo $slide['PhotoRoot']['offset'];?>/406x180/<?php echo $slide['PhotoRoot']['filename'];?>" alt="">
+                        </a>
+                </div>
+            <?php $slide = $this->mainSlides[$i+3];
+                        if($slide['target_type'] == "news"):
+                            $url = $this->url(array('slug' => $slide['News']['Translation'][$this->language]['slug']),'domain-news-article'); 
+                        elseif($slide['target_type'] == "custom_url"):
+                            $url = $slide['target_href'];
+                        else:
+                            $url = "#";
+                        endif; ?>
+                <div class="ot-slider-layer fourth">
+                        <a href="<?php echo $url; ?>">
+                                <strong>
+                                        <?php if($slide['target_type'] == "news_target"): ?>
+                                            <i class="cat-<?php echo $slide['News']['Category']['slug'];?>"><?php echo $slide['Translation'][$this->language]['title'];?></i>
+                                        <?php endif; ?>
+                                    <?php echo strip_tags($slide['Translation'][$this->language]['content']);?>
+                                </strong>
+                                <img src="/media/photos/<?php echo $slide['PhotoRoot']['offset'];?>/406x180/<?php echo $slide['PhotoRoot']['filename'];?>" alt="">
+                        </a>
+                </div>
+        </div>
+            <?php endfor; ?>
+
+        
+</div>
+
 <?php echo $this->slider()->render('main', 'slider/main.phtml') ?>

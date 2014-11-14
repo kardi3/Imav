@@ -10,36 +10,18 @@
  * @property string $slug
  * @property clob $description
  * @property decimal $price
- * @property integer $dimensions
  * @property string $code
- * @property integer $availability
- * @property boolean $status
  * @property boolean $promoted
- * @property boolean $promotion
- * @property decimal $promotion_price
- * @property boolean $new
- * @property integer $purchased_number
- * @property string $youtube
- * @property integer $producer_id
- * @property integer $discount_id
+ * @property integer $video_root_id
  * @property integer $photo_root_id
  * @property integer $metatag_id
- * @property integer $views
- * @property integer $clicks
- * @property boolean $slider
- * @property boolean $newsletter_send
+ * @property integer $category_id
  * @property boolean $active
- * @property boolean $sold
  * @property boolean $facebook
  * @property boolean $twitter
  * @property boolean $pin
- * @property Product_Model_Doctrine_Producer $Producer
- * @property Product_Model_Doctrine_Discount $Discount
- * @property Doctrine_Collection $RelatedProducts
+ * @property Product_Model_Doctrine_Category $Category
  * @property Doctrine_Collection $Translation
- * @property Doctrine_Collection $Categories
- * @property Doctrine_Collection $Comments
- * @property Doctrine_Collection $Attachments
  * 
  * @package    Admi
  * @subpackage Product
@@ -72,54 +54,16 @@ abstract class Product_Model_Doctrine_BaseProduct extends Doctrine_Record
              'type' => 'decimal',
              'default' => 0,
              ));
-        $this->hasColumn('dimensions', 'integer', 1, array(
-             'type' => 'integer',
-             'default' => 0,
-             'length' => '1',
-             ));
         $this->hasColumn('code', 'string', 255, array(
              'unique' => true,
              'type' => 'string',
              'length' => '255',
              ));
-        $this->hasColumn('availability', 'integer', 4, array(
-             'type' => 'integer',
-             'default' => 0,
-             'length' => '4',
-             ));
-        $this->hasColumn('status', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => 1,
-             ));
         $this->hasColumn('promoted', 'boolean', null, array(
              'type' => 'boolean',
              'default' => 0,
              ));
-        $this->hasColumn('promotion', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => 0,
-             ));
-        $this->hasColumn('promotion_price', 'decimal', null, array(
-             'type' => 'decimal',
-             'default' => 0,
-             ));
-        $this->hasColumn('new', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => 0,
-             ));
-        $this->hasColumn('purchased_number', 'integer', null, array(
-             'type' => 'integer',
-             'default' => 0,
-             ));
-        $this->hasColumn('youtube', 'string', 255, array(
-             'type' => 'string',
-             'length' => '255',
-             ));
-        $this->hasColumn('producer_id', 'integer', 4, array(
-             'type' => 'integer',
-             'length' => '4',
-             ));
-        $this->hasColumn('discount_id', 'integer', 4, array(
+        $this->hasColumn('video_root_id', 'integer', 4, array(
              'type' => 'integer',
              'length' => '4',
              ));
@@ -131,31 +75,13 @@ abstract class Product_Model_Doctrine_BaseProduct extends Doctrine_Record
              'type' => 'integer',
              'length' => '4',
              ));
-        $this->hasColumn('views', 'integer', 4, array(
+        $this->hasColumn('category_id', 'integer', 4, array(
              'type' => 'integer',
-             'default' => 0,
              'length' => '4',
-             ));
-        $this->hasColumn('clicks', 'integer', 4, array(
-             'type' => 'integer',
-             'default' => 0,
-             'length' => '4',
-             ));
-        $this->hasColumn('slider', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => 0,
-             ));
-        $this->hasColumn('newsletter_send', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => 0,
              ));
         $this->hasColumn('active', 'boolean', null, array(
              'type' => 'boolean',
              'default' => 1,
-             ));
-        $this->hasColumn('sold', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => 0,
              ));
         $this->hasColumn('facebook', 'boolean', null, array(
              'type' => 'boolean',
@@ -178,35 +104,13 @@ abstract class Product_Model_Doctrine_BaseProduct extends Doctrine_Record
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('Product_Model_Doctrine_Producer as Producer', array(
-             'local' => 'producer_id',
+        $this->hasOne('Product_Model_Doctrine_Category as Category', array(
+             'local' => 'category_id',
              'foreign' => 'id'));
-
-        $this->hasOne('Product_Model_Doctrine_Discount as Discount', array(
-             'local' => 'discount_id',
-             'foreign' => 'id'));
-
-        $this->hasMany('Product_Model_Doctrine_Product as RelatedProducts', array(
-             'refClass' => 'Product_Model_Doctrine_ProductRelated',
-             'local' => 'product_id',
-             'foreign' => 'relate_product_id'));
 
         $this->hasMany('Product_Model_Doctrine_ProductTranslation as Translation', array(
              'local' => 'id',
              'foreign' => 'id'));
-
-        $this->hasMany('Product_Model_Doctrine_Category as Categories', array(
-             'refClass' => 'Product_Model_Doctrine_ProductCategory',
-             'local' => 'product_id',
-             'foreign' => 'category_id'));
-
-        $this->hasMany('Product_Model_Doctrine_Comment as Comments', array(
-             'local' => 'id',
-             'foreign' => 'product_id'));
-
-        $this->hasMany('Product_Model_Doctrine_Attachment as Attachments', array(
-             'local' => 'id',
-             'foreign' => 'product_id'));
 
         $i18n0 = new Doctrine_Template_I18n(array(
              'fields' => 

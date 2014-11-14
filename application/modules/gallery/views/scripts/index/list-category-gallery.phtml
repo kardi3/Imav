@@ -1,0 +1,35 @@
+<div class="block_breadcrumbs">   
+    <ul>
+        <li><a href="/">Strona głowna</a></li>
+        <li><a href="<?php echo $this->url(array(),'domain-list-gallery'); ?>">Galeria</a></li>
+        <li><?php echo $this->category['title']; ?></li>
+    </ul>
+</div>
+<div class="separator" style="height:30px;"></div>
+<h3 style="font-size:16px;"><?php echo $this->category['title']; ?></h3>
+<div class="line_4" style="margin:-4px 0px 18px;"></div>
+<div class="block_best_materials">
+    <div  style="overflow: hidden; position: relative;">
+        <ul class="slides" style="width: 1200%; margin-left: 0px;">
+            <?php foreach($this->galleries as $gallery):
+                $photo = $gallery['PhotoRoot'];
+                ?>
+                <li style="width: 213px; float: left; display: block;">
+                    <div class="block_best_material_post">
+                        <div class="f_pic">
+                            <a href="<?php echo $this->url(array('slug' => $gallery['Translation'][$this->language]['slug']),'domain-i18n:gallery'); ?>" class="w_hover">
+                                <img src="/media/photos/<?php echo $photo['offset']; ?>/256x122/<?php echo $photo['filename']; ?>" alt=""><span></span>
+                            </a>
+                        </div>
+                        <p class="title">
+                            <a href="<?php echo $this->url(array('slug' => $gallery['Translation'][$this->language]['slug']),'domain-i18n:gallery'); ?>"><?php echo $gallery['Translation'][$this->language]['title']; ?></a>
+                        </p>
+                        <div class="info">
+                            <div class="date"><p><?php echo MF_Text::polishTimeFormat($gallery['created_at'], 'd M Y'); ?></p></div>
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>

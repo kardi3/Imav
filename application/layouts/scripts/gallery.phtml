@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html lang = "en">
+	<head>
+		<?php echo $this->render('_head.phtml'); ?>
+	</head>
+
+	<body>
+
+		<a href="#dat-menu" class="ot-menu-toggle"><i class="fa fa-bars"></i>Toggle Menu</a>
+                
+		<div class="boxed active">
+			
+			<header class="header willfix">
+                            <?php echo $this->render('_header.phtml'); ?>
+			</header>
+			
+			<section class="content">
+				
+				<div class="wrapper">
+					
+
+					<?php echo $this->layout()->breakingNews; ?>
+
+
+					 <div class="main-content has-sidebar"> 
+						<div class="left-content">
+							<?php echo $this->layout()->content; ?>
+						</div>
+                                                
+                                                <aside id="sidebar">
+                                                    
+							<?php echo $this->layout()->bannerRight; ?>
+							
+							<?php echo $this->layout()->lastNewsSidebar; ?>
+							
+							<?php echo $this->layout()->nextEvents; ?>
+							
+							<?php echo $this->layout()->mainPageGalleries; ?>
+							
+						</aside>
+					</div>
+					
+				</div>
+				
+			</section>
+			
+                        
+               <?php echo $this->render('_footer.phtml'); ?>
+		</div>
+
+		<script type="text/javascript" src="/assets/jscript/snap.svg-min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/theme-scripts.js"></script>
+		<script type="text/javascript" src="/assets/jscript/lightbox.js"></script>
+		<script type="text/javascript" src="/assets/jscript/owl.carousel.min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/SmoothScroll.min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/iscroll.js"></script>
+		<script type="text/javascript" src="/assets/jscript/modernizr.custom.50878.js"></script>
+		<script type="text/javascript" src="/assets/jscript/dat-menu.js"></script>
+		<script>
+			jQuery(document).ready(function() {
+				jQuery(".ot-slider").owlCarousel({
+					items : 1,
+					autoPlay : true,
+					stopOnHover : true,
+					navigation : true,
+					lazyLoad : true,
+					singleItem : true,
+					pagination : false
+				});
+			});
+			jQuery(document).ready(function() {
+				jQuery(".single-photo-thumbs > .thumb-wrapper").owlCarousel({
+					autoPlay : false,
+					navigation : true,
+					pagination : true
+				});
+			});
+		</script>
+
+	</body>
+</html>

@@ -1,73 +1,52 @@
-<?php $address = $this->company_address." ".$this->company_postal_code." ".$this->company_city; ?>
-<div class="contactLeft">
-    <strong class="productTitle"><h1><?php echo $this->translate('Contact'); ?></h1></strong>
-    <?php echo $this->page['Translation'][$this->language]->content; ?>
-     <div class="mapa"><iframe width="455" height="580" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=<?php echo $address; ?>&output=embed&z=14"></iframe><br /><small><a href="http://maps.google.com/?q=<?php echo $address; ?>" style="color:#0000FF;text-align:left">Wyświetl większą mapę</a></small></div>
-     
+<div class="main-title">
+        <h2>Kontakt</h2>
+        <span>Napisz do nas</span>
 </div>
-<div class="contactRight">
-    <?php if($this->messages()->count()): ?>
-        <div class="message">
-            <?php echo $this->messages()->render(); ?>
+
+<div class="article-content">
+
+        <div class="google-maps">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26475.972741627935!2d-118.34612045!3d33.95407354999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2b656274bdd8d%3A0x727b30fdcae3170!2sInglewood%2C+CA!5e0!3m2!1sen!2s!4v1402995910861" width="450" height="300" frameborder="0" style="border:0"></iframe>
         </div>
-        <?php endif; ?>
-    <h4><?php echo $this->translate('Contact with us'); ?></h4>
-    <form class="wpcf7" method="post" action="<?php echo $this->form->getAction() ?>">
-            <?php echo $this->form->csrf; ?>
-            <fieldset>
-                <label><span class="text-color">*</span> <?php echo $this->form->firstName->getLabel(); ?>:</label>
-                <?php echo $this->form->firstName->setDecorators(array('ViewHelper')); ?>
-                <span class="error"><?php echo $this->form->firstName->setDecorators(array('Errors')); ?></span>
-            </fieldset>
-
-            <fieldset>
-                <label><span class="text-color">*</span> <?php echo $this->form->lastName->getLabel(); ?>:</label>
-                <?php echo $this->form->lastName->setDecorators(array('ViewHelper')); ?>
-                <span class="error"><?php echo $this->form->lastName->setDecorators(array('Errors')); ?></span>
-            </fieldset>
-
-            <fieldset>
-                <label><span class="text-color">*</span> <?php echo $this->form->email->getLabel(); ?>:</label>
-                <?php echo $this->form->email->setDecorators(array('ViewHelper')); ?>
-                <span class="error"><?php echo $this->form->email->setDecorators(array('Errors')); ?></span>
-            </fieldset>
-            
-            <fieldset>
-                <label><span class="text-color"></span> <?php echo $this->form->phone->getLabel(); ?>:</label>
-                <?php echo $this->form->phone->setDecorators(array('ViewHelper')); ?>
-                <span class="error"><?php echo $this->form->phone->setDecorators(array('Errors')); ?></span>
-            </fieldset>
-            
-            <fieldset>
-                <label><span class="text-color">*</span> <?php echo $this->form->subject->getLabel(); ?>:</label>
-                <?php echo $this->form->subject->setDecorators(array('ViewHelper')); ?>
-                <span class="error"><?php echo $this->form->subject->setDecorators(array('Errors')); ?></span>
-            </fieldset>
-
-            <fieldset>
-                <label><span class="text-color">*</span> <?php echo $this->form->message->getLabel(); ?>:</label>
-                <?php echo $this->form->message->setDecorators(array('ViewHelper')); ?>
-                <span class="error"><?php echo $this->form->message->setDecorators(array('Errors')); ?></span>
-            </fieldset>
-            
-        <fieldset>
-                <?php echo $this->form->captcha; ?>
-            </fieldset>
+        <?php echo $this->page['Translation'][$this->language]['content']; ?>
         
-            <?php echo $this->form->submit; ?>
-
-        </form><!-- wpcf7 end -->
 </div>
- <div class="productTop">
-   		<div class="titleBG">
-		  
-   		</div>
-   </div>
 
- <div class="sftlo">
- 
-     <div class="tekst">
-         
-     </div>
-     <div class="clear"></div>
-  </div>
+<div id="writecomment" class="writecomment">
+
+        <form action="" method="POST">
+
+                <p class="comment-info">
+                        <i class="fa fa-info"></i>
+                        <strong>Napisz do nas</strong>
+                        <span>Wypełnij formularz kontaktowy</span>
+                </p><!--
+
+                <div class="coloralert" style="background: #CA2E1A;">
+                        <i class="fa fa-warning"></i>
+                        <p>Oh noooes!<br>Something gone wrong!</p>
+                        <a href="#close-alert"><i class="fa fa-times-circle"></i></a>
+                </div>
+                <div class="coloralert" style="background: #68a117;">
+                        <i class="fa fa-check"></i>
+                        <p>Great Success<br>Your comment went through!</p>
+                        <a href="#close-alert"><i class="fa fa-times-circle"></i></a>
+                </div>-->
+                <?php echo $this->messages()->render(); ?>
+                <p class="contact-form-user">
+                        <input type="text" placeholder="Imie i nazwisko" name="name" id="c_name" />
+                </p>
+                <p class="contact-form-email">
+                        <input type="text" placeholder="E-mail" name="email" id="c_email" />
+                </p>
+                <p class="contact-form-message">
+                        <textarea name="message" placeholder="Wiadomość.." id="c_message"></textarea>
+                </p>
+                <div class="contact-form-message" style="margin:0 auto;width:55%;">
+                        <?php echo $this->form->captcha; ?>
+                </div>
+                <p><input type="submit" class="button" name="submit_contact" value="Wyślij wiadomość" /></p>
+        </form>
+
+</div>
+

@@ -156,6 +156,34 @@ class Default_Service_Metatag extends MF_Service_ServiceAbstract {
         }
     }
     
+    
+    public function setOgMetatags($view,$title = null,$image_url = null,$description = null,$type = "article") {
+            
+        $view->doctype('XHTML1_RDFA');
+       
+        if(strlen($title)) {
+            $view->headMeta($title, 'og:title','property');
+        }
+        if(strlen($image_url)) {
+            if(strpos($image_url,'http://')==false){
+                $image_url = "http://".Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$image_url;
+            }
+            
+            $view->headMeta($image_url, 'og:image','property');
+        }
+
+        if(strlen($description)) {
+            $view->headMeta(strip_tags($description), 'og:description','property');
+        }
+        
+        if(strlen($type)) {
+            $view->headMeta($type, 'og:type','property');
+        }
+        
+        $view->headMeta(Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(),'og:url','property');
+            
+    }
+    
     public function getMetatag($id, $field = 'id', $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
         return $this->metatagTable->findOneBy($field, $id, $hydrationMode);
     }

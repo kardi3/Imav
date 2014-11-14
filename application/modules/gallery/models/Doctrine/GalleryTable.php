@@ -18,15 +18,34 @@ class Gallery_Model_Doctrine_GalleryTable extends Doctrine_Table
     }
     
     public function getFullGalleryQuery() {
-        $q = $this->createQuery('p')
-                ->addSelect('p.*')
-                ->addSelect('t.*')
+        $q = $this->createQuery('g')
+                ->addSelect('g.*')
+                ->addSelect('gt.*')
                 ->addSelect('m.*')
                 ->addSelect('mt.*')
-                ->leftJoin('p.Translation t')
-                ->leftJoin('p.Metatag m')
+                ->addSelect('pr.*')
+                ->addSelect('p.*')
+                ->leftJoin('g.Translation gt')
+                ->leftJoin('g.Metatag m')
                 ->leftJoin('m.Translation mt')
+                ->leftJoin('g.PhotoRoot pr')
+                ->leftJoin('g.Photos p')
                 ;
         return $q;
     }
+    
+    public function getShortGalleryQuery() {
+        $q = $this->createQuery('g')
+                ->addSelect('g.*')
+                ->addSelect('gt.*')
+                ->addSelect('pr.*')
+                ->addSelect('c.*')
+                ->leftJoin('g.Translation gt')
+                ->leftJoin('g.PhotoRoot pr')
+                ->leftJoin('g.Category c')
+                ;
+        return $q;
+    }
+    
+    
 }

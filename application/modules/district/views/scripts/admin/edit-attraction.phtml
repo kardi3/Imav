@@ -62,7 +62,7 @@ $(document).ready(function() {
         $.ajax({
             type: "post",
             dataType: "json",
-            url: "<?php echo $this->adminUrl('remove-attraction-photo', 'district') ?>/id/"+$('#id').val()+"/photo-id/"+$(this).attr('rel'),
+            url: "<?php echo $this->adminUrl('remove-attraction-main-photo', 'district') ?>/id/"+$('#id').val()+"/photo-id/"+$(this).attr('rel'),
             data: data,
             success: function(resp) {
                 if(resp.status == "success") {
@@ -236,6 +236,9 @@ $(document).ready(function() {
                         <?php echo $this->form->publish ?>
                         <?php echo $this->form->publish_date->setAttrib('class', 'combiner-picker') ?>
                         <?php echo $this->form->id ?>
+                         <?php if(!$this->attraction->gallery): ?>
+                            <?php echo $this->form->gallery ?>
+                        <?php endif; ?>
                     </span>
                     <span class="section photoSection">
                         <div class="page-header">

@@ -29,6 +29,12 @@ News:
     publish:
       type: boolean
       default: 1
+    gallery:
+      type: boolean
+      default: 0
+    breaking_news:
+      type: boolean
+      default: 0
     publish_date:
       type: timestamp
     photo_root_id:
@@ -39,8 +45,19 @@ News:
       type: integer(4)
     category_id:
       type: integer(4)
+    student:
+      type: boolean
+      default: 0
+    student_accept:
+      type: boolean
+      default: 0
+    group_id:
+      type: integer(4)
     views:
       type: integer(11)
+    show_views:
+      type: boolean
+      default: 1
 NewsTranslation:
   tableName: news_news_translation
   columns:
@@ -109,7 +126,7 @@ Comment:
     content:
       type: clob
     user_ip:
-      type: integer(4)
+      type: varchar(255)
     active:
       type: boolean
       default: 1
@@ -121,3 +138,57 @@ Comment:
       alias: News
       type: one
       foreignType: many
+Group:
+  tableName: news_group
+  actAs:
+    Timestampable: ~
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    content:
+      type: clob
+    metatag_id:
+      type: integer(4)
+  relations:
+    News:
+      local: id
+      foreign: group_id
+      foreignAlias: Group
+      alias: Newses
+      type: many
+      foreignType: one    
+Tag:
+  tableName: news_tag
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    metatag_id:
+      type: integer(4)
+  relations:
+    News:
+        refClass: NewsTag
+        local: tag_id
+        foreign: news_id
+        foreignType: many
+        foreignAlias: Tags
+        alias: Newses
+NewsTag:
+  tableName: news_news_tag
+  columns:
+    tag_id:
+      type: integer(4)
+    news_id:
+      type: integer(4)

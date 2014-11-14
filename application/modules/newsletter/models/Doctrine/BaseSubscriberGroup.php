@@ -10,7 +10,7 @@
  * 
  * @package    Admi
  * @subpackage Newsletter
- * @author     Michał Folga <michalfolga@gmail.com>
+ * @author     Andrzej Wilczyński <and.wilczynski@gmail.com>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class Newsletter_Model_Doctrine_BaseSubscriberGroup extends Doctrine_Record

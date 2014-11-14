@@ -1,0 +1,29 @@
+ <!-- Previous page link -->
+    <?php if (isset($this->previous)): ?>
+            <a class="prev page-numbers" href="<?php echo $this->url(array('page' => $this->previous), 'domain-list-gallery'); ?>"><i class="fa fa-caret-left"></i>Poprzednia</a>
+   
+    <?php endif; ?>
+
+    <!-- Numbered page links -->
+    <?php for ($i=1; $i<=count($this->pagesInRange); $i++): ?>
+        <?php if ($this->pagesInRange[$i] == $this->current): ?>
+             <?php if($i != 2 && $i !=1): ?>
+                    <a class="page-numbers" href="<?php echo $this->url(array('page' => $this->pagesInRange[$i-2]), 'domain-list-gallery') ?>"><?php echo $this->pagesInRange[$i-2]; ?></a>
+            <?php endif; ?>
+            <?php if($i != 1): ?>
+                    <a class="page-numbers" href="<?php echo $this->url(array('page' => $this->pagesInRange[$i-1]), 'domain-list-gallery') ?>"><?php echo $this->pagesInRange[$i-1]; ?></a>
+            <?php endif; ?>
+                <span class="page-numbers current" href="#"><?php echo $this->pagesInRange[$i]; ?></span>
+            <?php if($i != count($this->pagesInRange)): ?>
+                    <a class="page-numbers" href="<?php echo $this->url(array('page' => $this->pagesInRange[$i+1]), 'domain-list-gallery') ?>"><?php echo $this->pagesInRange[$i+1]; ?></a>
+            <?php endif; ?>
+            <?php if($i != count($this->pagesInRange) && $i != count($this->pagesInRange)-1): ?>
+                    <a class="page-numbers" href="<?php echo $this->url(array('page' => $this->pagesInRange[$i+2]), 'domain-list-gallery') ?>"><?php echo $this->pagesInRange[$i+2]; ?></a>
+            <?php endif; ?>
+        <?php endif; ?>
+    <?php endfor; ?>
+
+    <!-- Next page link -->
+    <?php if (isset($this->next)): ?>
+            <a class="next page-numbers" href="<?php echo $this->url(array('page' => $this->next), 'domain-list-gallery'); ?>">Następna<i class="fa fa-caret-right"></i></a>
+    <?php endif; ?>    

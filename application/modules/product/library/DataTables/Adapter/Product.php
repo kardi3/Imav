@@ -7,13 +7,10 @@
  */
 class Product_DataTables_Adapter_Product extends Default_DataTables_Adapter_AdapterAbstract {
     protected function getBaseQuery() {
-        $q = $this->table->createQuery('x');
-        $q->leftJoin('x.Translation t');
-        $q->leftJoin('x.Producer p');
-        $q->leftJoin('x.Categories cat');
-        $q->leftJoin('cat.Translation ct');
+        $q = $this->table->createQuery('p');
         $q->leftJoin('p.Translation pt');
-        $q->leftJoin('x.PhotoRoot pr');
+        $q->leftJoin('p.Category c');
+        $q->leftJoin('c.Translation ct');
         
         return $q;
     }

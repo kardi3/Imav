@@ -1,9 +1,19 @@
 <?php foreach ($this->messages as $type => $messages): ?>
-	<?php foreach($messages as $message): ?>
-		<div class="alert alert-<?php echo $type ?>">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <?php echo $message ?>
-        </div>
+	<?php foreach($messages as $message): 
+            if($type=="success"):
+            ?>
+                        <div class="coloralert" style="background: #68a117;color:#fff;padding-bottom:25px;">
+                                <i class="fa fa-check"></i>
+                                <p><?php echo $message; ?></p>
+                                <a href="#close-alert"><i class="fa fa-times-circle"></i></a>
+                        </div>
+                <?php else: ?>
+                    <div class="coloralert" style="background: #CA2E1A;color:#fff;padding-bottom:25px;">
+                            <i class="fa fa-warning"></i>
+                            <p><?php echo $message; ?></p>
+                            <a href="#close-alert"><i class="fa fa-times-circle"></i></a>
+                    </div>
+                <?php endif; ?>
 	<?php endforeach; ?>
 <?php endforeach; ?>
 

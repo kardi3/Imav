@@ -70,14 +70,14 @@ class Default_Service_Service extends MF_Service_ServiceAbstract {
     public function sendMail($values,$mailTo)
     {
         $mailFrom = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getOption('contact_email');
-        
+ 
         $message = "Dane nadawcy:<br /><br />
             <b>Imie i nazwisko</b> ".$values['name']." ".$values['surname']."<br />
            <b>Email</b> ".$values['email']."<br /><b>Telefon</b> ".$values['phone']."<br /><br /> <br />".$values['message'];
 
         
          $mail = new Zend_Mail('UTF-8');
-         $mail->setSubject($values['subject']);
+         $mail->setSubject('Mail kontaktowy ze strony');
          $mail->setFrom($mailFrom,$values['name']." ".$values['surname']);
          $mail->setReplyTo($values['email']);
          $mail->addTo($mailTo);

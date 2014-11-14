@@ -1,0 +1,25 @@
+<div class="widget">
+        <h3>NAJNOWSZA GALERIA</h3>
+        <div class="photo-gallery-widget">
+            
+            <?php foreach($this->mainPageGalleries as $gallery): ?>
+                <div class="item">
+                        <div class="item-header">
+                                <div class="gallery-change">
+                                        <a href="<?php echo $this->url(array('slug' => $gallery['Translation'][$this->language]['slug']),'domain-i18n:gallery'); ?>" class="active">
+                                            <img src="/media/photos/<?php echo $gallery['PhotoRoot']['offset'];?>/300x239/<?php echo $gallery['PhotoRoot']['filename'];?>" alt="" />
+                                        </a>
+                                </div>
+                        </div>
+                        <div class="item-content">
+                                <h4>
+                                    <a href="<?php echo $this->url(array('slug' => $gallery['Translation'][$this->language]['slug']),'domain-i18n:gallery'); ?>">
+                                        <?php echo $gallery['Translation'][$this->language]['title']; ?>
+                                    </a>
+                                </h4>
+                               <p><?php echo MF_Text::truncate(strip_tags($gallery['Translation'][$this->language]['content']),50); ?></p>
+                        </div>
+                </div>
+           <?php endforeach; ?>
+        </div>
+</div>

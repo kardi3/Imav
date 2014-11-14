@@ -163,6 +163,49 @@ $(document).ready(function() {
         $('.section').hide();
         $('.'+rel).show();
      });
+     
+      var current_url = $('#url');
+   if (current_url.val()) {
+     
+       $('#videoPreview').attr('src',current_url.val()); 
+       
+     
+    }
+   
+   
+    String.prototype.startsWith = function(str) 
+{return (this.match("^"+str)==str)}
+
+    $('#url').on('blur',function(){
+      
+      var val = '';
+                
+     // jeżeli nie zaczyna się od http to dodajemy http
+     if($(this).val().match(/^(?:http:\/\/)/)||$(this).val().match(/^(?:https:\/\/)/))
+          val = $(this).val();
+      else
+          val = "http://" + $(this).val();
+            
+            // dla youtube zamieniamy znacznik watch?=v na embed
+       if(val.indexOf("vimeo") >= 0 && val.indexOf("player") < 0){
+          var index = val.lastIndexOf("/");
+          var res = val.substring(index+1, val.length);
+          val = 'http://player.vimeo.com/video/'+res;
+      }    
+      else{    
+      if(val.indexOf("/watch?") >= 0&&val.indexOf("youtube") >= 0){
+          val = val.replace('/watch\?v=', '/embed/');
+      } 
+        
+      }
+      
+       $('#videoPreview').attr('src',val); 
+       $(this).val(val);
+       
+    });
+    
+    
+     $('#tag_id').select2();
 });
 </script>
 
@@ -236,7 +279,17 @@ $(document).ready(function() {
                         <?php echo $this->form->publish ?>
                         <?php echo $this->form->publish_date->setAttrib('class', 'combiner-picker') ?>
                         <?php echo $this->form->category_id->setAttrib('class', 'nostyle') ?>
+                        <?php echo $this->form->group_id ?>
+                        <?php echo $this->form->student ?>
+                        <?php echo $this->form->student_accept ?>
+                        <?php echo $this->form->tag_id->setAttrib('class','nostyle') ?>
+                        <?php echo $this->form->show_views ?>
                         <?php echo $this->form->id ?>
+                        
+                        <?php if(!$this->news->gallery): ?>
+                            <?php echo $this->form->gallery ?>
+                        <?php endif; ?>
+                        
                     </span>
                     <span class="section photoSection">
                         <div class="page-header">
@@ -256,7 +309,7 @@ $(document).ready(function() {
                                     </a>
                                     <?php endif; ?>
                                     <div class="actionBtn">
-                                        <a href="<?php echo $this->adminUrl('edit-news-main-photo', 'news', array('news-id' => $this->news->getId(), 'id' => $this->news->get('PhotoRoot')->getId())) ?>" class="edit"><span class="icon16 icomoon-icon-pencil-2 white"></span></a>
+                                        <a href="<?php echo $this->adminUrl('edit-news-photo', 'news', array('news-id' => $this->news->getId(), 'id' => $this->news->get('PhotoRoot')->getId())) ?>" class="edit"><span class="icon16 icomoon-icon-pencil-2 white"></span></a>
                                         <a href="#" class="add"><span class="icon16 iconic-icon-cursor white"></span></a>
                                         <a href="#" class="delete"><span class="icon16 icomoon-icon-cancel-4 white"></span></a>
                                     </div>
@@ -283,31 +336,22 @@ $(document).ready(function() {
                                 <h4>
                                     <span class="icon16 entypo-icon-attachment"></span>
                                     <span><?php echo $this->translate('Videos') ?></span>
-                                    <div class="box-form right">
-                                        <button name="add_video" type="submit" class="btn btn-success btn-mini nostyle" id="add_video"><?php echo $this->translate('Add video') ?></button>
-                                    </div>
+                                    
                                 </h4>  
                             </div>    
-                            <div class="content clearfix">
-                                <table id="video_table" cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" width="100%">
-                                    <thead>
-                                        <th><?php  echo $this->translate('Video') ?></th>
-                                        <th><?php echo $this->translate('Options') ?></th>
-                                    </thead>
-                                    <?php if($this->news->get('VideoRoot')->getNode()->hasChildren()): ?>
-                                    <tbody> 
-                                       <?php foreach($this->news->get('VideoRoot')->getNode()->getChildren() as $video): ?>
-                                            <tr>
-                                                <th><iframe id="videoPreview" width="220" height="115" frameborder="0" allowfullscreen src="<?php echo $video->url; ?>"></iframe></th>
-                                                <th style="width:50px;">
-                                                    <a href="<?php  echo $this->adminUrl('remove-video', 'news', array('id' => $video->id,'news-id' => $this->news->id)); ?>" class="remove3" title="<?php echo $this->translate('Remove'); ?>"><span class="icon16 icon-remove"></span></a>
-                                                </th>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                    <?php endif; ?>
-                                </table>
-                            </div>
+
+            <div class="content">
+                   
+                       
+                        <?php echo $this->videoForm->id ?>
+                        <?php echo $this->videoForm->url ?>
+                        <?php echo $this->videoForm->translations->getSubForm('pl')->name ?>
+                        <?php echo $this->videoForm->ad_id ?>
+                        <iframe id="videoPreview" width="420" height="315" frameborder="0" allowfullscreen></iframe>
+                        
+                       
+            </div>
+          
                         </div>
                     </span>
                     <div class="form-actions">

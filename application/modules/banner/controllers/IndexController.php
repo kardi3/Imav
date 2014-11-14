@@ -19,5 +19,83 @@ class Banner_IndexController extends MF_Controller_Action {
         $this->_helper->actionStack('layout-serwis10', 'index', 'default');
         
     }
+    public function bannerRightAction(){
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $rightBanners = $bannerService->getPositionBanners('Sidebar1');
+        $this->_helper->viewRenderer->setResponseSegment('bannerRight');
+        $this->view->assign('rightBanners', $rightBanners);
+    }
+    
+    public function bannerSidebarAction(){
+        
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $banners = $bannerService->getPositionBanners('Sidebar2');
+        
+        $this->_helper->viewRenderer->setResponseSegment('bannerSidebar');
+        
+        $this->view->assign('banners', $banners);
+    }
+    
+    public function bannerMainFirstAction(){
+        
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $banners = $bannerService->getPositionBanners('MainFirst');
+        $this->view->assign('banners', $banners);
+    }
+    
+    public function bannerMainSecondAction(){
+        
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $banners = $bannerService->getPositionBanners('MainSecond');
+        
+        
+        $this->view->assign('banners', $banners);
+    }
+    
+    public function bannerMainThirdAction(){
+        
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $banners = $bannerService->getPositionBanners('MainThird');
+        
+        
+        $this->view->assign('banners', $banners);
+    }
+    
+    public function bannerMainFourthAction(){
+        
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $banners = $bannerService->getPositionBanners('MainFourth');
+        
+        
+        $this->view->assign('banners', $banners);
+    }
+    
+    public function bannerMainFifthAction(){
+        
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $banners = $bannerService->getPositionBanners('MainFifth');
+        
+        
+        $this->view->assign('banners', $banners);
+    }
+    
+    public function bannerUnderNewsAction(){
+        
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $banners = $bannerService->getPositionBanners('UnderNews');
+        
+        
+        $this->view->assign('banners', $banners);
+    }
+    
+    
 }
 

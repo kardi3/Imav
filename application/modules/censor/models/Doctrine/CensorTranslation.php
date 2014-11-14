@@ -12,5 +12,5 @@
  */
 class Censor_Model_Doctrine_CensorTranslation extends Censor_Model_Doctrine_BaseCensorTranslation
 {
-
+    
 }

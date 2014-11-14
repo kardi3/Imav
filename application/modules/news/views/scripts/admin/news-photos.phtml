@@ -12,6 +12,8 @@
 
         <div class="actionBtn">
             <a href="<?php echo $this->adminUrl('move-news-photo', 'news', array('id' => $photo->id, 'move' => 'up', 'news' => $this->news->id)) ?>" class="move"><span class="icon16 minia-icon-arrow-left white"></span></a>
+            <a href="<?php echo $this->adminUrl('edit-news-photo', 'news', array('news-id' => $this->news->getId(), 'id' => $photo->getId())) ?>" class="edit"><span class="icon16 icomoon-icon-pencil-2 white"></span></a>
+       
             <a href="javascript:void(0)" class="delete" rel="<?php echo $photo->id; ?>"><span class="icon16 icomoon-icon-cancel-4 white"></span></a>
             <a href="<?php echo $this->adminUrl('move-news-photo', 'news', array('id' => $photo->id, 'move' => 'down', 'news' => $this->news->id)) ?>" class="move"><span class="icon16 minia-icon-arrow-right white"></span></a>
         </div>

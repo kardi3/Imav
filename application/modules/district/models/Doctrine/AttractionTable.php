@@ -16,4 +16,22 @@ class District_Model_Doctrine_AttractionTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('District_Model_Doctrine_Attraction');
     }
+    
+    public function getPublishAttractionQuery() {
+        $q = $this->createQuery('a')
+                ->addSelect('a.*')
+                ->addSelect('at.*')
+                ->addSelect('pr.*')
+                ->addSelect('p.*')
+                ->addSelect('uc.*')
+                ->leftJoin('a.Translation at')
+                ->leftJoin('a.UserCreated uc')
+                ;
+        
+        $q->leftJoin('a.PhotoRoot pr');
+        $q->leftJoin('a.Photos p');
+//        $q->addWhere('a.publish = 1');
+//        $q->addWhere('a.publish_date >= NOW()');
+        return $q;
+    } 
 }

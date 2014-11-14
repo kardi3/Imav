@@ -81,6 +81,10 @@
                     <ul class="nav">
                         <li class="active"><a href="<?php echo $this->url(array(), 'domain-homepage', true) ?>" target="_blank"><span class="icon16 icomoon-icon-screen-2"></span> <?php echo $this->translate('Site') ?></a></li>
                         <li class="dropdown">
+                                <?php 
+                    $serviceBroker = MF_Service_ServiceBroker::getInstance();
+                   $user = $serviceBroker->getService('User_Service_Auth')->getAuthenticatedUser();
+                   if($user->role=="admin"): ?>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <span class="icon16 icomoon-icon-cog"></span> <?php echo $this->translate('Settings') ?>
                                 <b class="caret"></b>
@@ -97,6 +101,7 @@
                                     </ul>
                                 </li>
                             </ul>
+                            <?php endif; ?>
                         </li>
                     </ul>
                   
@@ -142,12 +147,17 @@
                             <ul class="dropdown-menu">
                                 <li class="menu">
                                     <ul>
+                                            <?php 
+                    $serviceBroker = MF_Service_ServiceBroker::getInstance();
+                   $user = $serviceBroker->getService('User_Service_Auth')->getAuthenticatedUser();
+                   if($user->role=="admin"): ?>
                                         <li>
                                             <a href="<?php echo $this->adminUrl('edit-account', 'user') ?>"><span class="icon16 entypo-icon-settings"></span><?php echo $this->translate('Edit account') ?></a>
                                         </li>
                                         <li>
                                             <a href="<?php echo $this->adminUrl('add-admin', 'user') ?>"><span class="icon16 icomoon-icon-plus-2"></span><?php echo $this->translate('Add user') ?></a>
                                         </li>
+                                        <?php endif; ?>
                                     </ul>
                                 </li>
                             </ul>
@@ -195,39 +205,49 @@
 
                 <div class="mainnav">
                     <ul>
+                        
                         <li><a href="<?php echo $this->adminUrl('list-news', 'news') ?>"><span class="icon16 icomoon-icon-newspaper"></span><?php echo $this->translate('News') ?></a></li>
-                        <li><a href="<?php echo $this->adminUrl('list-category', 'news') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Categories') ?></a></li>
-                        <li><a href="<?php echo $this->adminUrl('list-attraction', 'district') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Attractions') ?></a></li>
+                        <?php 
+                    $serviceBroker = MF_Service_ServiceBroker::getInstance();
+                   $user = $serviceBroker->getService('User_Service_Auth')->getAuthenticatedUser();
+                   if($user->role=="admin"): ?>
+                        <li><a href="<?php echo $this->adminUrl('list-ad', 'banner') ?>"><span class="icon16 icomoon-icon-newspaper"></span><?php echo $this->translate('Reklama') ?></a></li>
+                      
+                        <li><a href="<?php echo $this->adminUrl('list-banner', 'banner') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Banners') ?></a></li>
+                          <li><a href="<?php echo $this->adminUrl('list-gallery', 'gallery') ?>"><span class="icon16 icomoon-icon-camera-2"></span><?php echo $this->translate('Galeria') ?></a></li>
+                        <li><a href="<?php echo $this->adminUrl('list-group', 'news') ?>"><span class="icon16 icomoon-icon-newspaper"></span><?php echo $this->translate('News group') ?></a></li>
                        
-                        <li><a href="<?php echo $this->adminUrl('list-people', 'district') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Districts') ?></a></li>
+                          <li><a href="<?php echo $this->adminUrl('list-menu', 'menu') ?>"><span class="icon16 icomoon-icon-list-view"></span><?php echo $this->translate('Menu') ?></a></li>
+                       <li><a href="<?php echo $this->adminUrl('list-comment', 'news') ?>"><span class="icon16 icomoon-icon-newspaper"></span>Komentarze</a></li>
+                        <li><a href="<?php echo $this->adminUrl('list-censor', 'censor') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Niecenzuralne słowa') ?></a></li>
+                        <li><a href="<?php echo $this->adminUrl('list-ip', 'censor') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Zablokowane IP') ?></a></li>
+                        <li><a href="<?php echo $this->adminUrl('list-event', 'district') ?>"><span class="icon16 icomoon-icon-calendar"></span><?php echo $this->translate('Wydarzenia') ?></a></li>
+                      
                        
-                        <li><a href="<?php echo $this->adminUrl('list-event', 'district') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Events') ?></a></li>
-                        <li><a href="<?php echo $this->adminUrl('list-censor', 'censor') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Censor') ?></a></li>
-                        
-                        <li><a href="<?php echo $this->adminUrl('list-product', 'product') ?>"><span class="icon16 icomoon-icon-list-view"></span><?php echo $this->translate('Products') ?></a></li>
                         <li>
-                            <a href="<?php echo $this->adminUrl('list-subscriber', 'newsletter') ?>"><span class="icon16 icomoon-icon-user-3"></span><?php echo $this->translate('Subscribers') ?></a>
+                            <a href="#"><span class="icon16 icomoon-icon-mail-4"></span><?php echo $this->translate('Newsletter') ?></a>
+                            <ul class="sub">
+                                <li><a href="<?php echo $this->adminUrl('list-message', 'newsletter') ?>"><span class="icon16 entypo-icon-list"></span><?php echo $this->translate('Newsletter') ?></a></li> 
+                                <li><a href="<?php echo $this->adminUrl('list-subscriber', 'newsletter') ?>"><span class="icon16 entypo-icon-list"></span><?php echo $this->translate('Subscribers') ?></a></li> 
+                                <li><a href="<?php echo $this->adminUrl('list-group', 'newsletter') ?>"><span class="icon16 entypo-icon-list"></span><?php echo $this->translate('Groups') ?></a></li> 
+                              
+                            </ul>
                         </li>
-                        <li><a href="<?php echo $this->adminUrl('list-menu', 'menu') ?>"><span class="icon16 icomoon-icon-list-view"></span><?php echo $this->translate('Menu') ?></a></li>
-<!--                        <li>
-                            <a href="#"><span class="icon16 icomoon-icon-mail-4"></span><?php echo $this->translate('Insurance') ?></a>
-                            <ul class="sub">
-                                <li><a href="<?php //echo $this->adminUrl('list-item', 'insurance') ?>"><span class="icon16 entypo-icon-list"></span><?php //echo $this->translate('Items') ?></a></li> 
-                                <li><a href="<?php //echo $this->adminUrl('list-product', 'insurance') ?>"><span class="icon16 entypo-icon-list"></span><?php// echo $this->translate('Product') ?></a></li> 
-                                <li><a href="<?php //echo $this->adminUrl('list-country', 'insurance') ?>"><span class="icon16 entypo-icon-list"></span><?php //echo $this->translate('Country') ?></a></li> 
-                                <li><a href="<?php //echo $this->adminUrl('list-sport', 'insurance') ?>"><span class="icon16 entypo-icon-list"></span><?php //echo $this->translate('Sport') ?></a></li> 
-                                
-                            </ul>
-                        </li>-->
-                        <li><a href="<?php echo $this->adminUrl('list-page', 'page') ?>"><span class="icon16 icomoon-icon-stack"></span><?php echo $this->translate('Pages') ?></a></li>
-                        <li><a href="<?php  echo $this->adminUrl('list-slide', 'slider') ?>"><span class="icon16 entypo-icon-images"></span><?php  echo $this->translate('Slider') ?></a></li>
-                        
+                        <li><a href="<?php  echo $this->adminUrl('list-page', 'page') ?>"><span class="icon16 icomoon-icon-stack"></span><?php  echo $this->translate('Pages') ?></a></li>
+                        <li><a href="<?php   echo $this->adminUrl('list-slide', 'slider') ?>"><span class="icon16 entypo-icon-images"></span><?php echo $this->translate('Slider') ?></a></li>
+                        <li><a href="<?php echo $this->adminUrl('list-tag', 'news') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Tagi') ?></a></li>
+                       
                         <li>
-                            <a href="#"><span class="icon16 entypo-icon-settings"></span><?php echo $this->translate('Settings') ?></a>
-                            <ul class="sub">
-                                <li><a href="<?php echo $this->adminUrl('list-settings', 'default') ?>"><span class="icon16 icomoon-icon-equalizer"></span><?php echo $this->translate('Site settings') ?></a></li>
-                                <li><a href="<?php echo $this->adminUrl('list-language', 'default') ?>"><span class="icon16 icomoon-icon-comments-2"></span><?php echo $this->translate('Languages') ?></a></li>
-                            </ul>
+                              <div class="sidebar-widget" style="margin: -1px 0 0 0;">
+                            <h5 class="title" style="margin-bottom:0"><?php echo $this->translate('Configuration') ?></h5>
+                        </div><!-- End .sidenav-widget -->
+                       <li><a href="<?php echo $this->adminUrl('list-admin', 'user') ?>"><span class="icon16 icomoon-icon-user"></span><?php echo $this->translate('Administrators') ?></a></li>  
+                       <?php /*     <li><a href="<?php echo $this->adminUrl('list-language', 'default') ?>"><span class="icon16 icomoon-icon-comments-2"></span><?php echo $this->translate('Languages') ?></a></li> */ ?>
+                            <li><a href="<?php echo $this->adminUrl('list-settings', 'default') ?>"><span class="icon16 icomoon-icon-info"></span><?php echo $this->translate('Company information') ?></a></li> 
+                        
+                <?php else: ?>
+                            <li style="min-width:210px;"></li><?php
+                endif; ?>
                         </li>
                     </ul>
                 </div>
@@ -240,14 +260,12 @@
                         <ul class="unstyled">
                             <!--<li><span class="number">34</span><span class="icon16 icomoon-icon-new-2"></span>Posts</li>-->
                             <!--<li><span class="number">7</span><span class="icon16 icomoon-icon-file"></span>Pages</li>-->
-                            <?php /*
-                            <li><span class="number"><?php echo $this->offerCount ?></span><span class="icon16 silk-icon-calculator"></span><?php echo $this->translate('Offers') ?></li>
-                            <li><span class="number"><?php echo $this->noticeCount ?></span><span class="icon16 icomoon-icon-file-2"></span><?php echo $this->translate('Notices') ?></li>
+                          
+                          <?php     /*<li><span class="number"><?php echo $this->noticeCount ?></span><span class="icon16 icomoon-icon-file-2"></span><?php echo $this->translate('Notices') ?></li>
                              * 
                              */ ?>
-                            <li><span class="number"><?php echo $this->articleCount ?></span><span class="icon16 icomoon-icon-pencil-2"></span><?php echo $this->translate('News') ?></li>
-                            <li><span class="number"><?php echo $this->categoryCount ?></span><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Categories') ?></li>
-                            <li><span class="number"><?php echo $this->productCount ?></span><span class="icon16 icomoon-icon-cart-2"></span><?php echo $this->translate('Products') ?></li>
+                            <li><span class="number"><?php echo $this->newsCount ?></span><span class="icon16 icomoon-icon-pencil-2"></span><?php echo $this->translate('News') ?></li>
+                            <li style="font-size:11px"><span class="number"><?php echo $this->studentNewsCount ?></span><span  class="icon16 silk-icon-calculator"></span>Nowe newsy stud.</li>
                             <!--<li><span class="number">201</span><span class="icon16 icomoon-icon-tag"></span>Tags</li>-->
                         </ul>
                     </div>
@@ -381,9 +399,8 @@
     <script type="text/javascript" src="/plugins/forms/timeentry/jquery.timeentry.min.js"></script>
     <script type="text/javascript" src="/plugins/forms/select/select2.min.js"></script>
     <script type="text/javascript" src="/plugins/forms/dualselect/jquery.dualListBox-1.3.min.js"></script>
-    <script type="text/javascript" src="/plugins/forms/tiny_mce/jquery.tinymce.js"></script>
     <script type="text/javascript" src="/plugins/forms/smartWizzard/jquery.smartWizard-2.0.min.js"></script>
-    <!--<script type="text/javascript" src="/plugins/tinymce/jquery.tinymce.js"></script>-->
+    <script type="text/javascript" src="/plugins/tinymce4/tinymce.min.js"></script>
     
     <!-- Fix plugins -->
     <script type="text/javascript" src="/plugins/fix/ios-fix/ios-orientationchange-fix.js"></script>

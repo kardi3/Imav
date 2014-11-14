@@ -3,7 +3,7 @@
 /**
  * Slider
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Michał Folga <michalfolga@gmail.com>
  */
 class Slider_View_Helper_Slider extends Zend_View_Helper_Abstract {
     

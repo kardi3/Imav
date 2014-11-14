@@ -3,7 +3,7 @@
 /**
  * Newsletter_Form_Group
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Andrzej Wilczyński <and.wilczynski@gmail.com>
  */
 class Newsletter_Form_Group extends Admin_Form {
     
@@ -18,10 +18,11 @@ class Newsletter_Form_Group extends Admin_Form {
         $name->setDecorators(self::$textDecorators);
         $name->setAttrib('class', 'span8');
 
-        
-        $subscribers = $this->createElement('multiselect', 'subscribers');
-        $subscribers->setLabel('Subscribers');
-        $subscribers->setDecorators(self::$selectDecorators);
+        $subscriberId = $this->createElement('multiselect', 'subscriber_id');
+        $subscriberId->setLabel('Subscribers');
+        $subscriberId->setRequired();
+        $subscriberId->setDecorators(self::$selectDecorators);
+        $subscriberId->setAttrib('multiple', 'multiple');
         
         $submit = $this->createElement('button', 'submit');
         $submit->setLabel('Save');
@@ -29,7 +30,7 @@ class Newsletter_Form_Group extends Admin_Form {
         $submit->setAttribs(array('class' => 'btn btn-info', 'type' => 'submit'));
 
         $this->setElements(array(
-            $subscribers,
+            $subscriberId,
             $name,
             $id,
             $submit

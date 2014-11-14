@@ -73,3 +73,19 @@ tr.inactive td { background-color: #C4C4C4; }
 form .error{
     border: 1px solid #ED7A53 !important;
 }
+.roleRadio .controls,.roleRadio label{
+    display:inline-block;
+}
+.roleRadio .controls{
+    height:30px;
+    padding-top:5px;
+}
+.roleRadio label{
+    width:100px;
+}
+.roleRadio label[for="role"]{
+    width:33%;
+}
+.roleRadio br{
+    display:none;
+}

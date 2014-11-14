@@ -29,11 +29,10 @@ class Product_Form_Product extends Admin_Form {
 //        $producerId->setLabel('Producer');
 //        $producerId->setDecorators(self::$selectDecorators);
         
-        $categoryId = $this->createElement('multiselect', 'category_id');
+        $categoryId = $this->createElement('select', 'category_id');
         $categoryId->setLabel('Categories');
         $categoryId->setRequired();
         $categoryId->setDecorators(self::$selectDecorators);
-        $categoryId->setAttrib('multiple', 'multiple');
      
         
         $price = $this->createElement('text', 'price');
@@ -91,6 +90,7 @@ class Product_Form_Product extends Admin_Form {
         $active->setLabel('Active');
         $active->setDecorators(self::$checkboxDecorators);
         $active->setAttrib('class', 'span8');
+        $active->setValue(1);
         
         $sold = $this->createElement('checkbox', 'sold');
         $sold->setLabel('Sold');

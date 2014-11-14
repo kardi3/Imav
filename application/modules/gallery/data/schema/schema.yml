@@ -6,9 +6,11 @@ Gallery:
   tableName: gallery_gallery
   actAs:
     I18n:
-      fields: [name, slug, description]
+      fields: [title, slug, content]
       tableName: gallery_gallery_translation
       className: GalleryTranslation
+    Timestampable: ~
+    SoftDelete: ~
   columns:
     id:
       primary: true
@@ -16,16 +18,19 @@ Gallery:
       type: integer(4)
     metatag_id:
       type: integer(4)
-    name:
+    title:
       type: string(255)
     slug:
       type: string(255)
-    description:
+    content:
       type: clob
     photo_root_id:
       type: integer(4)
     category_id:
       type: integer(4)
+    main_page:
+      type: boolean
+      default: 0
   relations:
     Category:
       local: category_id
@@ -44,11 +49,11 @@ GalleryTranslation:
     lang:
       primary: true
       type: string(64)
-    name:
+    title:
       type: string(255)
     slug:
       type: string(255)
-    description:
+    content:
       type: clob
   relations:
     Gallery:
@@ -59,11 +64,6 @@ GalleryTranslation:
       foreignType: many
 Category:
   tableName: gallery_category
-  actAs:
-    I18n:
-      fields: [name, slug, description]
-      tableName: gallery_category_translation
-      className: CategoryTranslation
   columns:
     id:
       primary: true
@@ -71,32 +71,9 @@ Category:
       type: integer(4)
     metatag_id:
       type: integer(4)
-    name:
+    title:
       type: string(255)
     slug:
       type: string(255)
-    description:
+    content:
       type: clob
-CategoryTranslation:
-  tableName: gallery_category_translation
-  columns:
-    id:
-      primary: true
-      autoincrement: true
-      type: integer(4)
-    lang:
-      primary: true
-      type: string(64)
-    name:
-      type: string(255)
-    slug:
-      type: string(255)
-    description:
-      type: clob
-  relations:
-    Category:
-      local: id
-      foreign: id
-      foreignAlias: Translation
-      type: one
-      foreignType: many

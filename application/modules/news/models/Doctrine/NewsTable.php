@@ -22,13 +22,139 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
                 ->addSelect('n.*')
                 ->addSelect('nt.*')
                 ->addSelect('pr.*')
+                ->addSelect('c.*')
                 ->addSelect('p.*')
                 ->leftJoin('n.Translation nt')
                 ;
         
         $q->leftJoin('n.PhotoRoot pr');
-        $q->leftJoin('n.Photos p');
+        $q->leftJoin('n.Photos p')
+                ->leftJoin('n.Category c');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
+        $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
+        return $q;
+    }
+    
+    public function getShowNewsQuery() {
+        $q = $this->createQuery('n')
+                ->addSelect('n.*')
+                ->addSelect('nt.*')
+                ->addSelect('pr.*')
+                ->addSelect('c.*')
+                ->addSelect('p.*')
+                ->leftJoin('n.Translation nt')
+                ;
         
+        $q->leftJoin('n.PhotoRoot pr');
+        $q->leftJoin('n.Photos p')
+                ->leftJoin('n.Category c');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
+        return $q;
+    }
+    
+    public function getBreakingNewsQuery() {
+        $q = $this->createQuery('n')
+                ->addSelect('n.*')
+                ->addSelect('nt.*')
+                ->addSelect('c.*')
+                ->leftJoin('n.Translation nt')
+                
+        
+                ->leftJoin('n.Category c');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
+        
+        $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
+        return $q;
+    }
+    
+    public function getNewsCategoryListQuery() {
+        $q = $this->createQuery('n')
+                ->addSelect('n.*')
+                ->addSelect('nt.*')
+                ->addSelect('pr.*')
+                ->addSelect('c.*')
+                ->addSelect('p.*')
+                ->addSelect('vr.*')
+                ->leftJoin('n.Translation nt')
+                ->leftJoin('n.VideoRoot vr');
+                ;
+        
+        $q->leftJoin('n.PhotoRoot pr');
+        $q->leftJoin('n.Photos p')
+                ->leftJoin('n.Category c');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
+        $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
+        return $q;
+    }
+    
+    public function getNewsStudentListQuery() {
+        $q = $this->createQuery('n')
+                ->addSelect('n.*')
+                ->addSelect('nt.*')
+                ->addSelect('pr.*')
+                ->addSelect('c.*')
+                ->addSelect('p.*')
+                ->addSelect('vr.*')
+                ->leftJoin('n.Translation nt')
+                ->leftJoin('n.VideoRoot vr');
+                ;
+        
+        $q->leftJoin('n.PhotoRoot pr');
+        $q->leftJoin('n.Photos p')
+                ->leftJoin('n.Category c');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
+        $q->addWhere('n.student = 1');
+        return $q;
+    }
+    
+    public function getNewsGroupListQuery() {
+        $q = $this->createQuery('n')
+                ->addSelect('n.*')
+                ->addSelect('nt.*')
+                ->addSelect('pr.*')
+                ->addSelect('c.*')
+                ->addSelect('g.*')
+                ->addSelect('p.*')
+                ->addSelect('vr.*')
+                ->leftJoin('n.Translation nt')
+                ->leftJoin('n.VideoRoot vr');
+                
+        $q->leftJoin('n.PhotoRoot pr');
+        $q->leftJoin('n.Photos p')
+                ->leftJoin('n.Category c')
+                ->leftJoin('n.Group g');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
+        
+        $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
+        return $q;
+    }
+    
+    public function getNewsTagListQuery() {
+        $q = $this->createQuery('n')
+                ->addSelect('n.*')
+                ->addSelect('nt.*')
+                ->addSelect('pr.*')
+                ->addSelect('c.*')
+                ->addSelect('t.*')
+                ->addSelect('p.*')
+                ->addSelect('vr.*')
+                ->leftJoin('n.Translation nt')
+                ->leftJoin('n.VideoRoot vr');
+                
+        $q->leftJoin('n.PhotoRoot pr');
+        $q->leftJoin('n.Photos p')
+                ->leftJoin('n.Category c')
+                ->leftJoin('n.Tags t');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
+        
+        $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
         return $q;
     }
     
@@ -45,7 +171,10 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
         
         $q->leftJoin('n.PhotoRoot pr');
         $q->leftJoin('n.Photos p');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
         
+        $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
         return $q;
     }
     
@@ -62,13 +191,13 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
         
         $q->leftJoin('n.PhotoRoot pr');
         $q->leftJoin('n.Photos p');
-        
+        $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
         return $q;
     }
     
      public function getPublishNewsQuery() {
         $q = $this->createQuery('n')
-                ->addSelect('n.*')
+                ->select('n.*')
                 ->addSelect('nt.*')
                 ->addSelect('pr.*')
                 ->addSelect('p.*')
@@ -78,9 +207,10 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
         
         $q->leftJoin('n.PhotoRoot pr');
         $q->leftJoin('n.Photos p');
-//        $q->addWhere('n.publish = 1');
-//        $q->addWhere('n.publish_date >= NOW()');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
         $q->leftJoin('n.Comments c');
+        $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
         return $q;
     } 
 }

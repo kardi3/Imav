@@ -20,29 +20,6 @@ class Product_AdminController extends MF_Controller_Action {
     /* category start */
     
     public function listCategoryAction() {
-        $i18nService = $this->_service->getService('Default_Service_I18n');
-        $categoryService = $this->_service->getService('Product_Service_Category');
-        
-        $adminLanguage = $i18nService->getAdminLanguage();
-           
-        if(!$categoryRoot = $categoryService->getCategoryRoot()) {
-            $languages = array('en' => 'Categories', 'pl' => 'Kategorie');
-            $categoryService->createCategoryRoot($languages);
-        }
-
-        if(!$parent = $categoryService->getCategory($this->getRequest()->getParam('id', 0))) {
-            $parent = $categoryService->getCategoryRoot();
-        }
-
-        $categoryTree = $categoryService->getCategoryTree();
-           
-        if($current = $this->view->admincontainer->findOneBy('id', 'category')) {
-            $current->setActive(true);
-        }
-        
-        $this->view->assign('adminLanguage', $adminLanguage->getId());
-        $this->view->assign('parent', $parent);
-        $this->view->assign('categoryTree', $categoryTree);
     }
     
     public function listCategoryDataAction() {
@@ -53,8 +30,8 @@ class Product_AdminController extends MF_Controller_Action {
             'request' => $this->getRequest(), 
             'table' => $table, 
             'class' => 'Product_DataTables_Category', 
-            'columns' => array('t.name'),
-            'searchFields' => array('t.name')
+            'columns' => array('ct.name'),
+            'searchFields' => array('ct.name')
         ));
         $results = $dataTables->getResult();
         
@@ -95,10 +72,6 @@ class Product_AdminController extends MF_Controller_Action {
         
         $form = $categoryService->getCategoryForm();
         
-        if(!$parent = $categoryService->getCategory($this->getRequest()->getParam('id', 0))) {
-            $parent = $categoryService->getCategoryRoot();
-        }
-        $form->getElement('parent_id')->setValue($parent->getId());
         
         $form->translations->getSubForm($adminLanguage->getId())->getElement('name')->setRequired();
         
@@ -128,8 +101,9 @@ class Product_AdminController extends MF_Controller_Action {
                     
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
                 
-                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-category', 'product', array('id' => $category->getId())));
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-category', 'product'));
                 } catch(Exception $e) {
+                    var_dump($e->getMessage());exit;
                     $this->_service->get('doctrine')->getCurrentConnection()->rollback();
                     $this->_service->get('log')->log($e->getMessage(), 4);
                 }
@@ -140,67 +114,6 @@ class Product_AdminController extends MF_Controller_Action {
         
         $this->view->assign('adminLanguage', $adminLanguage);
         $this->view->assign('languages', $languages);
-        $this->view->assign('form', $form);
-        $this->view->assign('parentId', $parent->getId());
-    }
-    
-    public function listSubCategoryAction() {
-        $i18nService = $this->_service->getService('Default_Service_I18n');
-        $categoryService = $this->_service->getService('Product_Service_Category');
-        $metatagService = $this->_service->getService('Default_Service_Metatag');
-        
-        $adminLanguage = $i18nService->getAdminLanguage();
-        
-        $translator = $this->_service->get('translate');
-        
-        if(!$category = $categoryService->getCategory((int) $this->getRequest()->getParam('id'))) {
-            throw new Zend_Controller_Action_Exception('Category not found');
-        }
-        
-        $form = $categoryService->getCategoryForm($category);
-
-        $metatagsForm = $metatagService->getMetatagsSubForm($category->get('Metatags'));
-        $form->addSubForm($metatagsForm, 'metatags');
-        
-        if($this->getRequest()->isPost()) {
-            if($form->isValid($this->getRequest()->getParams())) {
-                try {
-                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
-                
-                    $values = $form->getValues();
-                    
-                    if($metatags = $metatagService->saveMetatagsFromArray($category->get('Metatags'), $values, array('title' => 'name', 'description' => 'description', 'keywords' => 'description'))) {
-                        $values['metatag_id'] = $metatags->getId();
-                    }
-                    
-                    $category = $categoryService->saveCategoryFromArray($values);
-
-                    
-                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
-                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-category', 'product', array('id' => $category->getId())));
-                } catch(Exception $e) {
-                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
-                    $this->_service->get('log')->log($e->getMessage(), 4);
-                }
-            }
-        }
-        
-        if(!$categoryRoot = $categoryService->getCategoryRoot()) {
-            $languages = array('en' => 'Categories', 'pl' => 'Kategorie');
-            $categoryService->createCategoryRoot($languages);
-        }
-     
-        $categoryTree = $categoryService->getCategoryTree();
-        
-        if($current = $this->view->admincontainer->findOneBy('id', 'list-sub-category')) {
-            $current->setLabel($translator->translate($current->getLabel()) . ' ' . $category->Translation[$adminLanguage]->name);
-            $current->setActive(true);
-            $this->view->assign('adminTitle', $current->getLabel());
-        }
-        
-        $this->view->assign('adminLanguage', $adminLanguage->getId());
-        $this->view->assign('parent', $category);
-        $this->view->assign('categoryTree', $categoryTree);
         $this->view->assign('form', $form);
     }
     
@@ -264,13 +177,7 @@ class Product_AdminController extends MF_Controller_Action {
             $categoryPhotos = NULL;
         }
         
-        $parentId = $category->getNode()->getParent() ? $category->getNode()->getParent()->getId() : null;
-        
-        if($current = $this->view->admincontainer->findOneBy('id', 'edit-category')) {
-            $current->setLabel($translator->translate($current->getLabel()) . ' ' . $category->Translation[$adminLanguage]->name);
-            $current->setActive(true);
-            $this->view->assign('adminTitle', $current->getLabel());
-        }
+       
 
         $languages = $i18nService->getLanguageList();
         
@@ -278,38 +185,9 @@ class Product_AdminController extends MF_Controller_Action {
         $this->view->assign('languages', $languages);
         $this->view->assign('category', $category);
         $this->view->assign('form', $form);
-        $this->view->assign('parentId', $parentId);
         $this->view->assign('categoryPhotos', $categoryPhotos);
     }
   
-    public function moveCategoryAction() {
-
-        $categoryService = new Product_Service_Category();
-        
-        $this->view->clearVars();
-
-        $category = $categoryService->getCategory((int) $this->getRequest()->getParam('id'));
-        $status = 'success';
-        
-        $dest = $categoryService->getCategory((int) $this->getRequest()->getParam('dest_id'));
-  
-        try {
-            $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
-
-            $categoryService->moveCategory($category, $dest, $this->getRequest()->getParam('mode', 'after'));
-
-            $this->_service->get('doctrine')->getCurrentConnection()->commit();
-        } catch(Exception $e) {
-            $this->_service->get('doctrine')->getCurrentConnection()->rollback();
-            $this->_service->get('log')->log($e->getMessage());
-            $status= 'error';
-        }
-        
-        $this->_helper->viewRenderer->setNoRender();
-        
-        $this->view->assign('status', $status);
-    }
-    
     public function removeCategoryAction() {
         $categoryService = $this->_service->getService('Product_Service_Category');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
@@ -784,8 +662,8 @@ class Product_AdminController extends MF_Controller_Action {
             'request' => $this->getRequest(), 
             'table' => $table, 
             'class' => 'Product_DataTables_Product', 
-            'columns' => array('t.name', 'pt.name','ct.name','x.slider','x.promotion','x.new','x.active','x.sold'),
-            'searchFields' => array('t.id','t.name', 'pt.name','ct.name','x.slider','x.promotion','x.new','x.active','x.sold')
+            'columns' => array('pt.name','ct.name'),
+            'searchFields' => array( 'pt.name','ct.name')
         ));
         
         $results = $dataTables->getResult();
@@ -795,61 +673,17 @@ class Product_AdminController extends MF_Controller_Action {
         $rows = array();
         foreach($results as $result) {
                     $row = array();
+                    $row[] = $result->id;
                     $row[] = $result->Translation[$language->getId()]->name;
-                    $cat = '';
-                    foreach ($result['Categories'] as $category):
-                        if ($cat == ''){
-                            $cat = $category->Translation[$language->getId()]->name;
-                        }
-                        else{
-                            $cat .= '<br>'.$category->Translation[$language->getId()]->name;
-                        }
-                    endforeach;
-                    $row[] = $cat;
                     
-                    if($result['slider'] == 1){
-                        $row[] = '<a href="' . $this->view->adminUrl('set-slider-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"></span></a>';
-                    }else{
-                        $row[] = '<a href="' . $this->view->adminUrl('set-slider-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
-                    }
+                    $row[] = $result['Category']->Translation[$language->getId()]->name;
                     
-                     if($result['promotion'] == 1){
-                        $row[] = '<a href="' . $this->view->adminUrl('set-promotion-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"></span></a>';
-                    }else{
-                        $row[] = '<a href="' . $this->view->adminUrl('set-promotion-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
-                    }
-                    
-                    if($result['new'] == 1){
-                        $row[] = '<a href="' . $this->view->adminUrl('set-new-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"></span></a>';
-                    }else{
-                        $row[] = '<a href="' . $this->view->adminUrl('set-new-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
-                    }
-                 
                     if($result['active'] == 1){
                         $row[] = '<a href="' . $this->view->adminUrl('set-active-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"></span></a>';
                     }else{
                         $row[] = '<a href="' . $this->view->adminUrl('set-active-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
                     }
                     
-                    if($result['sold'] == 1){
-                        $row[] = '<a href="' . $this->view->adminUrl('set-sold-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"></span></a>';
-                    }else{
-                        $row[] = '<a href="' . $this->view->adminUrl('set-sold-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
-                    }
-                    
-                    if($result['facebook'] == 1){
-                        $row[] = '<span class="icon16 icomoon-icon-checkbox-2"></span>';
-                    }else{
-                        $row[] = '<a href="' . $this->view->adminUrl('set-facebook-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
-                    }
-                    
-                    if($result['twitter'] == 1){
-                        $row[] = '<span class="icon16 icomoon-icon-checkbox-2"></span>';
-                    }else{
-                        //$row[] = '<a href="' . $this->view->adminUrl('set-twitter-product', 'product', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
-                        $row[] = '<span class="icon16 icomoon-icon-checkbox-unchecked-2"></span>';
-                        
-                    }
                     
                     $options = '<a href="' . $this->view->adminUrl('edit-product', 'product', array('id' => $result['id'])) . '" title ="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;';     
                     $options .= '<a href="' . $this->view->adminUrl('remove-product', 'product', array('id' => $result['id'])) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
@@ -874,7 +708,6 @@ class Product_AdminController extends MF_Controller_Action {
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $productService = $this->_service->getService('Product_Service_Product');
         $categoryService = $this->_service->getService('Product_Service_Category');
-        $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
         $photoService = $this->_service->getService('Media_Service_Photo');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
         
@@ -885,8 +718,7 @@ class Product_AdminController extends MF_Controller_Action {
         $form = $productService->getProductForm();
         $metatagsForm = $metatagService->getMetatagsSubForm();
         $form->addSubForm($metatagsForm, 'metatags');
-       // $form->getElement('producer_id')->setMultiOptions($producerService->getTargetProducerSelectOptions(true, $adminLanguage->getId()));
-        $form->getElement('category_id')->setMultiOptions($categoryService->getTargetCategorySelectOptions(null, $adminLanguage->getId()));
+        $form->getElement('category_id')->setMultiOptions($categoryService->getTargetCategorySelectOptions(true, $adminLanguage->getId()));
         
         $form->translations->getSubForm($adminLanguage->getId())->name->setRequired();
         
@@ -912,7 +744,6 @@ class Product_AdminController extends MF_Controller_Action {
                  
                     $product = $productService->saveProductFromArray($values);
                                         
-                    $subscriberService->saveProductSubscribers($product);
                     
                     $root = $product->get('PhotoRoot');
                     if($root->isInProxyState()) {
@@ -928,35 +759,17 @@ class Product_AdminController extends MF_Controller_Action {
                 
                     $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-product', 'product', array('id' => $product->getId())));
                 } catch(Exception $e) {
-                    var_dump($e->getMessage());exit;
                     $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
                     $this->_service->get('log')->log($e->getMessage(), 4);
                 }              
             }
-            else{
-                $form->populate($_POST);
-            }
         }     
         
-        
-        if(!$categoryRoot = $categoryService->getCategoryRoot()) {
-            $languages = array('en' => 'Categories', 'pl' => 'Kategorie');
-            $categoryService->createCategoryRoot($languages);
-        }
-
-        if(!$parent = $categoryService->getCategory($this->getRequest()->getParam('id', 0))) {
-            $parent = $categoryService->getCategoryRoot();
-        }
-
-        $categoryTree = $categoryService->getCategoryTree();
-           
         $languages = $i18nService->getLanguageList();
         
         
         $this->view->assign('adminLanguage', $adminLanguage->getId());
         $this->view->assign('languages', $languages);
-        $this->view->assign('parent', $parent);
-        $this->view->assign('categoryTree', $categoryTree);
         $this->view->assign('form', $form);       
     }
   
@@ -965,7 +778,7 @@ class Product_AdminController extends MF_Controller_Action {
         $metatagService = $this->_service->getService('Default_Service_Metatag');
         $productService = $this->_service->getService('Product_Service_Product');
         $photoService = $this->_service->getService('Media_Service_Photo');
-        $producerService = $this->_service->getService('Product_Service_Producer');
+        $videoService = $this->_service->getService('Media_Service_VideoUrl');
         $categoryService = $this->_service->getService('Product_Service_Category');
         
         $adminLanguage = $i18nService->getAdminLanguage();
@@ -981,8 +794,11 @@ class Product_AdminController extends MF_Controller_Action {
         
         $form->translations->getSubForm($adminLanguage->getId())->name->setRequired();
         
-       // $form->getElement('producer_id')->setMultiOptions($producerService->getTargetProducerSelectOptions(true, $adminLanguage->getId()));
-        $form->getElement('category_id')->setMultiOptions($categoryService->getTargetCategorySelectOptions(false, $adminLanguage->getId()));
+       
+        
+        $form->getElement('category_id')->setMultiOptions($categoryService->getTargetCategorySelectOptions(true, $adminLanguage->getId()));
+        $form->getElement('category_id')->setValue($product['category_id']);
+        
         $form->removeElement('price');
         $form->removeElement('code');
         $form->removeElement('dimensions');
@@ -996,7 +812,11 @@ class Product_AdminController extends MF_Controller_Action {
                 $product->set('PhotoRoot',$root);
                 $product->save();
             }
-       
+        if(!strlen($product->video_root_id)){
+            $root = $videoService->createVideoRoot();
+            $product->set('VideoRoot',$root);
+            $product->save();
+        }
         if($this->getRequest()->isPost()) {
             if($form->isValid($this->getRequest()->getPost())) {
                 try {                                   
@@ -1011,7 +831,17 @@ class Product_AdminController extends MF_Controller_Action {
                     
                     $this->view->messages()->add($translator->translate('Item has been updated'), 'success');
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    
+                     if(isset($_POST['add_video'])){
+                        $this->_helper->redirector->gotoUrl($this->view->adminUrl('add-video', 'product',array('id' => $product->id)));
+                    }
+                    
+                     if(isset($_POST['save_only'])){
+                        $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-product', 'product',array('id' => $product->id)));
+                    }
+                    
                     $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-product', 'product'));
+                    
                 } catch(Exception $e) {
                     $this->_service->get('doctrine')->getCurrentConnection()->rollback();
                     $this->_service->get('log')->log($e->getMessage(), 4);
@@ -1031,24 +861,12 @@ class Product_AdminController extends MF_Controller_Action {
             $productPhotos = NULL;
         }
         
-        if(!$categoryRoot = $categoryService->getCategoryRoot()) {
-            $languages = array('en' => 'Categories', 'pl' => 'Kategorie');
-            $categoryService->createCategoryRoot($languages);
-        }
-
-        if(!$parent = $categoryService->getCategory($this->getRequest()->getParam('id', 0))) {
-            $parent = $categoryService->getCategoryRoot();
-        }
-
-        $categoryTree = $categoryService->getCategoryTree();
-           
+       
         $languages = $i18nService->getLanguageList();
         
         
         $this->view->assign('adminLanguage', $adminLanguage->getId());
         $this->view->assign('languages', $languages);
-        $this->view->assign('parent', $parent);
-        $this->view->assign('categoryTree', $categoryTree);
         $this->view->assign('form', $form);
         $this->view->assign('product', $product);
         $this->view->assign('productPhotos', $productPhotos);
@@ -1121,7 +939,7 @@ class Product_AdminController extends MF_Controller_Action {
                             $product->save();
                         }
 
-                       $photoService->createPhoto($filePath, $name, $pathinfo['filename'], $photoDimension, $root, true);
+                       $photoService->createPhoto($filePath, $name, $pathinfo['filename'], array_keys(Product_Model_Doctrine_Product::getProductPhotoDimensions()), $root, true);
 
                        $this->_service->get('doctrine')->getCurrentConnection()->commit();
                     } catch(Exception $e) {
@@ -1239,11 +1057,7 @@ class Product_AdminController extends MF_Controller_Action {
     public function addProductMainPhotoAction() {
         $productService = $this->_service->getService('Product_Service_Product');
         $photoService = $this->_service->getService('Media_Service_Photo');
-        $photoDimensionService = $this->_service->getService('Default_Service_PhotoDimension');
         
-        $productDimension = $photoDimensionService->getDimension('productmain');
-        $sliderDimension = $photoDimensionService->getDimension('slider');
-        $photoDimension = array_unique(array_merge($productDimension,$sliderDimension));
         
         if(!$product = $productService->getProduct((int) $this->getRequest()->getParam('id'))) {
             throw new Zend_Controller_Action_Exception('Product not found');
@@ -1268,10 +1082,10 @@ class Product_AdminController extends MF_Controller_Action {
 
                     $root = $product->get('PhotoRoot');
                     if(!$root || $root->isInProxyState()) {
-                        $photo = $photoService->createPhoto($filePath, $name, $pathinfo['filename'], $photoDimension, false, false);
+                        $photo = $photoService->createPhoto($filePath, $name, $pathinfo['filename'], array_keys(Product_Model_Doctrine_Product::getProductPhotoDimensions()), false, false);
                     } else {
                         $photo = $photoService->clearPhoto($root);       
-                        $photo = $photoService->updatePhoto($root, $filePath, null, $name, $pathinfo['filename'], $photoDimension, false);                    
+                        $photo = $photoService->updatePhoto($root, $filePath, null, $name, $pathinfo['filename'], array_keys(Product_Model_Doctrine_Product::getProductPhotoDimensions()), false);                    
                     }
 
                     $product->set('PhotoRoot', $photo);
@@ -1622,6 +1436,71 @@ class Product_AdminController extends MF_Controller_Action {
         $this->view->assign('photo', $photo);
         $this->view->assign('dimensions', $photoDimension);
         $this->view->assign('form', $form);
+    }
+    
+    public function addVideoAction() {
+        $productService = $this->_service->getService('Product_Service_Product');
+        $videoService = $this->_service->getService('Media_Service_VideoUrl');
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        
+        if(!$product = $productService->getProduct((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Product not found');
+        }
+        $root = $product->get('VideoRoot');
+        
+        $form = new Product_Form_Video();
+       
+        $this->view->assign('form',$form);
+        
+       
+        $languages = $i18nService->getLanguageList();
+        $adminLanguage = $i18nService->getAdminLanguage();
+        $this->view->assign('languages', $languages);
+        $this->view->assign('adminLanguage', $adminLanguage->getId());
+        
+        
+         if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getPost())) {
+                try {                                   
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    $values = $form->getValues();  
+                 
+                    $video = $videoService->createVideoFromUpload($values, $root);
+                    
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-product', 'product',array('id' => (int) $this->getRequest()->getParam('id'))));
+                } catch(Exception $e) {
+                    var_dump($e->getMessage());exit;
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+        }    
+//     
+    }
+    
+    public function removeVideoAction() {
+        $videoService = $this->_service->getService('Media_Service_VideoUrl');
+        
+        
+        
+        if($video = $videoService->getVideo($this->getRequest()->getParam('id'))){
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                
+                $videoService->removeVideo($video);
+
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                $this->_helper->redirector->gotoUrl($_SERVER['HTTP_REFERER']);
+            } catch(Exception $e) {
+               $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+               $this->_service->get('log')->log($e->getMessage(), 4);
+            }
+
+        }
+        
+       
+        
     }
     
   /* product end */ 

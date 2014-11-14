@@ -13,8 +13,14 @@
 class District_Model_Doctrine_Event extends District_Model_Doctrine_BaseEvent
 {
     public static $eventPhotoDimensions = array(
-        '126x126' => 'Photo in admin panel',                  // admin
-        '400x' => 'Main photo'
+         '126x126' => 'Photo in admin panel',                  // admin
+        '265x260' => 'Gorące newsy(265x260)',
+        '74x74' => 'Imprezy w regionie(74x74)',
+        '406x250' => 'Kategoria - pierwszy news(406x250)',
+        '61x61' => 'Kategoria - pozostałe newsy(61x61)',
+        '829x528' => 'Pojedynczy news - główne(829x528)',
+        '263x188' => 'Pojedynczy news - galeria(263x188)',
+        '173x130' => 'Powiązane artykuły(173x130)',
     );
     
     public static function getEventPhotoDimensions() {
@@ -60,7 +66,10 @@ class District_Model_Doctrine_Event extends District_Model_Doctrine_BaseEvent
             'foreign' => 'id'
         ));
         
-     
+     $this->hasMany('Media_Model_Doctrine_VideoUrl as Videos', array(
+            'local' => 'video_root_id',
+            'foreign' => 'root_id'
+        ));
         
          $this->hasOne('Media_Model_Doctrine_VideoUrl as VideoRoot', array(
             'local' => 'video_root_id',

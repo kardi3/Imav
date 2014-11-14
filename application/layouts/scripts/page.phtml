@@ -1,51 +1,310 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
-<html lang="en">
-<!--<![endif]-->
+<!DOCTYPE HTML>
+<html lang = "en">
+	<head>
+		<?php echo $this->render('_head.phtml'); ?>
+	</head>
 
-<!-- Head BEGIN -->
-<head>
-  <?php echo $this->render('_head.phtml'); ?>
-</head>
-<!-- Head END -->
+	<body>
 
-<!-- Body BEGIN -->
-<body class="corporate">
-    <div class="mainWrapper">
-    <!-- BEGIN HEADER -->
-    <?php echo $this->render('_header.phtml'); ?>
-    <!-- Header END -->
+		<a href="#dat-menu" class="ot-menu-toggle"><i class="fa fa-bars"></i>Toggle Menu</a>
+		<div class="boxed active">
+			
+			<header class="header willfix">
+				<?php echo $this->render('_header.phtml'); ?>
+			</header>
+			
+			<section class="content">
+				
+				<div class="wrapper">
+					
 
-    
+					<?php echo $this->layout()->breakingNews; ?>
 
-    <div class="main">
-        <div class='content pageContainer'>
-            
-            <div class="sidebar">
-                <div class="sidebarWrapper">
-                    
-                    <span>MASZYNY DO DREWNA</span>
-                    <?php echo $this->layout()->sidebar; ?>
-                    
-                </div>
-                <a class="newsletterBanner" href='/pl/newsletter'><img src="/img/_newsletter.png" /></a>
-            </div>
-            <div class="pagecontainer">
-                
-              <?php echo $this->layout()->content; ?>
-            </div>
-            <div class='clear'></div>
-        </div>            
-        <div class='clear'></div>
-    </div>
-    <div class='clear'></div>
-    
 
-   
-    </div>
-    
-</body>
-<!-- END BODY -->
+					<div class="main-content has-sidebar">
+                                            
+						<div class="left-content">
+							<?php echo $this->layout()->content; ?>
+						</div>
+
+						<!-- BEGIN #sidebar -->
+						<aside id="sidebar">
+
+							<div class="widget">
+								<div class="banner">
+									<a href="#" target="_blank"><img src="images/no-banner-300x250.jpg" alt="" /></a>
+								</div>
+							</div>
+							
+							<div class="widget">
+								<div class="ot-tabbed">
+									<h3 class="active">Comments</h3>
+									<h3>Latest News</h3>
+								</div>
+								<div class="comments-block ot-tab-block active">
+									<div class="item">
+										<div class="item-header">
+											<a href="#" class="image-avatar"><img src="images/photos/avatar-1.jpg" alt="" /></a>
+										</div>
+										<div class="item-content">
+											<h4><a href="#">Orange-Themes</a></h4>
+											<p>Cum an officiis integebat necessitatibus, impedi tes menandri has clita...</p>
+											<a href="post.html" class="read-more-link">View article<i class="fa fa-angle-double-right"></i></a>
+										</div>
+									</div>
+									<div class="item">
+										<div class="item-header">
+											<a href="#" class="image-avatar"><img src="images/photos/avatar-2.jpg" alt="" /></a>
+										</div>
+										<div class="item-content">
+											<h4><a href="#">Keir Donato</a></h4>
+											<p>Simul albucius accusata per in, ei soleat insolens.</p>
+											<a href="post.html" class="read-more-link">View article<i class="fa fa-angle-double-right"></i></a>
+										</div>
+									</div>
+								</div>
+								<div class="article-block ot-tab-block">
+									<div class="item">
+										<div class="item-header">
+											<a href="post.html" class="image-hover"><img src="images/photos/image-17.jpg" alt="" /></a>
+										</div>
+										<div class="item-content">
+											<div class="content-category">
+												<a href="category.html" style="color: #276197;">Tech News</a>
+											</div>
+											<h4><a href="post.html">Eum ex civibus pertinax antur his ea dicam</a></h4>
+											<span><a href="blog.html">September 11, 2014</a></span>
+										</div>
+									</div>
+									<div class="item">
+										<div class="item-header">
+											<a href="post.html" class="image-hover"><img src="images/photos/image-19.jpg" alt="" /></a>
+										</div>
+										<div class="item-content">
+											<div class="content-category">
+												<a href="category.html" style="color: #1985e1;">Nostalgia</a>
+											</div>
+											<h4><a href="post.html">Eum ex civibus pertinax antur his ea dicam</a></h4>
+											<span><a href="blog.html">September 11, 2014</a></span>
+										</div>
+									</div>
+									<div class="item">
+										<div class="item-header">
+											<a href="post.html" class="image-hover"><img src="images/photos/image-18.jpg" alt="" /></a>
+										</div>
+										<div class="item-content">
+											<div class="content-category">
+												<a href="category.html" style="color: #ef8722;">World News</a>
+											</div>
+											<h4><a href="post.html">Eum ex civibus pertinax antur his ea dicam</a></h4>
+											<span><a href="blog.html">September 11, 2014</a></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="widget ">
+								<h3>Latest Photo Galleries</h3>
+								<div class="photo-gallery-widget">
+									<div class="item">
+										<div class="item-header">
+											<div class="gallery-navi">
+												<a href="#gal-left"><i class="fa fa-angle-left"></i></a>
+												<a href="#gal-right"><i class="fa fa-angle-right"></i></a>
+											</div>
+											<div class="gallery-change">
+												<a href="photo-gallery-single.html" class="active"><img src="images/photos/image-67.jpg" alt="" /></a>
+												<a href="photo-gallery-single.html"><img src="images/photos/image-68.jpg" alt="" /></a>
+												<a href="photo-gallery-single.html"><img src="images/photos/image-69.jpg" alt="" /></a>
+												<a href="photo-gallery-single.html"><img src="images/photos/image-70.jpg" alt="" /></a>
+											</div>
+										</div>
+										<div class="item-content">
+											<h4><a href="photo-gallery-single.html">Partem causae ut mee vix error impedit ex</a></h4>
+											<p>Te lorem libris iracundia eos. Ne eam liber veritus, eos eu agam recteque, exerci reformidans sea no.</p>
+										</div>
+									</div>
+									<div class="item">
+										<div class="item-header">
+											<div class="gallery-navi">
+												<a href="#gal-left"><i class="fa fa-angle-left"></i></a>
+												<a href="#gal-right"><i class="fa fa-angle-right"></i></a>
+											</div>
+											<div class="gallery-change">
+												<a href="photo-gallery-single.html" class="active"><img src="images/photos/image-69.jpg" alt="" /></a>
+												<a href="photo-gallery-single.html"><img src="images/photos/image-70.jpg" alt="" /></a>
+												<a href="photo-gallery-single.html"><img src="images/photos/image-67.jpg" alt="" /></a>
+												<a href="photo-gallery-single.html"><img src="images/photos/image-68.jpg" alt="" /></a>
+											</div>
+										</div>
+										<div class="item-content">
+											<h4><a href="photo-gallery-single.html">Has eu ceteros periculis ullamcorper illum quaeque adversarium est</a></h4>
+											<p>Ex aeque civibus maiestatis nam, aliquip complectitur sea an. Autem viris dissentiet.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="widget">
+								<h3>Popular Articles</h3>
+								<div class="article-block">
+									<div class="item">
+										<div class="item-header">
+											<a href="post.html" class="image-hover"><img src="images/photos/image-17.jpg" alt="" /></a>
+										</div>
+										<div class="item-content">
+											<div class="content-category">
+												<a href="category.html" style="color: #276197;">Tech News</a>
+											</div>
+											<h4><a href="post.html">Eum ex civibus pertinax antur his ea dicam</a></h4>
+											<span><a href="blog.html">September 11, 2014</a></span>
+										</div>
+									</div>
+									<div class="item">
+										<div class="item-header">
+											<a href="post.html" class="image-hover"><img src="images/photos/image-18.jpg" alt="" /></a>
+										</div>
+										<div class="item-content">
+											<div class="content-category">
+												<a href="category.html" style="color: #ef8722;">World News</a>
+											</div>
+											<h4><a href="post.html">Eum ex civibus pertinax antur his ea dicam</a></h4>
+											<span><a href="blog.html">September 11, 2014</a></span>
+										</div>
+									</div>
+									<div class="item">
+										<div class="item-header">
+											<a href="post.html" class="image-hover"><img src="images/photos/image-19.jpg" alt="" /></a>
+										</div>
+										<div class="item-content">
+											<div class="content-category">
+												<a href="category.html" style="color: #1985e1;">Nostalgia</a>
+											</div>
+											<h4><a href="post.html">Eum ex civibus pertinax antur his ea dicam</a></h4>
+											<span><a href="blog.html">September 11, 2014</a></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="widget">
+								<h3>Subscribe Newsletter</h3>
+								<div class="subscribe-feed">
+									<p>Te lorem libris iracundia eos. Ne eam liber veritus, eos eu agam recteque, exerci reformidans sea no.</p>
+
+									<!-- <div class="coloralert aweber-success">
+										<i class="fa fa-check"></i>
+										<p>Success! Everything went well, You are now subscribed !</p>
+										<a href="#close-alert"><i class="fa fa-times-circle"></i></a>
+									</div> -->
+
+									<!-- <div class="coloralert aweber-fail">
+										<i class="fa fa-warning"></i>
+										<p>Error Occurred!</p>
+										<a href="#close-alert"><i class="fa fa-times-circle"></i></a>
+									</div> -->
+
+									<div class="coloralert aweber-loading">
+										<i class="fa fa-refresh fa-spin"></i>
+										<p>Loading.. <br>This may take a few seconds !</p>
+										<a href="#close-alert"><i class="fa fa-times-circle"></i></a>
+									</div>
+
+									<form name="aweber-form" action="#" class="subscribe-form aweber-form">
+										<p class="sub-email">
+											<input type="text" value="" placeholder="E-mail address" name="email" class="email">
+										</p>
+										<p class="sub-submit">
+											<input type="submit" value="Subscribe" class="button aweber-submit">
+										</p>
+									</form>
+								</div>
+							</div>
+							
+							<div class="widget">
+								<h3>Tag Cloud</h3>
+								<div class="tagcloud">
+									<a href="category.html">Aeterno</a>
+									<a href="category.html">Definitionem</a>
+									<a href="category.html">Melius</a>
+									<a href="category.html">meis etiam volutpat at nam</a>
+									<a href="category.html">nec nibh</a>
+									<a href="category.html">Persequeris</a>
+									<a href="category.html">vel</a>
+									<a href="category.html">Tollit nominavi</a>
+								</div>
+							</div>
+							
+							<div class="widget">
+								<h3>Socialize</h3>
+								<div class="socialize-widget">
+									<p>Te lorem libris iracundia eos. Ne eam liber veritus, eos eu agam recteque, exerci reformidans sea no.</p>
+									<div class="ot-social-block">
+										<a href="#" class="soc-link soc-facebook">
+											<strong>2k<small>likes</small></strong>
+											<span>facebook</span>
+										</a>
+										<a href="#" class="soc-link soc-twitter">
+											<strong>901<small>tweets</small></strong>
+											<span>twitter</span>
+										</a>
+										<a href="#" class="soc-link soc-google">
+											<strong>81<small>+1's</small></strong>
+											<span>google+</span>
+										</a>
+										<a href="#" class="soc-link soc-linkedin">
+											<strong>34<small>shares</small></strong>
+											<span>linkedin</span>
+										</a>
+									</div>
+								</div>
+							</div>
+
+						<!-- END #sidebar -->
+						</aside>
+
+					</div>
+					
+				<!-- END .wrapper -->
+				</div>
+				
+			<!-- BEGIN .content -->
+			</section>
+			
+			<!-- BEGIN .footer -->
+			
+       <?php echo $this->render('_footer.phtml'); ?>
+		<!-- END .boxed -->
+		</div>
+
+		<!-- Scripts -->
+		<script type="text/javascript" src="/assets/jscript/jquery-latest.min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/snap.svg-min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/theme-scripts.js"></script>
+		<script type="text/javascript" src="/assets/jscript/lightbox.js"></script>
+		<script type="text/javascript" src="/assets/jscript/owl.carousel.min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/SmoothScroll.min.js"></script>
+		<script type="text/javascript" src="/assets/jscript/iscroll.js"></script>
+		<script type="text/javascript" src="/assets/jscript/modernizr.custom.50878.js"></script>
+		<script type="text/javascript" src="/assets/jscript/dat-menu.js"></script>
+		<script>
+			jQuery(document).ready(function() {
+				jQuery(".ot-slider").owlCarousel({
+					items : 1,
+					autoPlay : true,
+					stopOnHover : true,
+					navigation : true,
+					lazyLoad : true,
+					singleItem : true,
+					pagination : false
+				});
+
+				
+			});
+		</script>
+
+
+	<!-- END body -->
+	</body>
+<!-- END html -->
 </html>

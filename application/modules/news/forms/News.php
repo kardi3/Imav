@@ -16,8 +16,19 @@ class News_Form_News extends Admin_Form {
         
         $categoryId = $this->createElement('select', 'category_id');
         $categoryId->setLabel('Category');
+        $categoryId->setRequired();
         $categoryId->setDecorators(self::$selectDecorators);
         
+        $groupId = $this->createElement('select', 'group_id');
+        $groupId->setLabel('Group');
+        $groupId->setDecorators(self::$selectDecorators);
+        
+      
+        $tagId = $this->createElement('select', 'tag_id');
+        $tagId->setLabel('Tags');
+        $tagId->setDecorators(self::$selectDecorators);
+        $tagId->setIsArray(true);
+        $tagId->setAttrib('multiple','multiple');
         
         $languages = $i18nService->getLanguageList();
 
@@ -52,10 +63,23 @@ class News_Form_News extends Admin_Form {
         
         $this->addSubForm($translations, 'translations');
 
+        $url = $this->createElement('text', 'url');
+        $url->setLabel('Url');
+        $url->setDecorators(self::$textDecorators);
+        $url->setAttrib('class', 'span8');
+        $url->setRequired(false);
+        
         $publish = $this->createElement('checkbox', 'publish');
         $publish->setLabel('Publish');
         $publish->setDecorators(self::$checkgroupDecorators);
         $publish->setAttrib('class', 'span8');
+        
+        $show_views = $this->createElement('checkbox', 'show_views');
+        $show_views->setLabel('Pokaż wyświetlenia');
+        $show_views->setDecorators(self::$checkgroupDecorators);
+        $show_views->setAttrib('class', 'span8');
+        $show_views->setValue(1);
+        $show_views->setAttrib('checked', 'checked');
         
         $publishDate = $this->createElement('text', 'publish_date');
         $publishDate->setLabel('Publish date');
@@ -82,7 +106,11 @@ class News_Form_News extends Admin_Form {
             $id,
             $categoryId,
             $publish,
+            $tagId,
+            $groupId,
+            $url,
             $publishDate,
+            $show_views,
             $servicesDisplay,
             $submit
         ));

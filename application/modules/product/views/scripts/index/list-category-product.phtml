@@ -1,0 +1,69 @@
+<div class="block_breadcrumbs">
+    <ul>
+        <li><a href="/">Strona głowna</a></li>
+        <li><a href="<?php echo $this->url(array(),'domain-product'); ?>">Rękodzieło</a></li>
+        <li><?php echo $this->category['Translation'][$this->language]['name']; ?></li>
+    </ul>
+</div>
+<div class="separator" style="height:30px;"></div>
+<h3 style="font-size:16px;"><?php echo  $this->category['Translation'][$this->language]['name']; ?></h3>
+<div class="line_4" style="margin:-4px 0px 18px;"></div>
+<div class="block_home_col_1">
+    <?php foreach($this->productList as $key => $product): 
+        $photoRoot = $product['PhotoRoot'];
+        if($key%2!=0)
+            continue;
+        ?>
+    <div class="block_home_post">
+            <div class="pic">
+                    <a href="<?php echo $this->url(array('slug' => $product['Translation'][$this->language]['slug']),'domain-i18n:product'); ?>" class="w_hover">
+                            <img src="/media/photos/<?php echo $photoRoot['offset'];?>/67x45/<?php echo $photoRoot['filename']; ?>" alt="">
+                            <span></span>
+                    </a>
+            </div>
+
+            <div class="text">
+                    <p class="title"><a href="<?php echo $this->url(array('slug' => $product['Translation'][$this->language]['slug']),'domain-i18n:product'); ?>"><?php echo $product['Translation'][$this->language]['name']; ?></a></p>
+                    <div class="date"><p><?php echo MF_Text::polishTimeFormat($product['publish_date'], 'j M Y'); ?></p></div>
+                    <div class="icons">
+                        <ul>
+                                <li><a href="#" class="views"><?php echo $product['views']; ?></a></li>
+                        </ul>
+                    </div>
+            </div>
+    </div>
+    <div class="line_3" style="margin:14px 0px 17px;"></div>
+
+    <?php endforeach; ?>
+
+</div>
+<div class="block_home_col_2">
+    <div class="line_3 first" style="margin:14px 0px 17px;"></div>
+
+     <?php foreach($this->productList as $key => $product): 
+        if($key%2!=1)
+            continue;
+        ?>
+    <div class="block_home_post">
+            <div class="pic">
+                    <a href="<?php echo $this->url(array('slug' => $product['Translation'][$this->language]['slug']),'domain-i18n:product'); ?>" class="w_hover">
+                            <img src="/media/photos/<?php echo $photoRoot['offset'];?>/67x45/<?php echo $photoRoot['filename']; ?>" alt="">
+                            <span></span>
+                    </a>
+            </div>
+
+            <div class="text">
+                    <p class="title"><a href="<?php echo $this->url(array('slug' => $product['Translation'][$this->language]['slug']),'domain-i18n:product'); ?>"><?php echo $product['Translation'][$this->language]['name']; ?></a></p>
+                    <div class="date"><p><?php echo MF_Text::polishTimeFormat($product['publish_date'], 'j M Y'); ?></p></div>
+                    <div class="icons">
+                        <ul>
+                                <li><a href="#" class="views"><?php echo $product['views']; ?></a></li>
+                        </ul>
+                    </div>
+            </div>
+    </div>
+    <div class="line_3" style="margin:14px 0px 17px;"></div>
+
+    <?php endforeach; ?>
+</div>
+<div class="clearboth"></div>

@@ -10,42 +10,26 @@ class News_IndexController extends MF_Controller_Action {
     public static $articleItemCountPerPage = 10;
     
     public function indexAction() {
-        $newsService = $this->_service->getService('News_Service_News');
-        $linkService = $this->_service->getService('Link_Service_Link');
         
-        $query = $newsService->getArticlePaginationQuery($this->language);
-
-        $adapter = new MF_Paginator_Adapter_Doctrine($query, Doctrine_Core::HYDRATE_ARRAY);
-        $paginator = new Zend_Paginator($adapter);
-        $paginator->setCurrentPageNumber($this->getRequest()->getParam('page', 1));
-        $paginator->setItemCountPerPage(self::$articleItemCountPerPage);
-        
-        $this->view->assign('linkService', $linkService);
-        $this->view->assign('paginator', $paginator);
-        
-        $this->_helper->actionStack('layout', 'index', 'default');
     }
     
-    public function lastNewsSliderAction() {
-        $newsService = $this->_service->getService('News_Service_News');
-        
-        $lastNews = $newsService->getLastNews(4,Doctrine_Core::HYDRATE_ARRAY);
-        
-        $this->view->assign('lastNews', $lastNews);
-        
-        
-        $this->_helper->viewRenderer->setResponseSegment('lastNewsSlider');
-    }
-    
-    public function lastNewsTopAction() {
+    public function lastNewsAction() {
         $newsService = $this->_service->getService('News_Service_News');
         
         $lastNews = $newsService->getLastNews(6,Doctrine_Core::HYDRATE_ARRAY);
-        
         $this->view->assign('lastNews', $lastNews);
         
+        $this->_helper->viewRenderer->setResponseSegment('lastNews');
+    }
+    
+    public function breakingNewsAction() {
+        $newsService = $this->_service->getService('News_Service_News');
         
-        $this->_helper->viewRenderer->setResponseSegment('lastNewsTop');
+        $breakingNews = $newsService->getBreakingNews(Doctrine_Core::HYDRATE_ARRAY);
+        $this->view->assign('breakingNews', $breakingNews);
+        
+        
+        $this->_helper->viewRenderer->setResponseSegment('breakingNews');
     }
     
     public function lastCategoriesNewsAction() {
@@ -57,7 +41,9 @@ class News_IndexController extends MF_Controller_Action {
         
         $newsList = array();
         foreach($categories as $category):
-            $newsList[$category['title']] = $newsService->getLastCategoryNews($category['id'],2,Doctrine_Core::HYDRATE_ARRAY);
+            if($category['title'] == "Reportaże")
+                continue;
+            $newsList[$category['title']] = $newsService->getLastCategoryNews($category['id'],6,Doctrine_Core::HYDRATE_ARRAY);
         endforeach;
         
         $this->view->assign('newsList', $newsList);
@@ -66,56 +52,234 @@ class News_IndexController extends MF_Controller_Action {
         $this->_helper->viewRenderer->setResponseSegment('lastCategoriesNews');
     }
     
-    public function popularNewsAction() {
+    public function lastNewsSidebarAction() {
         $newsService = $this->_service->getService('News_Service_News');
         
-        $popularNews = $newsService->getPopularNews(3,Doctrine_Core::HYDRATE_ARRAY);
+        $lastNewsSidebar = $newsService->getLastNews(3,Doctrine_Core::HYDRATE_ARRAY);
         
-        $this->view->assign('popularNews', $popularNews);
+        $this->view->assign('lastNewsSidebar', $lastNewsSidebar);
         
         
-        $this->_helper->viewRenderer->setResponseSegment('popularNews');
+        $this->_helper->viewRenderer->setResponseSegment('lastNewsSidebar');
     }
     
-    public function articlesAction() {
+    public function listNewsAction() {
+        $newsService = $this->_service->getService('News_Service_News');
+        $categoryService = $this->_service->getService('News_Service_Category');
+        
+        
+        $categories = $categoryService->getAllCategories();
+        
+        $lastNews = $newsService->getLastNews(3,Doctrine_Core::HYDRATE_ARRAY);
+        
+        $newsList = array();
+        foreach($categories as $category):
+            $newsList[$category['title']] = $newsService->getLastCategoryNews($category['id'],2,Doctrine_Core::HYDRATE_ARRAY);
+        endforeach;
+        
+        
+        $this->view->assign('lastNews', $lastNews);
+        $this->view->assign('newsList', $newsList);
+        
+        $this->_helper->actionStack('layout', 'index', 'default');
+        
+        $this->_helper->layout->setLayout('article');
+    }
+    
+    public function listNewsCategoryAction() {
+        $newsService = $this->_service->getService('News_Service_News');
+        $categoryService = $this->_service->getService('News_Service_Category');
+        
+        
+        if(!$category = $categoryService->getCategory($this->getRequest()->getParam('category'), 'slug',  Doctrine_Core::HYDRATE_RECORD)) {
+            throw new Zend_Controller_Action_Exception('Category not found');
+        }
+        
+        
+       $newsList = $newsService->getLastCategoryNews($category['id'],null,Doctrine_Core::HYDRATE_ARRAY);
+        
+        
+        $this->view->assign('category', $category);
+        $this->view->assign('newsList', $newsList);
+        
+        $this->_helper->layout->setLayout('article');
+        
+        $this->_helper->actionStack('layout', 'index', 'default');
+        
+        
+    }
+    
+    
+    
+    public function categoryAction(){
+        
+        $this->_helper->layout->setLayout('article');
+        $this->_helper->actionStack('layout', 'index', 'default');
+        
+        
+        $pageService = $this->_service->getService('Page_Service_Page');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        $newsService = $this->_service->getService('News_Service_News');
+        $categoryService = $this->_service->getService('News_Service_Category');
+        
+        if(!$category = $categoryService->getCategory($this->getRequest()->getParam('slug'), 'slug')) {
+            throw new Zend_Controller_Action_Exception('Category not found', 404);
+        }
+        
+        if(!$page = $pageService->getPage($this->getRequest()->getParam('slug'), 'type')) {
+            
+        }
+        
+        $metatagService->setViewMetatags($page['metatag_id'],$this->view);
+        
+        $newsList = $newsService->getCategoryNews($category['id'],Doctrine_Core::HYDRATE_ARRAY);
+        
+         $this->view->assign('newsList', $newsList);
+         $this->view->assign('category', $category);
+        
+    }
+    
+    public function searchAction() {
         $newsService = $this->_service->getService('News_Service_News');
         $pageService = $this->_service->getService('Page_Service_Page');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
-        $linkService = $this->_service->getService('Link_Service_Link');
+       
+        $search = $this->getRequest()->getParam('search_name');
+        $search = $this->view->escape($search);
+        $searchResults = $newsService->findNews($search,Doctrine_Core::HYDRATE_ARRAY);
+            
+         if(!$page = $pageService->getPage('wyniki-wyszukiwania', 'type')) {
+            
+        }
         
-        $pageMain = $pageService->fetchPage('news', 'pl', Doctrine_Core::HYDRATE_RECORD);
-        $metatagService->setViewMetatags($pageMain->get('Metatag'), $this->view);
+        $metatagService->setViewMetatags($page['metatag_id'],$this->view);
         
-        $query = $newsService->getArticlePaginationQuery($this->language);
-
-        $adapter = new MF_Paginator_Adapter_Doctrine($query, Doctrine_Core::HYDRATE_ARRAY);
-        $paginator = new Zend_Paginator($adapter);
-        $paginator->setCurrentPageNumber($this->getRequest()->getParam('page', 1));
-        $paginator->setItemCountPerPage(self::$articleItemCountPerPage);
+        $this->view->assign('newsList', $searchResults);
+        $this->view->assign('search', $search);
         
-        $this->view->assign('linkService', $linkService);
-        $this->view->assign('paginator', $paginator);
+        $this->_helper->layout->setLayout('article');
         
         $this->_helper->actionStack('layout', 'index', 'default');
+        
+        
     }
     
-    public function categoryAction(){
+    public function groupAction(){
+        
+        $this->_helper->layout->setLayout('article');
+        $this->_helper->actionStack('layout', 'index', 'default');
+        
+        
+        $pageService = $this->_service->getService('Page_Service_Page');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        $newsService = $this->_service->getService('News_Service_News');
+        $groupService = $this->_service->getService('News_Service_Group');
+        
+        if(!$group = $groupService->getGroup($this->getRequest()->getParam('slug'), 'slug')) {
+            throw new Zend_Controller_Action_Exception('Group not found', 404);
+        }
+        
+        if(!$page = $pageService->getPage($this->getRequest()->getParam('slug'), 'type')) {
+            
+        }
+        
+        $metatagService->setViewMetatags($page['metatag_id'],$this->view);
+        
+        $newsList = $newsService->getGroupNews($group['id'],Doctrine_Core::HYDRATE_ARRAY);
+        
+         $this->view->assign('newsList', $newsList);
+         $this->view->assign('group', $group);
+        
+    }
+    
+    public function tagAction(){
+        
+        $this->_helper->layout->setLayout('article');
+        $this->_helper->actionStack('layout', 'index', 'default');
+        
+        
+        $pageService = $this->_service->getService('Page_Service_Page');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        $newsService = $this->_service->getService('News_Service_News');
+        $tagService = $this->_service->getService('News_Service_Tag');
+        
+        if(!$tag = $tagService->getTag($this->getRequest()->getParam('slug'), 'slug')) {
+            throw new Zend_Controller_Action_Exception('Tag not found', 404);
+        }
+        
+        
+        $metatagService->setViewMetatags($tag['metatag_id'],$this->view);
+        
+        $newsList = $newsService->getTagNews($tag['id'],Doctrine_Core::HYDRATE_ARRAY);
+        
+         $this->view->assign('newsList', $newsList);
+         $this->view->assign('tag', $tag);
+        
+    }
+    
+     public function studentAction(){
+        
+        $this->_helper->layout->setLayout('article');
+        $this->_helper->actionStack('layout', 'index', 'default');
+        
+        
+        $pageService = $this->_service->getService('Page_Service_Page');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        $newsService = $this->_service->getService('News_Service_News');
+         if(!$page = $pageService->getPage('studencka-tworczosc', 'type')) {
+            
+        }
+        
+        $metatagService->setViewMetatags($page['metatag_id'],$this->view);
+                
+        $newsList = $newsService->getStudentNews(Doctrine_Core::HYDRATE_ARRAY);
+        
+         $this->view->assign('newsList', $newsList);
         
     }
     
     public function articleAction() {
         $newsService = $this->_service->getService('News_Service_News');
+        $adService = $this->_service->getService('Banner_Service_Ad');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
         $commentService = $this->_service->getService('News_Service_Comment');
-        
+        $censorService = $this->_service->getService('Censor_Service_Censor');
+        $settingsService = $this->_service->getService('Default_Service_Setting');
         
         if(!$article = $newsService->getFullArticle($this->getRequest()->getParam('slug'), 'slug')) {
             throw new Zend_Controller_Action_Exception('Article not found', 404);
         }
+        $ad = $adService->getActiveAd($article['VideoRoot']['Ad']['id']);
+       
+        $lastServerId = $settingsService->getSetting('server',Doctrine_Core::HYDRATE_RECORD);
+        $videoUrl = $article['VideoRoot']['url'];
+        // jak nie vimeo i youtube
+        if(strpos($videoUrl,'vimeo')==false && strpos($videoUrl,'youtube')==false){
+            if($lastServerId->value==1){
+                $videoUrl = str_replace('stream2', 'stream1', $videoUrl);
+                $lastServerId->value = 2;
+                $lastServerId->save();
+            }
+            elseif($lastServerId->value==2){
+                $videoUrl = str_replace('stream1', 'stream2', $videoUrl);
+                $lastServerId->value = 1;
+                $lastServerId->save();
+            }
+        }
+       
+        $pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
+
+        if(!$pageWasRefreshed ) {
+           $article->increaseView();
+        } 
         
-        $article->increaseView();
+        $lastCategoryOtherArticles = $newsService->getLastCategoryOtherArticles($article,Doctrine_Core::HYDRATE_ARRAY);
         
+        $ipService = $this->_service->getService('Censor_Service_Ip');
+        
+        $ips = $ipService->getAllIps(Doctrine_Core::HYDRATE_SINGLE_SCALAR);
         $metatagService->setViewMetatags($article->get('Metatags'), $this->view);
+        $metatagService->setOgMetatags($this->view,$article['Translation'][$this->view->language]['title'],'/media/photos/'.$article['PhotoRoot']['offset']."/".$article['PhotoRoot']['filename'],$article['Translation'][$this->view->language]['content']);
        
         $comments = $commentService->getNewsComments($article['id'],Doctrine_Core::HYDRATE_ARRAY);
         $comments_count = $commentService->countNewsComments($article['id'],Doctrine_Core::HYDRATE_SINGLE_SCALAR);
@@ -123,68 +287,62 @@ class News_IndexController extends MF_Controller_Action {
         $this->view->assign('comments', $comments);
         $this->view->assign('comment_count', $comments_count);
         
+        $form = new Default_Form_Contact();
+        $form->removeElement('firstName');
+        $form->removeElement('lastName');
+        $form->removeElement('email');
+        $form->removeElement('subject');
+        $form->removeElement('message');
+        $form->removeElement('csrf');
+        $captchaDir = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getOption('captchaDir');
+        $form->addElement('captcha', 'captcha',
+            array(
+            'label' => 'Rewrite the chars', 
+            'captcha' => array(
+                'captcha' => 'Image',  
+                'wordLen' => 5,  
+                'timeout' => 300,  
+                'font' => APPLICATION_PATH . '/../data/arial.ttf',  
+                'imgDir' => $captchaDir,  
+                'imgUrl' => $this->view->serverUrl() . '/captcha/',  
+            )
+        ));
+        
         if(isset($_POST['submit_comment'])){
-
+            if(in_array($_SERVER['REMOTE_ADDR'],$ips)){
+            $this->view->messages()->add('Twój adres IP został zablokowany','error');
+        }elseif($form->isValid($this->getRequest()->getPost())){
             $values = $_POST;
-            $values['news_id'] = $article['id'];
             
+            if(!$censorService->checkCensor($values['content'])){
+                $this->view->messages()->add('Ten komentarz zawiera niecenzuralne słowa','error');
+            }
+            else{
+                
+            $values['news_id'] = $article['id'];
             $commentService->addComment($values,$article['id']);
+                $this->view->messages()->add('Komentarz dodany pomyślnie');
                         
             return $this->_helper->redirector->goToUrl($this->view->url(array('slug' => $article['Translation'][$this->view->language]['slug']),'domain-news-article')); 
+        
+            }
+            }
+            else{
+                $this->view->messages()->add('Podany kod jest niepoprawny','error');
+            }
         }
         
+       $this->view->assign('videoUrl',$videoUrl);
+       $this->view->assign('ad',$ad);
+       $this->view->assign('form',$form);
+       $this->view->assign('lastCategoryOtherArticles',$lastCategoryOtherArticles);
         
-        
+       
         $this->_helper->actionStack('layout', 'index', 'default');
         
         $this->_helper->layout->setLayout('article');
     }
     
-    
-      public function listNewsSerwis10Action()
-    {
-        $newsService = $this->_service->getService('News_Service_NewsSerwis1');
-        $pageService = $this->_service->getService('Page_Service_PageSerwis10');
-        $metatagService = $this->_service->getService('Default_Service_Metatag');
-        $linkService = $this->_service->getService('Link_Service_Link');
-        
-        if(!$page = $pageService->getPage('news-reviews', 'type')) {
-        }
-        else
-            $metatagService->setViewMetatags($page['metatag_id'], $this->view);
-        
-        $adapter = new MF_Paginator_Adapter_Doctrine($newsService->getNewsServiceQuery(10), Doctrine_Core::HYDRATE_RECORD);
-        
-        $paginator = new Zend_Paginator($adapter);
-        $paginator->setCurrentPageNumber($this->getRequest()->getParam('page', 1));
-        $paginator->setItemCountPerPage(self::$articleItemCountPerPage);
-        
-        $this->view->assign('linkService', $linkService);
-        
-        $newsList = $newsService->getAllServiceNews(10,'as.id',10);
-        $this->view->assign('newsList', $newsList);
-        
-        $this->view->assign('paginator', $paginator);
-        $this->_helper->actionStack('layout.serwis8', 'index', 'default');
-    }
-    
-  
-     public function newsSerwis10Action() {
-        $newsService = $this->_service->getService('News_Service_NewsSerwis1');
-        $metatagService = $this->_service->getService('Default_Service_Metatag');
-        $linkService = $this->_service->getService('Link_Service_Link');
-        
-        $item = $newsService->getFullNews($this->getRequest()->getParam('slug'),'slug');
-        $metatagService->setViewMetatags($item['metatag_id'], $this->view);
-        
-        $this->view->assign('linkService', $linkService);
-        $this->view->assign('item', $item);
-        
-        $newsList = $newsService->getAllServiceNews(10,'as.id',10);
-        $this->view->assign('newsList', $newsList);
-        
-        $this->_helper->actionStack('layout.serwis10', 'index', 'default');
-    }
     
     public function facebookAction(){
         

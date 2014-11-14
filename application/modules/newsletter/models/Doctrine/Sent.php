@@ -12,23 +12,5 @@
  */
 class Newsletter_Model_Doctrine_Sent extends Newsletter_Model_Doctrine_BaseSent
 {
-   
-     public function getId() {
-        return $this->_get('id');
-    }
-      public function getMessageId() {
-        return $this->_get('message_id');
-    }
-     public function setGroup($group_id) {
-       $this->_set('group_id',$group_id);
-    }
-     public function setSent($sent) {
-        $this->_set('sent', $sent);
-    }
-     public function setSentAt($sent) {
-        $this->_set('send_at', $sent);
-    }
-    public function getSent() {
-        return $this->_get('sent');
-    }
+
 }

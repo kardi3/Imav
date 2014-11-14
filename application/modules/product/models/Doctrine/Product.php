@@ -13,15 +13,21 @@
 class Product_Model_Doctrine_Product extends Product_Model_Doctrine_BaseProduct
 {
     public static $productPhotoDimensions = array(
-        '126x126' => 'Photo in admin panel', // admin
-        '190x' => 'Mini',
-        '1100x400' => 'Thumb'
+        '126x126' => 'Photo in admin panel',                  // admin
+        '610x292' => 'Big photo(610x292)',
+        '67x45' => 'Miniature photo(67x45)',
+        '256x122' => 'Small photo(256x122)',
+        '130x130' => 'Photo in gallery(130x130)',
+        '400x' => 'Backup photo(400x)',
     );
 
     public static $productMainPhotoDimensions = array(
         '126x126' => 'Photo in admin panel',                  // admin
-        '190x' => 'Mini',
-        '1100x400' => 'Thumb'
+        '610x292' => 'Big photo(610x292)',
+        '67x45' => 'Miniature photo(67x45)',
+        '256x122' => 'Small photo(256x122)',
+        '130x130' => 'Photo in gallery(130x130)',
+        '400x' => 'Backup photo(400x)',
     );
     
     public function getId() {
@@ -146,6 +152,11 @@ class Product_Model_Doctrine_Product extends Product_Model_Doctrine_BaseProduct
             'foreign' => 'id'
         ));
         
+        $this->hasOne('Media_Model_Doctrine_VideoUrl as VideoRoot', array(
+            'local' => 'video_root_id',
+            'foreign' => 'id'
+        ));
+        
         $this->hasMany('Media_Model_Doctrine_Photo as Photos', array(
             'local' => 'photo_root_id',
             'foreign' => 'root_id'
@@ -156,9 +167,6 @@ class Product_Model_Doctrine_Product extends Product_Model_Doctrine_BaseProduct
             'foregin' => 'id'
         ));
         
-         $this->hasMany('Newsletter_Model_Doctrine_ProductSubscriber as Subscribers', array(
-             'local' => 'id',
-             'foreign' => 'product_id'));
         parent::setUp();
     }
     

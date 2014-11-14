@@ -36,22 +36,30 @@ class District_Service_Event extends MF_Service_ServiceAbstract{
     
     public function getFullEvent($id, $field = 'id', $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
         $q = $this->eventTable->getPublishEventQuery();
-        $q = $this->eventTable->getPhotoQuery($q);
+      //  $q = $this->eventTable->getPhotoQuery($q);
         if(in_array($field, array('id'))) {
-            $q->andWhere('a.' . $field . ' = ?', array($id));
+            $q->andWhere('e.' . $field . ' = ?', array($id));
         } elseif(in_array($field, array('slug'))) {
-            $q->andWhere('at.' . $field . ' = ?', array($id));
-            $q->andWhere('at.lang = ?', 'pl');
+            $q->andWhere('et.' . $field . ' = ?', array($id));
+            $q->andWhere('et.lang = ?', 'pl');
         }
         return $q->fetchOne(array(), $hydrationMode);
     }
     
      public function getNextEvent($hydrationMode = Doctrine_Core::HYDRATE_ARRAY) {
         $q = $this->eventTable->getPublishEventQuery();
-        $q->andWhere('e.publish_date >= NOW()');
-        $q->orderBy('e.publish_date');
+        $q->andWhere('e.publish_date > NOW()');
+        $q->orderBy('e.publish_date DESC');
         $q->limit(1);
         return $q->fetchOne(array(), $hydrationMode);
+    }
+    
+    public function getNextEvents($limit=3,$hydrationMode = Doctrine_Core::HYDRATE_ARRAY) {
+        $q = $this->eventTable->getPublishEventQuery();
+        $q->andWhere('e.publish_date >= NOW()');
+        $q->orderBy('e.publish_date DESC');
+        $q->limit($limit);
+        return $q->execute(array(), $hydrationMode);
     }
    
     
@@ -68,6 +76,15 @@ class District_Service_Event extends MF_Service_ServiceAbstract{
         $q->andWhere('at.lang = ?', $language);
         $q->addOrderBy('a.publish_date DESC');
         return $q;
+    }
+    
+    public function getOtherEvents($event, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
+        $q = $this->eventTable->getPublishEventQuery();
+        $q->addWhere('e.id != ?',$event['id']);
+        $q->addWhere('e.publish_date >= NOW()');
+        $q->orderBy('e.publish_date DESC');
+        $q->limit(8);
+        return $q->execute(array(), $hydrationMode);
     }
     
     public function getEventForm(District_Model_Doctrine_Event $event = null) {
@@ -116,6 +133,9 @@ class District_Service_Event extends MF_Service_ServiceAbstract{
         
         $i18nService = MF_Service_ServiceBroker::getInstance()->getService('Default_Service_I18n');
         
+        if(strpos($values['url'], 'http://') !== 0 && strlen($values['url'])) {
+          $values['url'] = 'http://' . $values['url'];
+        } 
         if(strlen($values['publish_date'])) {
             $date = new Zend_Date($values['publish_date'], 'dd/MM/yyyy HH:mm');
             $values['publish_date'] = $date->toString('yyyy-MM-dd HH:mm:00');

@@ -7,12 +7,10 @@
  * 
  * @package    Admi
  * @subpackage Product
- * @author     Andrzej Wilczyński <and.wilczynski@gmail.com>
+ * @author     Michał Folga <michalfolga@gmail.com>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 class Product_Model_Doctrine_ProductCategory extends Product_Model_Doctrine_BaseProductCategory
 {
-    public function getCategoryId() {
-        return $this->_get('category_id');
-    }
+
 }

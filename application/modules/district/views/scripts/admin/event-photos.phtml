@@ -12,6 +12,7 @@
 
         <div class="actionBtn">
             <a href="<?php echo $this->adminUrl('move-event-photo', 'district', array('id' => $photo->id, 'move' => 'up', 'event' => $this->event->id)) ?>" class="move"><span class="icon16 minia-icon-arrow-left white"></span></a>
+            <a href="<?php echo $this->adminUrl('edit-event-photo', 'district', array('event-id' => $this->event->getId(), 'id' => $photo->getId())) ?>" class="edit"><span class="icon16 icomoon-icon-pencil-2 white"></span></a>
             <a href="javascript:void(0)" class="delete" rel="<?php echo $photo->id; ?>"><span class="icon16 icomoon-icon-cancel-4 white"></span></a>
             <a href="<?php echo $this->adminUrl('move-event-photo', 'district', array('id' => $photo->id, 'move' => 'down', 'event' => $this->event->id)) ?>" class="move"><span class="icon16 minia-icon-arrow-right white"></span></a>
         </div>

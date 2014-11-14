@@ -7,10 +7,16 @@
  */
 class District_AdminController extends MF_Controller_Action {
     
+     protected $user;
+        
+    
      public function init() {
         $this->_helper->ajaxContext()
                 ->initContext();
         parent::init();
+        
+        $authService = $this->_service->getService('User_Service_Auth');
+        $this->user = $authService->getAuthenticatedUser();
     }
     
     public function listAttractionAction() {
@@ -63,8 +69,9 @@ class District_AdminController extends MF_Controller_Action {
         $attractionService = $this->_service->getService('District_Service_Attraction');
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
-         $authService = $this->_service->getService('User_Service_Auth');
-        
+        $authService = $this->_service->getService('User_Service_Auth');
+        $photoService = $this->_service->getService('Media_Service_Photo');
+        $galleryService = $this->_service->getService('Gallery_Service_Gallery');
         
         $user = $authService->getAuthenticatedUser();
         $translator = $this->_service->get('translate');
@@ -85,6 +92,16 @@ class District_AdminController extends MF_Controller_Action {
                         $values['metatag_id'] = $metatags->getId();
                     }
                     $attraction = $attractionService->saveAttractionFromArray($values,$user->getId(),$user->getId());
+                    
+                    if(!$attraction->photo_root_id){
+                        $photoRoot = $photoService->createPhotoRoot();
+                        $attraction->set('PhotoRoot',$photoRoot);
+                        $attraction->save();
+                    }
+                    
+                    if($values['gallery']):
+                        $galleryService->saveGalleryFromAttraction($attraction);
+                    endif;
                     
                     $this->view->messages()->add($translator->translate('Item has been added'), 'success');
                     
@@ -111,6 +128,7 @@ class District_AdminController extends MF_Controller_Action {
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
         $photoService = $this->_service->getService('Media_Service_Photo');
+        $galleryService = $this->_service->getService('Gallery_Service_Gallery');
         $videoService = $this->_service->getService('Media_Service_VideoUrl');
          $authService = $this->_service->getService('User_Service_Auth');
         
@@ -157,6 +175,11 @@ class District_AdminController extends MF_Controller_Action {
                     }
                     
                     $attraction = $attractionService->saveAttractionFromArray($values,$user->getId());
+                    
+                    if($values['gallery']):
+                        $galleryService->saveGalleryFromAttraction($attraction);
+                    endif;
+                    
                     $this->view->messages()->add($translator->translate('Item has been updated'), 'success');
                     
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
@@ -416,6 +439,45 @@ class District_AdminController extends MF_Controller_Action {
         $root = $attraction->get('PhotoRoot');
         $photos = $photoService->getChildrenPhotos($root);
         $list = $this->view->partial('admin/attraction-photos.phtml', 'district', array('photos' => $photos , 'attraction' => $attraction));
+        
+        
+        $this->_helper->json(array(
+            'status' => 'success',
+            'body' => $list,
+            'id' => $attraction->getId()
+        ));
+        
+    }
+    
+    public function removeAttractionMainPhotoAction() {
+        $attractionService = $this->_service->getService('District_Service_Attraction');
+        $photoService = $this->_service->getService('Media_Service_Photo');
+        
+        if(!$attraction = $attractionService->getAttraction((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Attraction not found');
+        }
+        
+        try {
+            $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    
+            if($root = $attraction->get('PhotoRoot')) {
+                if($root && !$root->isInProxyState()) {
+                    $photo = $photoService->updatePhoto($root);
+                    $photo->setOffset(null);
+                    $photo->setFilename(null);
+                    $photo->setTitle(null);
+                    $photo->save();
+                }
+            }
+        
+            $this->_service->get('doctrine')->getCurrentConnection()->commit();
+        } catch(Exception $e) {
+            $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+            $this->_service->get('log')->log($e->getMessage(), 4);
+        }
+        
+        $root = $attraction->get('PhotoRoot');
+        $list = $this->view->partial('admin/attraction-main-photo.phtml', 'news', array('photos' => $root , 'attraction' => $attraction));
         
         
         $this->_helper->json(array(
@@ -788,7 +850,44 @@ class District_AdminController extends MF_Controller_Action {
         ));
         
     }
-    
+    public function removePeopleMainPhotoAction() {
+        $peopleService = $this->_service->getService('District_Service_People');
+        $photoService = $this->_service->getService('Media_Service_Photo');
+        
+        if(!$people = $peopleService->getPeople((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Attraction not found');
+        }
+        
+        try {
+            $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    
+            if($root = $people->get('PhotoRoot')) {
+                if($root && !$root->isInProxyState()) {
+                    $photo = $photoService->updatePhoto($root);
+                    $photo->setOffset(null);
+                    $photo->setFilename(null);
+                    $photo->setTitle(null);
+                    $photo->save();
+                }
+            }
+        
+            $this->_service->get('doctrine')->getCurrentConnection()->commit();
+        } catch(Exception $e) {
+            $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+            $this->_service->get('log')->log($e->getMessage(), 4);
+        }
+        
+        $root = $people->get('PhotoRoot');
+        $list = $this->view->partial('admin/people-main-photo.phtml', 'news', array('photos' => $root , 'people' => $people));
+        
+        
+        $this->_helper->json(array(
+            'status' => 'success',
+            'body' => $list,
+            'id' => $people->getId()
+        ));
+        
+    }
      public function addPeoplePhotoAction() {
         $peopleService = $this->_service->getService('District_Service_People');
         $photoService = $this->_service->getService('Media_Service_Photo');
@@ -1053,8 +1152,8 @@ class District_AdminController extends MF_Controller_Action {
             $row = array();
             $row[] = $result->id;
             $row[] = $result->Translation[$language->getId()]->title;
-            $row[] = $result['created_at']. "<br />".$result['UserCreated']['last_name']. " ".$result['UserCreated']['first_name'];
-            $row[] = $result['updated_at']. "<br /> ".$result['UserUpdated']['last_name']. " ".$result['UserUpdated']['first_name'];
+            $row[] = MF_Text::timeFormat($result['created_at'], 'd/m/Y H:i'). "<br />".$result['UserCreated']['last_name']. " ".$result['UserCreated']['first_name'];
+            $row[] = MF_Text::timeFormat($result['updated_at'], 'd/m/Y H:i'). "<br /> ".$result['UserUpdated']['last_name']. " ".$result['UserUpdated']['first_name'];
            
             $row[] = MF_Text::timeFormat($result->publish_date, 'd/m/Y H:i');
             
@@ -1079,17 +1178,20 @@ class District_AdminController extends MF_Controller_Action {
         $eventService = $this->_service->getService('District_Service_Event');
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
-         $authService = $this->_service->getService('User_Service_Auth');
+        $photoService = $this->_service->getService('Media_Service_Photo');
         
         
-        $user = $authService->getAuthenticatedUser();
         $translator = $this->_service->get('translate');
         
         $adminLanguage = $i18nService->getAdminLanguage();
         
         $form = $eventService->getEventForm();
+        $form->removeElement('category_id');
+        $form->removeElement('group_id');
+        $form->getElement('publish_date')->setLabel('Data wydarzenia');
         $metatagsForm = $metatagService->getMetatagsSubForm();
         $form->addSubForm($metatagsForm, 'metatags');
+        
         
         if($this->getRequest()->isPost()) {
             if($form->isValid($this->getRequest()->getParams())) {
@@ -1100,7 +1202,19 @@ class District_AdminController extends MF_Controller_Action {
                     if($metatags = $metatagService->saveMetatagsFromArray(null, $values, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
                         $values['metatag_id'] = $metatags->getId();
                     }
-                    $event = $eventService->saveEventFromArray($values,$user->getId(),$user->getId());
+                    $event = $eventService->saveEventFromArray($values,$this->user->getId(),$this->user->getId());
+                    
+                    if(!$event->photo_root_id){
+                        $photoRoot = $photoService->createPhotoRoot();
+                        $event->set('PhotoRoot',$photoRoot);
+                        $event->save();
+                    }
+                    
+                    if($this->user['role']=="redaktor"):
+                        $event->set('student',1);
+                        $event->set('student_accept',0);
+                        $event->save();
+                    endif;
                     
                     $this->view->messages()->add($translator->translate('Item has been added'), 'success');
                     
@@ -1108,7 +1222,6 @@ class District_AdminController extends MF_Controller_Action {
                     
                     $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-event', 'district', array('id' => $event->getId())));
                 } catch(Exception $e) {
-                    var_dump($e->getMessage());exit;
                     $this->_service->get('doctrine')->getCurrentConnection()->rollback();
                     $this->_service->get('log')->log($e->getMessage(), 4);
                 }
@@ -1123,15 +1236,15 @@ class District_AdminController extends MF_Controller_Action {
     }
     
     public function editEventAction() {
-         $eventService = $this->_service->getService('District_Service_Event');
+        $eventService = $this->_service->getService('District_Service_Event');
+        $newsService = $this->_service->getService('News_Service_News');
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
         $photoService = $this->_service->getService('Media_Service_Photo');
         $videoService = $this->_service->getService('Media_Service_VideoUrl');
-         $authService = $this->_service->getService('User_Service_Auth');
+        $adService = $this->_service->getService('Banner_Service_Ad');
         
         
-        $user = $authService->getAuthenticatedUser();
         $translator = $this->_service->get('translate');
         
         if(!$event = $eventService->getEvent($this->getRequest()->getParam('id'))) {
@@ -1144,9 +1257,13 @@ class District_AdminController extends MF_Controller_Action {
         
         $form = $eventService->getEventForm($event);
         
+        
+        $form->removeElement('category_id');
+        $form->removeElement('group_id');
+        $form->getElement('publish_date')->setLabel('Data wydarzenia');
+        
         $metatagsForm = $metatagService->getMetatagsSubForm($event->get('Metatags'));
         $form->addSubForm($metatagsForm, 'metatags');
-        
         if(!$event->photo_root_id){
             $photoRoot = $photoService->createPhotoRoot();
             $event->set('PhotoRoot',$photoRoot);
@@ -1158,29 +1275,39 @@ class District_AdminController extends MF_Controller_Action {
             $event->set('VideoRoot',$videoRoot);
             $event->save();
         }
+        if(!$video = $videoService->getVideo($event->video_root_id)) {
+            throw new Zend_Controller_Action_Exception('Video not found');
+        }
+        $videoForm = $newsService->getVideoForm($video);
+        $videoForm->getElement('ad_id')->addMultiOptions($adService->prependAds());
+        $videoForm->getElement('ad_id')->setValue($video->ad_id);
+        $videoForm->removeElement('date_from');
+        $videoForm->removeElement('date_to');
+        $this->view->assign('videoForm',$videoForm);
+        
         
         
         if($this->getRequest()->isPost()) {
-            if($form->isValid($this->getRequest()->getParams())) {
+            if($videoForm->isValid($this->getRequest()->getParams())&&$form->isValid($this->getRequest()->getParams())) {
                 try {
                     $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
                     
                     $values = $form->getValues();
-                    
-                    
+                    $videoValues = $videoForm->getValues();
+                    $videoValues['id'] = $video['id'];
                     if($metatags = $metatagService->saveMetatagsFromArray($event->get('Metatags'), $values, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
                         $values['metatag_id'] = $metatags->getId();
                     }
                     
-                    $event = $eventService->saveEventFromArray($values,$user->getId());
+                    $event = $eventService->saveEventFromArray($values,$this->user->getId());
+                     $video = $videoService->createVideoFromUpload($videoValues, $videoRoot);
+                    
+                    
                     $this->view->messages()->add($translator->translate('Item has been updated'), 'success');
                     
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
                     
-                     if(isset($_POST['add_video'])){
-                        $this->_helper->redirector->gotoUrl($this->view->adminUrl('add-event-video', 'district',array('id' => $event->id)));
-                    }
-                    
+                   
                      if(isset($_POST['save_only'])){
                         $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-event', 'district',array('id' => $event->id)));
                     }
@@ -1210,7 +1337,6 @@ class District_AdminController extends MF_Controller_Action {
          $authService = $this->_service->getService('User_Service_Auth');
         
         
-        $user = $authService->getAuthenticatedUser();
         if($event = $eventService->getEvent($this->getRequest()->getParam('id'))) {
             try {
                 $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
@@ -1221,7 +1347,7 @@ class District_AdminController extends MF_Controller_Action {
                 $photoRoot = $event->get('PhotoRoot');
                 $photoService->removePhoto($photoRoot);
                 
-                $event->set('UserUpdated',$user);
+                $event->set('UserUpdated',$this->user);
                 $event->save();
                 
                 $eventService->removeEvent($event);
@@ -1230,12 +1356,12 @@ class District_AdminController extends MF_Controller_Action {
                 $metatagTranslationService->removeMetatagTranslation($metatagTranslation);
 
                 $this->_service->get('doctrine')->getCurrentConnection()->commit();
-                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-event', 'district'));
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-event', 'event'));
             } catch(Exception $e) {
                 $this->_service->get('Logger')->log($e->getMessage(), 4);
             }
         }
-        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-event', 'district'));
+        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-event', 'event'));
     }
     
     public function addEventMainPhotoAction() {
@@ -1288,6 +1414,45 @@ class District_AdminController extends MF_Controller_Action {
         $root = $event->get('PhotoRoot');
         $root->refresh();
         $list = $this->view->partial('admin/event-main-photo.phtml', 'district', array('photos' => $root, 'event' => $event));
+        
+        $this->_helper->json(array(
+            'status' => 'success',
+            'body' => $list,
+            'id' => $event->getId()
+        ));
+        
+    }
+    
+    public function removeEventMainPhotoAction() {
+        $eventService = $this->_service->getService('District_Service_Event');
+        $photoService = $this->_service->getService('Media_Service_Photo');
+        
+        if(!$event = $eventService->getEvent((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Attraction not found');
+        }
+        
+        try {
+            $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    
+            if($root = $event->get('PhotoRoot')) {
+                if($root && !$root->isInProxyState()) {
+                    $photo = $photoService->updatePhoto($root);
+                    $photo->setOffset(null);
+                    $photo->setFilename(null);
+                    $photo->setTitle(null);
+                    $photo->save();
+                }
+            }
+        
+            $this->_service->get('doctrine')->getCurrentConnection()->commit();
+        } catch(Exception $e) {
+            $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+            $this->_service->get('log')->log($e->getMessage(), 4);
+        }
+        
+        $root = $event->get('PhotoRoot');
+        $list = $this->view->partial('admin/event-main-photo.phtml', 'district', array('photos' => $root , 'event' => $event));
+        
         
         $this->_helper->json(array(
             'status' => 'success',

@@ -8,10 +8,10 @@
  * @property integer $id
  * @property string $type
  * @property string $title
- * @property string $slug
  * @property clob $content
- * @property boolean $sent
- * @property timestamp $send_at
+ * @property timestamp $date_to_send
+ * @property boolean $all_subscribers
+ * @property Doctrine_Collection $SentMessages
  * 
  * @package    Admi
  * @subpackage Newsletter
@@ -37,19 +37,15 @@ abstract class Newsletter_Model_Doctrine_BaseMessage extends Doctrine_Record
              'type' => 'string',
              'length' => '255',
              ));
-        $this->hasColumn('slug', 'string', 255, array(
-             'type' => 'string',
-             'length' => '255',
-             ));
         $this->hasColumn('content', 'clob', null, array(
              'type' => 'clob',
              ));
-        $this->hasColumn('sent', 'boolean', null, array(
+        $this->hasColumn('date_to_send', 'timestamp', null, array(
+             'type' => 'timestamp',
+             ));
+        $this->hasColumn('all_subscribers', 'boolean', null, array(
              'type' => 'boolean',
              'default' => 0,
-             ));
-        $this->hasColumn('send_at', 'timestamp', null, array(
-             'type' => 'timestamp',
              ));
 
         $this->option('type', 'MyISAM');
@@ -60,6 +56,10 @@ abstract class Newsletter_Model_Doctrine_BaseMessage extends Doctrine_Record
     public function setUp()
     {
         parent::setUp();
+        $this->hasMany('Newsletter_Model_Doctrine_SentMessage as SentMessages', array(
+             'local' => 'id',
+             'foreign' => 'message_id'));
+
         $timestampable0 = new Doctrine_Template_Timestampable();
         $softdelete0 = new Doctrine_Template_SoftDelete();
         $this->actAs($timestampable0);

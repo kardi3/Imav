@@ -229,7 +229,6 @@ class Media_Service_Photo extends MF_Service_ServiceAbstract {
             if(realpath(dirname($filePath)) == realpath($offsetDir) || @copy($filePath, $offsetDir . DIRECTORY_SEPARATOR . $name)) {
               
                 foreach($options as $cat) {
-                    
                     if(!is_dir($offsetDir . DIRECTORY_SEPARATOR . $cat)) {
                         @mkdir($offsetDir . DIRECTORY_SEPARATOR . $cat);
                     }

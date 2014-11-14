@@ -5,10 +5,10 @@
  *
  * @author Andrzej Wilczyński <and.wilczynski@gmail.com>
  */
-class News_Form_Video extends Admin_Form {
+class District_Form_Video extends Admin_Form {
     
     public function init() {
-//        $i18nService = MF_Service_ServiceBroker::getInstance()->getService('Default_Service_I18n');
+        $i18nService = MF_Service_ServiceBroker::getInstance()->getService('Default_Service_I18n');
         
         $id = $this->createElement('hidden', 'id');
         $id->setDecorators(array('ViewHelper'));
@@ -19,9 +19,15 @@ class News_Form_Video extends Admin_Form {
         $video->setRequired(false);
         $video->setDecorators(self::$textDecorators);
         $video->setAttrib('class', 'span8');
-//        
+        
+          $advertisment = $this->createElement('text', 'advert');
+        $advertisment->setLabel('Advertisment');
+        $advertisment->setRequired(false);
+        $advertisment->setDecorators(self::$textDecorators);
+        $advertisment->setAttrib('class', 'span8');
+        
 //        $languages = $i18nService->getLanguageList();
-
+//
 //        $translations = new Zend_Form_SubForm();
 //
 //        foreach($languages as $language) {
@@ -53,7 +59,7 @@ class News_Form_Video extends Admin_Form {
 //        }
 //        
 //        $this->addSubForm($translations, 'translations');
-//         
+         
         $submit = $this->createElement('button', 'submit');
         $submit->setLabel('Save');
         $submit->setDecorators(array('ViewHelper'));
@@ -62,7 +68,7 @@ class News_Form_Video extends Admin_Form {
         
         $this->setElements(array(
             $id,
-
+            $advertisment,
             $video,
             $submit,
         ));

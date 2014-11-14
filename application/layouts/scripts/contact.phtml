@@ -1,30 +1,153 @@
-<!DOCTYPE html> 
-<html>
+
+
+<!DOCTYPE HTML>
+<!--[if IE 7 ]><html class="ie ie7 lte9 lte8 lte7" lang="en-US"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lte9 lte8" lang="en-US">	<![endif]-->
+<!--[if IE 9]><html class="ie ie9 lte9" lang="en-US"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="pl" class="noIE">
 <head>
-    <?php echo $this->partial('_head.phtml') ?>
+  <?php echo $this->render('_head.phtml'); ?>
+</head>
+<body class="onepage sticky-header">
+
+    <?php echo $this->render('_header.phtml'); ?>
+<!-- CONTACT US SECTION -->
+<section  class="section section-white"  id="contact" >
+    <div class="map">
+    <iframe src="https://maps.google.com/?ie=UTF8&amp;ll=38.85682,-103.996582&amp;spn=7.304424,16.907959&amp;t=m&amp;z=7&amp;output=embed" class="iframe" ></iframe>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8">
+      
+         <header class="section-header">
+          <div class=" animated" data-animation="bounceInLeft"> <i class="autologo_avto"></i> </div>
+          <div class="heading-wrap">
+            <h2 class="heading " ><span>Contacts Us</span></h2>
+          </div>
+           <p>Vestibulum fringilla nulla ultricies sem. Phasellus sit amet lorem at odio Nulla pede duislw</p>
+        </header>
+        
+        
+       
+        
+        
+      </div>
+    </div>
+    <div class="row contact-row">
+      <div class="col-xs-12 col-sm-12 col-lg-6">
+        <h4>SEND US AN INQUIRY</h4>
+        <form id="contact-form"  class="form-full-width contact-form">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <input placeholder="YOUR NAME*" type="text" id="contact-subject1" name="subject" />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <input placeholder="PHONE*" type="text" id="contact-subject2" name="subject" />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <input placeholder="SUBJECT*" type="text" id="contact-subject3" name="subject" />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <textarea placeholder="YOUR MESSAGE*" id="contact-message" name="message" ></textarea>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 text-left">
+              <div class="wrap-main">
+                <button id="contact-submit" class="btn btn-main btn-primary btn-lg uppercase"><span>Send Message</span></button>
+              </div>
+            </div>
+          </div>
+        </form>
+        
+        <!-- /CONTACT FORM ALERTS --> 
+        
+      </div>
+      <div class="col-xs-12 col-sm-12 col-lg-6 pull-right contact-text">
+        <h4>AUTOIMAGE AUTO DEALERS</h4>
+        <p>Address: Street No. 123, Main Road, City Name, IL 33025<br>
+          Phone: 555 666 777<br>
+          Fax: +1 23 4567 899<br>
+          Email: <a href="mailto:info@delicategem.com">info@autoimage.com</a></p>
+        <p>&nbsp; </p>
+        <h4>WORKING HOURS</h4>
+        <p>Monday to Friday: 9 A.M. to 6 P.M.<br>
+          Saturday: 9 A.M. to 1 P.M.<br>
+          No working hours on Sunday </p>
+        <p>&nbsp; </p>
+        <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-html5"></i></a> <a href="#"><i class="fa fa-youtube"></i></a> <a href="#"><i class="fa fa-flickr"></i></a> <a href="#"><i class="fa fa-vk"></i></a> </div>
+    </div>
+  </div>
+  
+</section>
+<!-- // CONTACT US SECTION --> 
+
+
+
+<!-- PAGE FOOTER -->
+<div class="section-footer">
+  <div class="container">
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+          <div class="copyright"> © 2014 AutoImage. All Rights Reserved.</div>
+          <a class="go-top"><i class="fa fa-angle-double-up"></i></a> </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- // PAGE FOOTER --> 
+
+<!-- Javascripts --> 
+<script src="/assets/js/bootstrap.min.js"></script> 
+<script src="/assets/js/jquery.isotope.min.js"></script> 
+<script src="/assets/js/jquery.prettyPhoto.min.js"></script> 
+<script src="/assets/js/jflickrfeed.min.js"></script> 
+<script src="/assets/js/sly.min.js"></script> 
+<script src="/assets/js/package.min.js"></script> 
+<script src="/assets/js/jquery.nav.js"></script> 
+<script src="/assets/js/scripts.js"></script>
+</body>
+</html>
+
+
+
+
+<?php /* ?>
+<html lang="pl">
+<!--<![endif]-->
+
+<head>
 </head>
 
-<body>
-    <div class="root">
-	<header class="h10 sticky-enabled no-topbar">
-		
-                <?php echo $this->render('_header.phtml') ?>
-            
-		<?php echo $this->layout()->topMenu; ?>
-		
-		
-	</header>
-	<!-- .container_12 start -->
-       
-	<section class="content reverse toup">
-		<section class="main">
-			<?php echo $this->layout()->content; ?>
-		</section>
-		<a href="#" class="go-top">Go to top of page</a>
-	</section>
+<body class="corporate">
+    <div class="mainWrapper">
+    <?php echo $this->render('_header.phtml'); ?>
 
-	 <?php echo $this->layout()->footer; ?>
+    <div class="main">
+	    <?php echo $this->layout()->content; ?>
+                      
     </div>
-</body>
+    <div class='clear'></div>
+    
 
+  
+    
+   <?php echo $this->render('_footer.phtml'); ?>
+    
+    </div>
+    
+</body>
 </html>
+ * 
+ *  ?>
+ */

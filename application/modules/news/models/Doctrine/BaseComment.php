@@ -9,7 +9,7 @@
  * @property integer $news_id
  * @property string $name
  * @property clob $content
- * @property integer $user_ip
+ * @property varchar $user_ip
  * @property boolean $active
  * @property News_Model_Doctrine_News $News
  * 
@@ -40,9 +40,9 @@ abstract class News_Model_Doctrine_BaseComment extends Doctrine_Record
         $this->hasColumn('content', 'clob', null, array(
              'type' => 'clob',
              ));
-        $this->hasColumn('user_ip', 'integer', 4, array(
-             'type' => 'integer',
-             'length' => '4',
+        $this->hasColumn('user_ip', 'varchar', 255, array(
+             'type' => 'varchar',
+             'length' => '255',
              ));
         $this->hasColumn('active', 'boolean', null, array(
              'type' => 'boolean',

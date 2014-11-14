@@ -3,7 +3,7 @@
 /**
  * Slider_DataTables_Adapter_Slide
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Michał Folga <michalfolga@gmail.com>
  */
 class Slider_DataTables_Adapter_Slide extends Default_DataTables_Adapter_AdapterAbstract {
     

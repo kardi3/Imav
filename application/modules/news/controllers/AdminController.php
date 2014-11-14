@@ -7,25 +7,29 @@
  */
 class News_AdminController extends MF_Controller_Action {
     
+    protected $user;
+        
+    
      public function init() {
         $this->_helper->ajaxContext()
-//                ->addActionContext('add-attachment0', 'json')
-//                ->addActionContext('add-attachment-name0', 'json')
-//                ->addActionContext('remove-attachment0', 'json')
                 ->initContext();
         parent::init();
+        
+        $authService = $this->_service->getService('User_Service_Auth');
+        $this->user = $authService->getAuthenticatedUser();
     }
     
     public function listNewsAction() {}
     public function listNewsDataAction() {
         $i18nService = $this->_service->getService('Default_Service_I18n');
+        
         $table = Doctrine_Core::getTable('News_Model_Doctrine_News');
         $dataTables = Default_DataTables_Factory::factory(array(
             'request' => $this->getRequest(), 
             'table' => $table, 
             'class' => 'News_DataTables_News', 
-            'columns' => array('x.id','xt.title', 'x.created_at','x.updated_at','x.publish_date','s.name'),
-            'searchFields' => array('x.id','xt.title','x.created_at','x.updated_at','x.publish_date','s.name')
+            'columns' => array('x.id','xt.title', 'c.title','g.title','x.created_at','x.updated_at','x.publish_date','x.student','x.student_accept','x.breaking_news'),
+            'searchFields' => array('x.id','xt.title','c.title','g.title','x.created_at','x.updated_at','x.publish_date','x.student','x.student_accept','x.breaking_news')
         ));
         
         $results = $dataTables->getResult();
@@ -37,14 +41,63 @@ class News_AdminController extends MF_Controller_Action {
             $row = array();
             $row[] = $result->id;
             $row[] = $result->Translation[$language->getId()]->title;
-            $row[] = $result['created_at']. "<br />".$result['UserCreated']['last_name']. " ".$result['UserCreated']['first_name'];
-            $row[] = $result['updated_at']. "<br /> ".$result['UserUpdated']['last_name']. " ".$result['UserUpdated']['first_name'];
+            $row[] = $result['Category']['title'];
+            $row[] = strlen($result['Group']['title'])?$result['Group']['title']:"brak";
+            
+            $row[] = MF_Text::timeFormat($result['created_at'], 'd/m/Y H:i'). "<br />".$result['UserCreated']['last_name']. " ".$result['UserCreated']['first_name'];
+            $row[] = MF_Text::timeFormat($result['updated_at'], 'd/m/Y H:i'). "<br /> ".$result['UserUpdated']['last_name']. " ".$result['UserUpdated']['first_name'];
            
             $row[] = MF_Text::timeFormat($result->publish_date, 'd/m/Y H:i');
             
-            $options = '<a href="' . $this->view->adminUrl('edit-news', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-            $options .= '<a href="' . $this->view->adminUrl('remove-news', 'news', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
-            $row[] = $options;
+            if($result['student'] == 1){ 
+                $row[] = '<span class="icon16 icomoon-icon-checkbox-2"><span class="spaninspan">Tak</span></span>';
+            }
+            else{
+                $row[] = '<span class="icon16 icomoon-icon-checkbox-unchecked-2"><span class="spaninspan">Nie</span></span>';
+            }
+            
+            if($result['student_accept'] == 1){ 
+                if($this->user['role']=="admin"):
+                    $row[] = '<a href="' . $this->view->adminUrl('set-student-accept', 'news', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"><span class="spaninspan">Tak</span></span></a>';
+                else:
+                    $row[] = '<span class="icon16 icomoon-icon-checkbox-2"><span class="spaninspan">Tak</span></span>';
+                endif;
+            }
+            else{
+                if($this->user['role']=="admin"):
+                    $row[] = '<a href="' . $this->view->adminUrl('set-student-accept', 'news', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"><span class="spaninspan">Nie</span></span></a>';
+                else:
+                     $row[] = '<span class="icon16 icomoon-icon-checkbox-unchecked-2"><span class="spaninspan">Nie</span></span>';
+                endif;
+                
+            }
+            
+            
+            if($result['breaking_news'] == 1){ 
+                if($this->user['role']=="admin"):
+                    $row[] = '<a href="' . $this->view->adminUrl('set-breaking-news', 'news', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"><span class="spaninspan">Tak</span></span></a>';
+                else:
+                    $row[] = '<span class="icon16 icomoon-icon-checkbox-2"><span class="spaninspan">Tak</span></span>';
+                endif;
+                
+            }
+            else{
+                if($this->user['role']=="admin"):
+                    $row[] = '<a href="' . $this->view->adminUrl('set-breaking-news', 'news', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"><span class="spaninspan">Nie</span></span></a>';
+                else:
+                     $row[] = '<span class="icon16 icomoon-icon-checkbox-unchecked-2"><span class="spaninspan">Nie</span></span>';
+                endif;
+                
+            }
+            
+            if($this->user['role']=="admin"||$result['UserCreated']['id']==$this->user['id']):
+                $options = '<a href="' . $this->view->adminUrl('edit-news', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                $options .= '<a href="' . $this->view->adminUrl('remove-news', 'news', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
+            else:
+                $options = '';
+            endif;
+            
+             $row[] = $options;
             $rows[] = $row;
         }
 
@@ -63,20 +116,23 @@ class News_AdminController extends MF_Controller_Action {
         $newsService = $this->_service->getService('News_Service_News');
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
-         $authService = $this->_service->getService('User_Service_Auth');
         $categoryService = $this->_service->getService('News_Service_Category');
+        $groupService = $this->_service->getService('News_Service_Group');
+        $photoService = $this->_service->getService('Media_Service_Photo');
+        $tagService = $this->_service->getService('News_Service_Tag');
         
         
-        
-        $user = $authService->getAuthenticatedUser();
         $translator = $this->_service->get('translate');
         
         $adminLanguage = $i18nService->getAdminLanguage();
         
         $form = $newsService->getNewsForm();
         $form->getElement('category_id')->addMultiOptions($categoryService->prependCategoryOptions());
+        $form->getElement('group_id')->addMultiOptions($groupService->prependGroupOptions());
+        $form->getElement('tag_id')->addMultiOptions($tagService->prependTagOptions());
         $metatagsForm = $metatagService->getMetatagsSubForm();
         $form->addSubForm($metatagsForm, 'metatags');
+        
         
         if($this->getRequest()->isPost()) {
             if($form->isValid($this->getRequest()->getParams())) {
@@ -87,7 +143,19 @@ class News_AdminController extends MF_Controller_Action {
                     if($metatags = $metatagService->saveMetatagsFromArray(null, $values, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
                         $values['metatag_id'] = $metatags->getId();
                     }
-                    $news = $newsService->saveNewsFromArray($values,$user->getId(),$user->getId());
+                    $news = $newsService->saveNewsFromArray($values,$this->user->getId(),$this->user->getId());
+                    
+                    if(!$news->photo_root_id){
+                        $photoRoot = $photoService->createPhotoRoot();
+                        $news->set('PhotoRoot',$photoRoot);
+                        $news->save();
+                    }
+                    
+                    if($this->user['role']=="redaktor"):
+                        $news->set('student',1);
+                        $news->set('student_accept',0);
+                        $news->save();
+                    endif;
                     
                     $this->view->messages()->add($translator->translate('Item has been added'), 'success');
                     
@@ -113,13 +181,14 @@ class News_AdminController extends MF_Controller_Action {
         $newsService = $this->_service->getService('News_Service_News');
         $categoryService = $this->_service->getService('News_Service_Category');
         $i18nService = $this->_service->getService('Default_Service_I18n');
+        $groupService = $this->_service->getService('News_Service_Group');
+        $tagService = $this->_service->getService('News_Service_Tag');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
         $photoService = $this->_service->getService('Media_Service_Photo');
         $videoService = $this->_service->getService('Media_Service_VideoUrl');
-         $authService = $this->_service->getService('User_Service_Auth');
+        $adService = $this->_service->getService('Banner_Service_Ad');
         
         
-        $user = $authService->getAuthenticatedUser();
         $translator = $this->_service->get('translate');
         
         if(!$news = $newsService->getNews($this->getRequest()->getParam('id'))) {
@@ -131,13 +200,16 @@ class News_AdminController extends MF_Controller_Action {
         $adminLanguage = $i18nService->getAdminLanguage();
         
         $form = $newsService->getNewsForm($news);
-        
         $form->getElement('category_id')->addMultiOptions($categoryService->prependCategoryOptions());
         $form->getElement('category_id')->setValue($news['category_id']);
+        $form->getElement('group_id')->addMultiOptions($groupService->prependGroupOptions());
+        $form->getElement('group_id')->setValue($news['group_id']);
+        $form->getElement('tag_id')->addMultiOptions($tagService->prependTagOptions());
+        $form->getElement('tag_id')->setValue($news->get('Tags')->getPrimaryKeys());
+        
         
         $metatagsForm = $metatagService->getMetatagsSubForm($news->get('Metatags'));
         $form->addSubForm($metatagsForm, 'metatags');
-        
         if(!$news->photo_root_id){
             $photoRoot = $photoService->createPhotoRoot();
             $news->set('PhotoRoot',$photoRoot);
@@ -149,24 +221,38 @@ class News_AdminController extends MF_Controller_Action {
             $news->set('VideoRoot',$videoRoot);
             $news->save();
         }
+        if(!$video = $videoService->getVideo($news->video_root_id)) {
+            throw new Zend_Controller_Action_Exception('Video not found');
+        }
+        $videoForm = $newsService->getVideoForm($video);
+        $videoForm->getElement('ad_id')->addMultiOptions($adService->prependAds());
+        $videoForm->getElement('ad_id')->setValue($video->ad_id);
+        $videoForm->removeElement('date_from');
+        $videoForm->removeElement('date_to');
+        $this->view->assign('videoForm',$videoForm);
+        
         
         
         if($this->getRequest()->isPost()) {
-            if($form->isValid($this->getRequest()->getParams())) {
+            if($videoForm->isValid($this->getRequest()->getParams())&&$form->isValid($this->getRequest()->getParams())) {
                 try {
                     $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
                     
                     $values = $form->getValues();
-                    
-                    
+                    $videoValues = $videoForm->getValues();
+                    $videoValues['id'] = $video['id'];
                     if($metatags = $metatagService->saveMetatagsFromArray($news->get('Metatags'), $values, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
                         $values['metatag_id'] = $metatags->getId();
                     }
                     
-                    $news = $newsService->saveNewsFromArray($values,$user->getId());
+                    $news = $newsService->saveNewsFromArray($values,$this->user->getId());
+                     $video = $videoService->createVideoFromUpload($videoValues, $videoRoot);
+                    
+                    
                     $this->view->messages()->add($translator->translate('Item has been updated'), 'success');
                     
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    
                     
                      if(isset($_POST['add_video'])){
                         $this->_helper->redirector->gotoUrl($this->view->adminUrl('add-video', 'news',array('id' => $news->id)));
@@ -201,7 +287,6 @@ class News_AdminController extends MF_Controller_Action {
          $authService = $this->_service->getService('User_Service_Auth');
         
         
-        $user = $authService->getAuthenticatedUser();
         if($news = $newsService->getNews($this->getRequest()->getParam('id'))) {
             try {
                 $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
@@ -212,7 +297,7 @@ class News_AdminController extends MF_Controller_Action {
                 $photoRoot = $news->get('PhotoRoot');
                 $photoService->removePhoto($photoRoot);
                 
-                $news->set('UserUpdated',$user);
+                $news->set('UserUpdated',$this->user);
                 $news->save();
                 
                 $newsService->removeNews($news);
@@ -229,13 +314,60 @@ class News_AdminController extends MF_Controller_Action {
         $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-news', 'news'));
     }
     
+    public function setBreakingNewsAction() {
+        $newsService = $this->_service->getService('News_Service_News');
+        
+        if($news = $newsService->getNews($this->getRequest()->getParam('id'))) {
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
 
+                if($news->breaking_news){
+                    $news->set('breaking_news',0);
+                }
+                else{
+                    $news->set('breaking_news',1);
+                }
+                    $news->save();
+
+
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-news', 'news'));
+            } catch(Exception $e) {
+                $this->_service->get('Logger')->log($e->getMessage(), 4);
+            }
+        }
+        $this->_helper->viewRenderer->setNoRender();
+    }
+    
+    public function setStudentAcceptAction() {
+        $newsService = $this->_service->getService('News_Service_News');
+        
+        if($news = $newsService->getNews($this->getRequest()->getParam('id'))) {
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+
+                if($news->student_accept){
+                    $news->set('student_accept',0);
+                }
+                else{
+                    $news->set('student_accept',1);
+                }
+                    $news->save();
+
+
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-news', 'news'));
+            } catch(Exception $e) {
+                $this->_service->get('Logger')->log($e->getMessage(), 4);
+            }
+        }
+        $this->_helper->viewRenderer->setNoRender();
+    }
     
    
     public function addNewsMainPhotoAction() {
         $newsService = $this->_service->getService('News_Service_News');
         $photoService = $this->_service->getService('Media_Service_Photo');
-        
         if(!$news = $newsService->getNews((int) $this->getRequest()->getParam('id'))) {
             throw new Zend_Controller_Action_Exception('News not found');
         }
@@ -476,16 +608,20 @@ class News_AdminController extends MF_Controller_Action {
     
      public function addVideoAction() {
         $newsService = $this->_service->getService('News_Service_News');
+        $adService = $this->_service->getService('Banner_Service_Ad');
         $videoService = $this->_service->getService('Media_Service_VideoUrl');
         $i18nService = $this->_service->getService('Default_Service_I18n');
         
         if(!$news = $newsService->getNews((int) $this->getRequest()->getParam('id'))) {
             throw new Zend_Controller_Action_Exception('News not found');
         }
+        
         $root = $news->get('VideoRoot');
         
         $form = new News_Form_Video();
-       
+        $form->getElement('ad_id')->addMultiOptions($adService->prependAds());
+        $form->removeElement('date_from');
+        $form->removeElement('date_to');
         $this->view->assign('form',$form);
         
        
@@ -512,7 +648,77 @@ class News_AdminController extends MF_Controller_Action {
                 }
             }
         }    
-//     
+    }
+    
+     public function editVideoAction() {
+        $newsService = $this->_service->getService('News_Service_News');
+        $adService = $this->_service->getService('Banner_Service_Ad');
+        $videoService = $this->_service->getService('Media_Service_VideoUrl');
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        
+         
+        
+        if(!$video = $videoService->getVideo((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Video not found');
+        }
+        
+        
+        $form = $newsService->getVideoForm($video);
+        $form->getElement('ad_id')->addMultiOptions($adService->prependAds());
+        $form->getElement('ad_id')->setValue($video->ad_id);
+        $form->removeElement('date_from');
+        $form->removeElement('date_to');
+        $this->view->assign('form',$form);
+        
+       
+        $languages = $i18nService->getLanguageList();
+        $adminLanguage = $i18nService->getAdminLanguage();
+        $this->view->assign('languages', $languages);
+        $this->view->assign('adminLanguage', $adminLanguage->getId());
+        
+        
+         if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getPost())) {
+                try {                                   
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    $values = $form->getValues();  
+                 
+                    $video = $videoService->createVideoFromUpload($values, $root);
+                    
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-news', 'news',array('id' => (int) $this->getRequest()->getParam('news-id'))));
+                } catch(Exception $e) {
+                    var_dump($e->getMessage());exit;
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+        }    
+    }
+    
+     public function removeVideoAction() {
+        $videoService = $this->_service->getService('Media_Service_VideoUrl');
+        
+        
+        if($video = $videoService->getVideo($this->getRequest()->getParam('id'))){
+            try {
+                
+                $videoService->removeVideo($video);
+                
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-news', 'news',array('id' => (int) $this->getRequest()->getParam('news-id'))));
+         
+
+            } catch(Exception $e) {
+                var_dump($e->getMessage());exit;
+               $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+               $this->_service->get('log')->log($e->getMessage(), 4);
+            }
+
+        }
+        $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-news', 'news',array('id' => (int) $this->getRequest()->getParam('news-id'))));
+         
+        $this->_helper->viewRenderer->setNoRender();
+               
     }
     
     public function moveNewsPhotoAction() {
@@ -543,13 +749,13 @@ class News_AdminController extends MF_Controller_Action {
             'id' => $news->getId()
         ));
     }
-     public function listCategoryAction() {}
-    public function listCategoryDataAction() {
-        $table = Doctrine_Core::getTable('News_Model_Doctrine_Category');
+     public function listGroupAction() {}
+    public function listGroupDataAction() {
+        $table = Doctrine_Core::getTable('News_Model_Doctrine_Group');
         $dataTables = Default_DataTables_Factory::factory(array(
             'request' => $this->getRequest(), 
             'table' => $table, 
-            'class' => 'News_DataTables_Category', 
+            'class' => 'News_DataTables_Group', 
             'columns' => array('x.id','x.title'),
             'searchFields' => array('x.id','x.title')
         ));
@@ -563,8 +769,8 @@ class News_AdminController extends MF_Controller_Action {
             $row[] = $result->id;
             $row[] = $result->title;
            
-            $options = '<a href="' . $this->view->adminUrl('edit-category', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-            $options .= '<a href="' . $this->view->adminUrl('remove-category', 'news', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
+            $options = '<a href="' . $this->view->adminUrl('edit-group', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            $options .= '<a href="' . $this->view->adminUrl('remove-group', 'news', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
             $row[] = $options;
             $rows[] = $row;
         }
@@ -580,15 +786,15 @@ class News_AdminController extends MF_Controller_Action {
         
     }
     
-    public function addCategoryAction() {
-        $categoryService = $this->_service->getService('News_Service_Category');
+    public function addGroupAction() {
+        $groupService = $this->_service->getService('News_Service_Group');
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
         $translator = $this->_service->get('translate');
         
         $adminLanguage = $i18nService->getAdminLanguage();
         
-        $form = $categoryService->getCategoryForm();
+        $form = $groupService->getGroupForm();
         
         $metatagsForm = $metatagService->getMetatagsSubForm();
         $form->addSubForm($metatagsForm, 'metatags');
@@ -604,13 +810,13 @@ class News_AdminController extends MF_Controller_Action {
                     if($metatags = $metatagService->saveMetatagsFromArray(null, $metatagValues, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
                         $values['metatag_id'] = $metatags->getId();
                     }
-                    $category = $categoryService->saveCategoryFromArray($values);
+                    $group = $groupService->saveGroupFromArray($values);
                     
                     $this->view->messages()->add($translator->translate('Item has been added'), 'success');
                     
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
                     
-                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-category', 'news'));
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-group', 'news'));
                 } catch(Exception $e) {
                     var_dump($e->getMessage());exit;
                     $this->_service->get('doctrine')->getCurrentConnection()->rollback();
@@ -626,21 +832,21 @@ class News_AdminController extends MF_Controller_Action {
         $this->view->assign('form', $form);
     }
     
-    public function editCategoryAction() {
-        $categoryService = $this->_service->getService('News_Service_Category');
+    public function editGroupAction() {
+        $groupService = $this->_service->getService('News_Service_Group');
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
         $translator = $this->_service->get('translate');
         
-        if(!$category = $categoryService->getCategory($this->getRequest()->getParam('id'))) {
-            throw new Zend_Controller_Action_Exception('Category not found');
+        if(!$group = $groupService->getGroup($this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Group not found');
         }
         
         $adminLanguage = $i18nService->getAdminLanguage();
         
-        $form = $categoryService->getCategoryForm($category);
+        $form = $groupService->getGroupForm($group);
         
-        $metatagsForm = $metatagService->getMetatagsSubForm($category->get('Metatags'));
+        $metatagsForm = $metatagService->getMetatagsSubForm($group->get('Metatags'));
         $form->addSubForm($metatagsForm, 'metatags');
         
         if($this->getRequest()->isPost()) {
@@ -654,11 +860,11 @@ class News_AdminController extends MF_Controller_Action {
                     
                     $metatagValues['translations']['pl'] = $values;
                     $metatagValues['metatags'] = $values['metatags']; 
-                    if($metatags = $metatagService->saveMetatagsFromArray($category->get('Metatags'), $metatagValues, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
+                    if($metatags = $metatagService->saveMetatagsFromArray($group->get('Metatags'), $metatagValues, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
                         $values['metatag_id'] = $metatags->getId();
                     }
                     
-                    $category = $categoryService->saveNewsFromArray($values);
+                    $group = $groupService->saveGroupFromArray($values);
                     $this->view->messages()->add($translator->translate('Item has been updated'), 'success');
                     
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
@@ -666,10 +872,10 @@ class News_AdminController extends MF_Controller_Action {
                    
                     
                      if(isset($_POST['save_only'])){
-                        $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-category', 'news',array('id' => $category->id)));
+                        $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-group', 'news',array('id' => $group->id)));
                     }
 
-                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-category', 'news'));
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-group', 'news'));
                 } catch(Exception $e) {
                     $this->_service->get('doctrine')->getCurrentConnection()->rollback();
                     $this->_service->get('log')->log($e->getMessage(), 4);
@@ -684,23 +890,23 @@ class News_AdminController extends MF_Controller_Action {
         $this->view->assign('form', $form);
     }
     
-    public function removeCategoryAction() {
-        $categoryService = $this->_service->getService('News_Service_Category');
+    public function removeGroupAction() {
+        $groupService = $this->_service->getService('News_Service_Group');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
         
-        if($category = $categoryService->getCategory($this->getRequest()->getParam('id'))) {
+        if($group = $groupService->getGroup($this->getRequest()->getParam('id'))) {
             try {
                 $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
 
-                $metatag = $metatagService->getMetatag((int) $category->getMetatagId());
+                $metatag = $metatagService->getMetatag((int) $group->getMetatagId());
 
                 $metatagService->removeMetatag($metatag);
                 
-                $categoryService->removeCategory($category);
+                $groupService->removeGroup($group);
 
 
                 $this->_service->get('doctrine')->getCurrentConnection()->commit();
-                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-category', 'news'));
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-group', 'news'));
             } catch(Exception $e) {
                 var_dump($e->getMessage());exit;
                 $this->_service->get('Logger')->log($e->getMessage(), 4);
@@ -709,6 +915,176 @@ class News_AdminController extends MF_Controller_Action {
         $this->_helper->viewRenderer->setNoRender();
     }
     
+    
+    /* tag - start */
+    
+    public function listTagAction() {}
+    public function listTagDataAction() {
+        $table = Doctrine_Core::getTable('News_Model_Doctrine_Tag');
+        $dataTables = Default_DataTables_Factory::factory(array(
+            'request' => $this->getRequest(), 
+            'table' => $table, 
+            'class' => 'News_DataTables_Tag', 
+            'columns' => array('x.id','x.title'),
+            'searchFields' => array('x.id','x.title')
+        ));
+        
+        $results = $dataTables->getResult();
+        
+
+        $rows = array();
+        foreach($results as $result) {
+            $row = array();
+            $row[] = $result->id;
+            $row[] = $result->title;
+           
+            $options = '<a href="' . $this->view->adminUrl('edit-tag', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            $options .= '<a href="' . $this->view->adminUrl('remove-tag', 'news', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
+            $row[] = $options;
+            $rows[] = $row;
+        }
+
+         $response = array(
+            "sEcho" => intval($_GET['sEcho']),
+            "iTotalRecords" => $dataTables->getDisplayTotal(),
+            "iTotalDisplayRecords" => $dataTables->getTotal(),
+            "aaData" => $rows
+        );
+
+        $this->_helper->json($response);
+        
+    }
+    
+    public function addTagAction() {
+        $tagService = $this->_service->getService('News_Service_Tag');
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        $translator = $this->_service->get('translate');
+        
+        $adminLanguage = $i18nService->getAdminLanguage();
+        
+        $form = $tagService->getTagForm();
+        
+        $metatagsForm = $metatagService->getMetatagsSubForm();
+        $form->addSubForm($metatagsForm, 'metatags');
+        
+        if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getParams())) {
+                try {
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    
+                    $values = $form->getValues();
+                    $metatagValues['translations']['pl'] = $values;
+                    $metatagValues['metatags'] = $values['metatags']; 
+                    if($metatags = $metatagService->saveMetatagsFromArray(null, $metatagValues, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
+                        $values['metatag_id'] = $metatags->getId();
+                    }
+                    $tag = $tagService->saveTagFromArray($values);
+                    
+                    $this->view->messages()->add($translator->translate('Item has been added'), 'success');
+                    
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-tag', 'news'));
+                } catch(Exception $e) {
+                    var_dump($e->getMessage());exit;
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+        }
+
+        $languages = $i18nService->getLanguageList();
+        
+        $this->view->assign('adminLanguage', $adminLanguage);
+        $this->view->assign('languages', $languages);
+        $this->view->assign('form', $form);
+    }
+    
+    public function editTagAction() {
+        $tagService = $this->_service->getService('News_Service_Tag');
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        $translator = $this->_service->get('translate');
+        
+        if(!$tag = $tagService->getTag($this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Tag not found');
+        }
+        
+        $adminLanguage = $i18nService->getAdminLanguage();
+        
+        $form = $tagService->getTagForm($tag);
+        
+        $metatagsForm = $metatagService->getMetatagsSubForm($tag->get('Metatags'));
+        $form->addSubForm($metatagsForm, 'metatags');
+        
+        if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getParams())) {
+                try {
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    
+                    $values = $form->getValues();
+                    
+                    
+                    
+                    $metatagValues['translations']['pl'] = $values;
+                    $metatagValues['metatags'] = $values['metatags']; 
+                    if($metatags = $metatagService->saveMetatagsFromArray($tag->get('Metatags'), $metatagValues, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
+                        $values['metatag_id'] = $metatags->getId();
+                    }
+                    
+                    $tag = $tagService->saveTagFromArray($values);
+                    $this->view->messages()->add($translator->translate('Item has been updated'), 'success');
+                    
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    
+                   
+                    
+                     if(isset($_POST['save_only'])){
+                        $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-tag', 'news',array('id' => $tag->id)));
+                    }
+
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-tag', 'news'));
+                } catch(Exception $e) {
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+        }
+        $languages = $i18nService->getLanguageList();
+        
+        $this->view->assign('adminLanguage', $adminLanguage);
+        $this->view->assign('news', $news);
+        $this->view->assign('languages', $languages);
+        $this->view->assign('form', $form);
+    }
+    
+    public function removeTagAction() {
+        $tagService = $this->_service->getService('News_Service_Tag');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        
+        if($tag = $tagService->getTag($this->getRequest()->getParam('id'))) {
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+
+                $metatag = $metatagService->getMetatag((int) $tag->getMetatagId());
+
+                $metatagService->removeMetatag($metatag);
+                
+                $tagService->removeTag($tag);
+
+
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-tag', 'news'));
+            } catch(Exception $e) {
+                var_dump($e->getMessage());exit;
+                $this->_service->get('Logger')->log($e->getMessage(), 4);
+            }
+        }
+        $this->_helper->viewRenderer->setNoRender();
+    }
+    
+    /* tag - end */
     
      public function listCommentAction() {}
     public function listCommentDataAction() {
@@ -733,9 +1109,9 @@ class News_AdminController extends MF_Controller_Action {
               $row[] = $result->created_at; 
               $row[] = $result->user_ip;
               if($result->active)
-                    $options = '<a href="' . $this->view->adminUrl('set-active-comment', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon16 icomoon-icon-checkbox-o"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                    $options = '<a href="' . $this->view->adminUrl('set-active-comment', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon16 icomoon-icon-checkbox-2"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
               else
-                  $options = '<a href="' . $this->view->adminUrl('set-active-comment', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon16 icomoon-icon-check-o"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                  $options = '<a href="' . $this->view->adminUrl('set-active-comment', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon16 icomoon-icon-checkbox-unchecked"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
             
               $row[] = $options;
             $rows[] = $row;
@@ -881,6 +1257,31 @@ class News_AdminController extends MF_Controller_Action {
         $this->_helper->viewRenderer->setNoRender();
     }
     
+    public function setActiveCommentAction() {
+        $commentService = $this->_service->getService('News_Service_Comment');
+        
+        if($comment = $commentService->getComment($this->getRequest()->getParam('id'))) {
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+
+                if($comment->active){
+                    $comment->set('active',0);
+                }
+                else{
+                    $comment->set('active',1);
+                }
+                    $comment->save();
+
+
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-comment', 'news'));
+            } catch(Exception $e) {
+                var_dump($e->getMessage());exit;
+                $this->_service->get('Logger')->log($e->getMessage(), 4);
+            }
+        }
+        $this->_helper->viewRenderer->setNoRender();
+    }
     
 }
 

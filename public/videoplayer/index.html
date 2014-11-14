@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="css/videoPlayerMain.css" type="text/css">
+  <link rel="stylesheet" href="css/videoPlayer.theme1.css" type="text/css">
+  <link rel="stylesheet" href="css/videoPlayer.theme1_Playlist.css" type="text/css" media="screen"/>
+  <link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
+  <script src="js/froogaloop.js" type="text/javascript"></script>
+  <script src="js/IScroll4Custom.js" type="text/javascript"></script>
+  <script src='js/THREEx.FullScreen.js'></script>
+  <script src="js/videoPlayer.js" type="text/javascript"></script>
+  <script src="js/Playlist.js" type="text/javascript"></script>
+
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready(function($)
+    {
+        videoPlayer = $("#video").Video({           //ALL PLUGIN OPTIONS
+            autohideControls:4,                     //autohide HTML5 player controls
+            videoPlayerWidth:746,                   //total player width
+            videoPlayerHeight:420,                  //total player height
+			playlist:"Right playlist",              //choose playlist type: "Right playlist","Bottom playlist", "Off"
+			autoplay:false,                         //autoplay when webpage loads
+            vimeoColor:"F11116",                    //"hexadecimal value", default vimeo color  00adef
+            youtubeSkin:"dark",                     //youtube theme: light,dark
+            youtubeColor:"red",                     //youtube color: red, white
+            videoPlayerShadow:"effect1",            //choose player shadow:  "effect1" , "effect2", "effect3", "effect4", "effect5", "effect6", "off"
+            posterImg:"images/preview_images/3.jpg",//player poster image
+            onFinish:"Play next video",             //"Play next video","Restart video", "Stop video",
+			nowPlayingText:"Yes",                   //enable disable now playing title: "Yes","No"
+            fullscreen:"Fullscreen native",         //choose fullscreen type: "Fullscreen native","Fullscreen browser"
+            rightClickMenu:true,                    //enable/disable right click over player: true/false
+            shareShow:"Yes",                        //enable/disable share option: "Yes","No"
+            facebookLink:"http://codecanyon.net/",  //link to go when facebook button clicked
+            twitterLink:"http://codecanyon.net/",   //link to go when twitter button clicked
+            logoShow:"Yes",                         //"Yes","No"
+            logoClickable:"Yes",                    //"Yes","No"
+            logoPath:"images/logo/logo.png",        //path to logo image
+            logoGoToLink:"http://codecanyon.net/",  //redirect to page when logo clicked
+            logoPosition:"bottom-right",            //choose logo position: "bottom-right","bottom-left"
+            embedShow:"Yes",                        //enable/disable embed option: "Yes","No"
+            embedCodeSrc:"www.yourwebsite.com/player/index.html", //path to your video player on server
+            embedCodeW:"746",                       //embed player code width
+            embedCodeH:"420",                       //embed player code height
+            videos:[
+                {
+                    videoType:"youtube",                                              //choose video type: "HTML5", "youtube", "vimeo"
+                    title:"Youtube video",                                            //video title
+                    youtubeID:"XMGoYNoMtOQ",                                          //https://www.youtube.com/watch?v=XMGoYNoMtOQ
+                    vimeoID:"46515976",                                               //http://vimeo.com/46515976
+                    mp4:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.mp4",//HTML5 video mp4 url
+                    webm:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.webm",//HTML5 video webm url
+                    videoAdShow:"yes",                                                 //show pre-roll "yes","no"
+                    videoAdGotoLink:"http://codecanyon.net/",                          //pre-roll goto link
+                    mp4AD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.mp4",   //pre-roll video mp4 format
+                    webmAD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.webm", //pre-roll video webm format
+                    description:"Video description goes here.",                        //video description
+                    thumbImg:"images/thumbnail_images/pic3.jpg",                       //path to playlist thumbnail image
+                    info:"Video info goes here"                                        //video info
+                },
+                {
+                    videoType:"vimeo",
+                    title:"Vimeo video",
+                    youtubeID:"XMGoYNoMtOQ",
+                    vimeoID:"46515976",
+                    mp4:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.mp4",
+                    webm:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.webm",
+                    videoAdShow:"yes",
+                    videoAdGotoLink:"http://codecanyon.net/",
+                    mp4AD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.mp4",
+                    webmAD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.webm",
+                    description:"Video description goes here.",
+                    thumbImg:"images/thumbnail_images/pic3.jpg",
+                    info:"Video info goes here"
+                },
+                {
+                    videoType:"HTML5",
+                    title:"Big Buck Bunny trailer",
+                    youtubeID:"XMGoYNoMtOQ",
+                    vimeoID:"46515976",
+                    mp4:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.mp4",
+                    webm:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.webm",
+                    videoAdShow:"yes",
+                    videoAdGotoLink:"http://codecanyon.net/",
+                    mp4AD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.mp4",
+                    webmAD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.webm",
+                    description:"Video description goes here.",
+                    thumbImg:"images/thumbnail_images/pic3.jpg",
+                    info:"Video info goes here"
+                },
+                {
+                    videoType:"HTML5",
+                    title:"Big Buck Bunny trailer",
+                    youtubeID:"XMGoYNoMtOQ",
+                    vimeoID:"46515976",
+                    mp4:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.mp4",
+                    webm:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.webm",
+                    videoAdShow:"yes",
+                    videoAdGotoLink:"http://codecanyon.net/",
+                    mp4AD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.mp4",
+                    webmAD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.webm",
+                    description:"Video description goes here.",
+                    thumbImg:"images/thumbnail_images/pic3.jpg",
+                    info:"Video info goes here"
+                },
+                {
+                    videoType:"HTML5",
+                    title:"Big Buck Bunny trailer",
+                    youtubeID:"XMGoYNoMtOQ",
+                    vimeoID:"46515976",
+                    mp4:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.mp4",
+                    webm:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.webm",
+                    videoAdShow:"yes",
+                    videoAdGotoLink:"http://codecanyon.net/",
+                    mp4AD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.mp4",
+                    webmAD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.webm",
+                    description:"Video description goes here.",
+                    thumbImg:"images/thumbnail_images/pic3.jpg",
+                    info:"Video info goes here"
+                },
+                {
+                    videoType:"HTML5",
+                    title:"Big Buck Bunny trailer",
+                    youtubeID:"XMGoYNoMtOQ",
+                    vimeoID:"46515976",
+                    mp4:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.mp4",
+                    webm:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.webm",
+                    videoAdShow:"yes",
+                    videoAdGotoLink:"http://codecanyon.net/",
+                    mp4AD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.mp4",
+                    webmAD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.webm",
+                    description:"Video description goes here.",
+                    thumbImg:"images/thumbnail_images/pic3.jpg",
+                    info:"Video info goes here"
+                },
+                {
+                    videoType:"HTML5",
+                    title:"Big Buck Bunny trailer",
+                    youtubeID:"XMGoYNoMtOQ",
+                    vimeoID:"46515976",
+                    mp4:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.mp4",
+                    webm:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.webm",
+                    videoAdShow:"yes",
+                    videoAdGotoLink:"http://codecanyon.net/",
+                    mp4AD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.mp4",
+                    webmAD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.webm",
+                    description:"Video description goes here.",
+                    thumbImg:"images/thumbnail_images/pic3.jpg",
+                    info:"Video info goes here"
+                },
+                {
+                    videoType:"HTML5",
+                    title:"Big Buck Bunny trailer",
+                    youtubeID:"XMGoYNoMtOQ",
+                    vimeoID:"46515976",
+                    mp4:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.mp4",
+                    webm:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.webm",
+                    videoAdShow:"yes",
+                    videoAdGotoLink:"http://codecanyon.net/",
+                    mp4AD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.mp4",
+                    webmAD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.webm",
+                    description:"Video description goes here.",
+                    thumbImg:"images/thumbnail_images/pic3.jpg",
+                    info:"Video info goes here"
+                },
+                {
+                    videoType:"HTML5",
+                    title:"Big Buck Bunny trailer",
+                    youtubeID:"XMGoYNoMtOQ",
+                    vimeoID:"46515976",
+                    mp4:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.mp4",
+                    webm:"http://player.pageflip.com.hr/videos/Big_Buck_Bunny_Trailer.webm",
+                    videoAdShow:"yes",
+                    videoAdGotoLink:"http://codecanyon.net/",
+                    mp4AD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.mp4",
+                    webmAD:"http://player.pageflip.com.hr/videos/Sintel_Trailer.webm",
+                    description:"Video description goes here.",
+                    thumbImg:"images/thumbnail_images/pic3.jpg",
+                    info:"Video info goes here"
+                }
+
+            ]
+        });
+    });
+
+  </script>
+</head>
+
+<body>
+  <div id="video"></div>
+</body>
+
+</html>

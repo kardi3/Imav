@@ -14,7 +14,11 @@ class District_Model_Doctrine_Attraction extends District_Model_Doctrine_BaseAtt
 {
      public static $attractionPhotoDimensions = array(
         '126x126' => 'Photo in admin panel',                  // admin
-        '400x' => 'Main photo'
+        '610x292' => 'Big photo(610x292)',
+        '67x45' => 'Miniature photo(67x45)',
+        '256x122' => 'Small photo(256x122)',
+        '130x130' => 'Photo in gallery(130x130)',
+        '400x' => 'Backup photo(400x)',
     );
     
     public static function getAttractionPhotoDimensions() {

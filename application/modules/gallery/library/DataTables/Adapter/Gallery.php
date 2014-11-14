@@ -11,8 +11,9 @@ class Gallery_DataTables_Adapter_Gallery extends Default_DataTables_Adapter_Adap
         $q = $this->table->createQuery('x');
         $q->addSelect('x.*');
         $q->addSelect('t.*');
+        $q->addSelect('c.*');
         $q->leftJoin('x.Translation t');
-//        $q->addOrderBy('x.type DESC, x.id');
+        $q->leftJoin('x.Category c');
         if($this->request->getParam('lang')) {
             $q->andWhere('t.lang = ?', $this->request->getParam('lang'));
         }

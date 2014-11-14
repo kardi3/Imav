@@ -13,11 +13,14 @@
 class District_Model_Doctrine_People extends District_Model_Doctrine_BasePeople
 {
     public static $peoplePhotoDimensions = array(
-        '126x126' => 'Photo in admin panel',                  // admin
-        '400x' => 'Wide photo',
-        '236x153' => 'Small photo',
-        'x210' => 'Height photo',
-        '130x130' => 'Gallery'
+         '126x126' => 'Photo in admin panel',                  // admin
+        '610x292' => 'Big photo(610x292)',
+        '67x45' => 'Miniature photo(67x45)',
+        '256x122' => 'Small photo(256x122)',
+        '236x152' => 'Small photo(236x153)',
+        '290x188' => 'Small photo(290x188)',
+        '130x130' => 'Photo in gallery(130x130)',
+        '400x' => 'Backup photo(400x)',
     );
     
     public static function getPeoplePhotoDimensions() {

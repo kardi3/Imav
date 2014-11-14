@@ -21,6 +21,16 @@
        <tu tuid='banners'>
            <tuv xml:lang="pl"><seg>bannery</seg></tuv>
        </tu>
+       <tu tuid='group'>
+           <tuv xml:lang="pl"><seg>grupa</seg></tuv>
+       </tu>
+       
+       <tu tuid='gallery'>
+           <tuv xml:lang="pl"><seg>galeria</seg></tuv>
+       </tu>
+       <tu tuid='list-gallery'>
+           <tuv xml:lang="pl"><seg>lista-galerii</seg></tuv>
+       </tu>
        <tu tuid='banners-edit'>
            <tuv xml:lang="pl"><seg>bannery-edycja</seg></tuv>
        </tu>
@@ -36,14 +46,12 @@
        <tu tuid='checkout'>
            <tuv xml:lang="pl"><seg>zaplac</seg></tuv>
        </tu>
-       <tu tuid='news'>
-           <tuv xml:lang="pl"><seg>aktualnosci</seg></tuv>
-       </tu>
+
        <tu tuid='notice'>
            <tuv xml:lang="pl"><seg>ogloszenie</seg></tuv>
        </tu>
-       <tu tuid='notice-search'>
-           <tuv xml:lang="pl"><seg>wyszukiwarka-ogloszen</seg></tuv>
+       <tu tuid='search'>
+           <tuv xml:lang="pl"><seg>wyszukaj</seg></tuv>
        </tu>
        <tu tuid='notices'>
            <tuv xml:lang="pl"><seg>ogloszenia</seg></tuv>
@@ -93,9 +101,7 @@
        <tu tuid='profile'>
            <tuv xml:lang="pl"><seg>profil</seg></tuv>
        </tu>
-       <tu tuid='settings'>
-           <tuv xml:lang="pl"><seg>ustawienia</seg></tuv>
-       </tu>
+      
        <tu tuid='subscribe'>
            <tuv xml:lang="pl"><seg>subskrybuj</seg></tuv>
        </tu>
@@ -108,11 +114,17 @@
        <tu tuid='producer'>
            <tuv xml:lang="pl"><seg>producent</seg></tuv>
        </tu> 
+       <tu tuid='list-product'>
+           <tuv xml:lang="pl"><seg>rekodzielo</seg></tuv>
+       </tu> 
+       <tu tuid='list-news'>
+           <tuv xml:lang="pl"><seg>aktualnosci</seg></tuv>
+       </tu> 
        <tu tuid='products'>
            <tuv xml:lang="pl"><seg>produkty</seg></tuv>
        </tu> 
        <tu tuid='product'>
-           <tuv xml:lang="pl"><seg>produkt</seg></tuv>
+           <tuv xml:lang="pl"><seg>pokaz-rekodzielo</seg></tuv>
        </tu> 
        <tu tuid='contact'>
            <tuv xml:lang="pl"><seg>kontakt</seg></tuv>

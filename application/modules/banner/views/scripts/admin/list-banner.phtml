@@ -11,14 +11,50 @@ $(document).ready(function() {
         "bServerSide": true,
         "bLengthChange": false,
         "sAjaxSource": "<?php echo $this->adminUrl('list-banner-data', 'banner') ?>",
-        "aaSorting": [[ 1, "desc" ]],
+        "aaSorting": [[ 0, "desc" ]],
         "aoColumns": [
+            { "bSortable": true, sWidth: '50px' },
             null,
             { sWidth: '200px' },
             { "bSortable": true, sWidth: '150px' },
+            { "bSortable": true, sWidth: '150px' },
+            { "bSortable": true, sWidth: '150px' },
             { "bSortable": false, sWidth: '50px' }
         ]
-    });
+    }).yadcf([
+        {
+            column_number: 0,
+            filter_type: 'text'
+        },
+        {
+            column_number: 1,
+            filter_type: 'text'
+        },
+        {
+            column_number: 2,
+        },
+        {
+            column_number: 3,
+            filter_type: 'range_date',
+            date_format : "dd/mm/yyyy"
+        },
+        {
+            column_number: 4,
+            filter_type: 'range_date',
+            date_format : "dd/mm/yyyy"
+        }, {
+           
+          column_number: 5,
+           data: [{
+                value: '1',
+                label: 'Tak'
+            }, {
+                value: 'empty_value',
+                label: 'Nie'
+            }],
+        
+        }
+    ]);
     
     $("#banner_table").bind("update", function(e) {
         oTable.fnReloadAjax();
@@ -31,7 +67,10 @@ $(document).ready(function() {
     <div class="span12">
         
         <div class="box">
-            
+            Rodzaje bannerów: <br />
+            Sidebar1 - prawa strona u góry (300x250)<br />
+            MainFirst, MainSecond itp.  - strona głowna, między kategoriami (728x90px)<br />
+            UnderNews - banner pod treścią newsa (728x90px)<br />
             <div class="title">
 
                 <h4>
@@ -46,10 +85,24 @@ $(document).ready(function() {
             <div class="content clearfix">
                 <table id="banner_table" cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" width="100%">
                     <thead>
-                        <th><?php echo $this->translate('Name') ?></th>
-                        <th><?php echo $this->translate('Date') ?></th>
-                        <th><?php echo $this->translate('Visible on site') ?></th>
-                        <th><?php echo $this->translate('Options') ?></th>
+                        <tr>
+                            <th><?php echo $this->translate('Id') ?></th>
+                            <th><?php echo $this->translate('Name') ?></th>
+                            <th><?php echo $this->translate('Position') ?></th>
+                            <th><?php echo $this->translate('Date from') ?></th>
+                            <th><?php echo $this->translate('Date to') ?></th>
+                            <th><?php echo $this->translate('Visible on site') ?></th>
+                            <th><?php echo $this->translate('Options') ?></th>
+                        </tr>
+                        <tr>
+                            <th><?php echo $this->translate('Id') ?></th>
+                            <th><?php echo $this->translate('Name') ?></th>
+                            <th><?php echo $this->translate('Position') ?></th>
+                            <th><?php echo $this->translate('Date from') ?></th>
+                            <th><?php echo $this->translate('Date to') ?></th>
+                            <th><?php echo $this->translate('Visible on site') ?></th>
+                            <th><?php echo $this->translate('Options') ?></th>
+                        </tr>
                     </thead>
                     <tbody>
                     </tbody>

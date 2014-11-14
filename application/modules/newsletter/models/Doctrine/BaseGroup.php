@@ -8,7 +8,7 @@
  * @property integer $id
  * @property string $name
  * @property Doctrine_Collection $Subscribers
- * @property Doctrine_Collection $Messages
+ * @property Doctrine_Collection $SentMessages
  * 
  * @package    Admi
  * @subpackage Newsletter
@@ -40,14 +40,13 @@ abstract class Newsletter_Model_Doctrine_BaseGroup extends Doctrine_Record
     {
         parent::setUp();
         $this->hasMany('Newsletter_Model_Doctrine_Subscriber as Subscribers', array(
-             'refClass' => 'Newsletter_Model_Doctrine_SubscriberGroup',
+             'refClass' => 'Newsletter_Model_Doctrine_GroupSubscriber',
              'local' => 'group_id',
              'foreign' => 'subscriber_id'));
 
-        $this->hasMany('Newsletter_Model_Doctrine_Message as Messages', array(
-             'refClass' => 'Newsletter_Model_Doctrine_MessageGroup',
-             'local' => 'group_id',
-             'foreign' => 'message_id'));
+        $this->hasMany('Newsletter_Model_Doctrine_SentMessage as SentMessages', array(
+             'local' => 'id',
+             'foreign' => 'group_id'));
 
         $timestampable0 = new Doctrine_Template_Timestampable();
         $softdelete0 = new Doctrine_Template_SoftDelete();

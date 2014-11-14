@@ -16,4 +16,12 @@ class Censor_Model_Doctrine_CensorTranslationTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('Censor_Model_Doctrine_CensorTranslation');
     }
+    
+    public function getShortCensorQuery() {
+        $q = $this->createQuery('t')
+                ->addSelect('t.title')
+                ;
+        
+        return $q;
+    }
 }

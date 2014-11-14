@@ -41,3 +41,11 @@ CensorTranslation:
       foreignAlias: Translation
       type: one
       foreignType: many
+IP:
+  tableName: censor_ip
+  actAs:
+    Timestampable: ~
+  columns:
+    ip:
+      primary: true
+      type: string(255)

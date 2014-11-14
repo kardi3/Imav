@@ -20,8 +20,8 @@ class Banner_AdminController extends MF_Controller_Action {
             'request' => $this->getRequest(), 
             'table' => $table, 
             'class' => 'Banner_DataTables_Banner', 
-            'columns' => array('pt.name', 'p.created_at'),
-            'searchFields' => array('pt.name', 'p.created_at')
+            'columns' => array('p.id','pt.name','p.position','p.date_from','p.date_to','p.status'),
+            'searchFields' => array('p.id','pt.name','p.position','p.date_from','p.date_to','p.status')
         ));
         
         $language = $i18nService->getAdminLanguage();
@@ -31,16 +31,18 @@ class Banner_AdminController extends MF_Controller_Action {
         $rows = array();
         foreach($results as $result) {
             $row = array();
-
+            $row[] = $result->id;
             $row[] = $result->Translation[$language->getId()]->name;
-            $row[] = $result['created_at'];
+            $row[] = $result->position;
+//            $row[] = MF_Text::timeFormat($result['created_at'],'d/m/Y H:i');
+            $row[] = MF_Text::timeFormat($result['date_from'],'d/m/Y H:i');
+            $row[] = MF_Text::timeFormat($result['date_to'],'d/m/Y H:i');
             if($result['status'] == 1){ 
                 $row[] = '<a href="' . $this->view->adminUrl('refresh-status-banner', 'banner', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"></span></a>';
-           
-                   }else{
-                        $row[] = '<a href="' . $this->view->adminUrl('refresh-status-banner', 'banner', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
-         
-                 }
+            }
+            else{
+                $row[] = '<a href="' . $this->view->adminUrl('refresh-status-banner', 'banner', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
+            }
            $options = '<a href="' . $this->view->adminUrl('edit-banner', 'banner', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;&nbsp;';
             $options .= '<a href="' . $this->view->adminUrl('remove-banner', 'banner', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
             $row[] = $options;
@@ -57,16 +59,22 @@ class Banner_AdminController extends MF_Controller_Action {
         $this->_helper->json($response);
     }
     
+    
+    
     public function addBannerAction() {
         $bannerService = $this->_service->getService('Banner_Service_Banner');
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
+        $attachmentService = $this->_service->getService('Media_Service_Attachment'); 
         
         $translator = $this->_service->get('translate');
         
         $adminLanguage = $i18nService->getAdminLanguage();
         
         $form = $bannerService->getBannerForm();
+        
+        $form->setDecorators(array('FormElements'));
+        $form->getElement('photo')->setValueDisabled(true);
         
         $metatagsForm = $metatagService->getMetatagsSubForm();
         $form->addSubForm($metatagsForm, 'metatags');
@@ -84,11 +92,16 @@ class Banner_AdminController extends MF_Controller_Action {
                        
                     $banner = $bannerService->saveBannerFromArray($values);
                     
+                    $attachment = $attachmentService->createAttachmentFromUpload($form->getElement('photo')->getName(), $form->getValue('photo'), null, $adminLanguage->getId());
+
+                    $banner->set('AttachmentRoot',$attachment);
+                    $banner->save();
+                    
                     $this->view->messages()->add($translator->translate('Item has been added'), 'success');
                     
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
                     
-                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-banner', 'banner', array('id' => $banner->getId())));
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-banner', 'banner'));
                 } catch(Exception $e) {
                     var_dump($e->getMessage());exit;
                     $this->_service->get('doctrine')->getCurrentConnection()->rollback();
@@ -108,6 +121,7 @@ class Banner_AdminController extends MF_Controller_Action {
         $bannerService = $this->_service->getService('Banner_Service_Banner');
         $i18nService = $this->_service->getService('Default_Service_I18n');
         $metatagService = $this->_service->getService('Default_Service_Metatag');
+        $attachmentService = $this->_service->getService('Media_Service_Attachment'); 
         
         $translator = $this->_service->get('translate');
         
@@ -115,9 +129,12 @@ class Banner_AdminController extends MF_Controller_Action {
             throw new Zend_Controller_Action_Exception('Banner not found');
         }
         
+        
         $adminLanguage = $i18nService->getAdminLanguage();
         
         $form = $bannerService->getBannerForm($banner);
+        
+        $form->translations->pl->getElement('name')->setLabel('Nazwa banneru');
         
         $metatagsForm = $metatagService->getMetatagsSubForm($banner->get('Metatags'));
         $form->addSubForm($metatagsForm, 'metatags');
@@ -126,14 +143,14 @@ class Banner_AdminController extends MF_Controller_Action {
             if($form->isValid($this->getRequest()->getParams())) {
                 try {
                     $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
-                    
                     $values = $form->getValues();
-                    
-                    if($metatags = $metatagService->saveMetatagsFromArray($banner->get('Metatags'), $values, array('title' => 'name', 'description' => 'description', 'keywords' => 'description'))) {
-                        $values['metatag_id'] = $metatags->getId();
-                    }
-                    
                     $banner = $bannerService->saveBannerFromArray($values);
+                  if(strlen($values['photo'])){
+                      $attachment = $attachmentService->createAttachmentFromUpload($form->getElement('photo')->getName(), $form->getValue('photo'), null, $adminLanguage->getId());
+                      
+                    $banner->set('AttachmentRoot',$attachment);
+                    $banner->save();
+                    }
                     
                     $this->view->messages()->add($translator->translate('Item has been updated'), 'success');
                     
@@ -141,9 +158,13 @@ class Banner_AdminController extends MF_Controller_Action {
 
                     $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-banner', 'banner'));
                 } catch(Exception $e) {
+                    var_dump($e->getMessage());exit;
                     $this->_service->get('doctrine')->getCurrentConnection()->rollback();
                     $this->_service->get('log')->log($e->getMessage(), 4);
                 }
+            }
+            else{
+                var_dump($e->getMessages());exit;
             }
         }
         
@@ -188,10 +209,8 @@ class Banner_AdminController extends MF_Controller_Action {
     public function addBannerPhotoAction() {
         $bannerService = $this->_service->getService('Banner_Service_Banner');
         $photoService = $this->_service->getService('Media_Service_Photo');
-        $photoDimensionService = $this->_service->getService('Default_Service_PhotoDimension');
         
   
-        $photoDimension = $photoDimensionService->getDimension('banner');
         
         if(!$banner = $bannerService->getBanner((int) $this->getRequest()->getParam('id'))) {
             throw new Zend_Controller_Action_Exception('Banner not found');
@@ -216,10 +235,10 @@ class Banner_AdminController extends MF_Controller_Action {
 
                     $root = $banner->get('PhotoRoot');
                     if(!$root || $root->isInProxyState()) {
-                        $photo = $photoService->createPhoto($filePath, $name, $pathinfo['filename'], $photoDimension, false, false);
+                        $photo = $photoService->createPhoto($filePath, $name, $pathinfo['filename'], array_keys(Banner_Model_Doctrine_Banner::getBannerPhotoDimensions()), false, false);
                     } else {
                         $photo = $photoService->clearPhoto($root);
-                        $photo = $photoService->updatePhoto($root, $filePath, null, $name, $pathinfo['filename'], $photoDimension, false);
+                        $photo = $photoService->updatePhoto($root, $filePath, null, $name, $pathinfo['filename'], array_keys(Banner_Model_Doctrine_Banner::getBannerPhotoDimensions()), false);
                     }
 
                     $banner->set('PhotoRoot', $photo);
@@ -365,6 +384,183 @@ class Banner_AdminController extends MF_Controller_Action {
         $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-banner', 'banner'));
         $this->_helper->viewRenderer->setNoRender();
     }
+    
+    public function refreshStatusAdAction() {
+        $adService = $this->_service->getService('Banner_Service_Ad');
+        
+        if(!$ad = $adService->getAd((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Ad not found');
+        }
+        
+        $adService->refreshStatusAd($ad);
+        
+        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-ad', 'banner'));
+        $this->_helper->viewRenderer->setNoRender();
+    }
+    
+    
+     public function listAdAction() {
+
+   }
+    
+   public function listAdDataAction() {    
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+       
+        $table = Doctrine_Core::getTable('Banner_Model_Doctrine_Ad');
+        $dataTables = Default_DataTables_Factory::factory(array(
+            'request' => $this->getRequest(), 
+            'table' => $table, 
+            'class' => 'Banner_DataTables_Ad', 
+            'columns' => array('p.id','pt.title', 'p.created_at','p.date_from','p.date_to','p.publish'),
+            'searchFields' => array('p.id','pt.title', 'p.created_at','p.date_from','p.date_to','p.publish')
+        ));
+        
+        $language = $i18nService->getAdminLanguage();
+        
+        $results = $dataTables->getResult();
+        
+        $rows = array();
+        foreach($results as $result) {
+            $row = array();
+            $row[] = $result->id;
+            $row[] = $result->Translation[$language->getId()]->title;
+            $row[] = MF_Text::timeFormat($result['created_at'],'d/m/Y H:i');
+            $row[] = MF_Text::timeFormat($result['date_from'],'d/m/Y H:i');
+            $row[] = MF_Text::timeFormat($result['date_to'],'d/m/Y H:i');
+            if($result['publish'] == 1){ 
+                $row[] = '<a href="' . $this->view->adminUrl('refresh-status-ad', 'banner', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"></span></a>';
+            }
+            else{
+                $row[] = '<a href="' . $this->view->adminUrl('refresh-status-ad', 'banner', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"></span></a>';
+            }
+           $options = '<a href="' . $this->view->adminUrl('edit-ad', 'banner', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;&nbsp;';
+            $options .= '<a href="' . $this->view->adminUrl('remove-ad', 'banner', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
+            $row[] = $options;
+            $rows[] = $row;
+        }
+
+        $response = array(
+            "sEcho" => intval($_GET['sEcho']),
+            "iTotalRecords" => $dataTables->getDisplayTotal(),
+            "iTotalDisplayRecords" => $dataTables->getTotal(),
+            "aaData" => $rows
+        );
+
+        $this->_helper->json($response);
+    }
+    
+    
+    public function addAdAction() {
+        $adService = $this->_service->getService('Banner_Service_Ad');
+        $videoService = $this->_service->getService('Media_Service_VideoUrl');
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        
+        $form = $adService->getAdForm();
+       
+        $this->view->assign('form',$form);
+        
+       
+        $languages = $i18nService->getLanguageList();
+        $adminLanguage = $i18nService->getAdminLanguage();
+        $this->view->assign('languages', $languages);
+        $this->view->assign('adminLanguage', $adminLanguage->getId());
+        
+        
+         if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getPost())) {
+                try {                                   
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    $values = $form->getValues();  
+                  
+                    $videoRoot = $videoService->createVideoRoot();
+            
+                    $video = $videoService->createVideoFromUpload($values, $videoRoot);
+                    
+                    $adService->saveAdFromArray($values,$video->id);
+                    
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-ad', 'banner'));
+                } catch(Exception $e) {
+                    var_dump($e->getMessage());exit;
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+        }    
+//     
+    }
+    
+    public function editAdAction() {
+        $adService = $this->_service->getService('Banner_Service_Ad');
+        $videoService = $this->_service->getService('Media_Service_VideoUrl');
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        
+        
+        if(!$ad = $adService->getAd($this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Ad not found');
+        }
+        
+        $form = $adService->getAdForm($ad);
+       
+        $this->view->assign('form',$form);
+        
+       
+        $languages = $i18nService->getLanguageList();
+        $adminLanguage = $i18nService->getAdminLanguage();
+        $this->view->assign('languages', $languages);
+        $this->view->assign('adminLanguage', $adminLanguage->getId());
+        
+        
+         if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getPost())) {
+                try {                                   
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    $values = $form->getValues();  
+                  
+                    if(!strlen($ad['video_root_id']))
+                        $videoRoot = $videoService->createVideoRoot();
+            
+                    if($values['url']!= $ad['VideoRoot']['url'])
+                        $video = $videoService->createVideoFromUpload($values, $videoRoot);
+                    
+                    $adService->saveAdFromArray($values,$video->id);
+                    
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-ad', 'banner'));
+                } catch(Exception $e) {
+                    var_dump($e->getMessage());exit;
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+        }    
+    }
+    
+     public function removeAdAction() {
+        $adService = $this->_service->getService('Banner_Service_Ad');
+        
+        
+        if($ad = $adService->getAd($this->getRequest()->getParam('id'))){
+            try {
+                
+                $ad->delete();
+                
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-ad', 'banner'));
+         
+
+            } catch(Exception $e) {
+                var_dump($e->getMessage());exit;
+               $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+               $this->_service->get('log')->log($e->getMessage(), 4);
+            }
+
+        }
+        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-ad', 'banner'));
+         
+        $this->_helper->viewRenderer->setNoRender();
+               
+    }
+    
     
 }
 

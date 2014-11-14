@@ -16,4 +16,25 @@ class Censor_Model_Doctrine_CensorTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('Censor_Model_Doctrine_Censor');
     }
+    
+     public function getFullCensorQuery() {
+        $q = $this->createQuery('c')
+                ->addSelect('c.*')
+                ->addSelect('ct.*')
+                ->leftJoin('c.Translation ct')
+                ;
+        
+        return $q;
+    }
+    
+    
+     public function getShortCensorQuery() {
+        $q = $this->createQuery('c')
+                ->addSelect('c.id')
+                ->addSelect('ct.title')
+                ->leftJoin('c.Translation ct')
+                ;
+        
+        return $q;
+    }
 }

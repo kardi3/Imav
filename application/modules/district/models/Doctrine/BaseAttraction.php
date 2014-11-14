@@ -11,6 +11,7 @@
  * @property string $title
  * @property string $slug
  * @property clob $content
+ * @property boolean $gallery
  * @property boolean $publish
  * @property timestamp $publish_date
  * @property integer $photo_root_id
@@ -52,6 +53,10 @@ abstract class District_Model_Doctrine_BaseAttraction extends Doctrine_Record
              ));
         $this->hasColumn('content', 'clob', null, array(
              'type' => 'clob',
+             ));
+        $this->hasColumn('gallery', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => 0,
              ));
         $this->hasColumn('publish', 'boolean', null, array(
              'type' => 'boolean',

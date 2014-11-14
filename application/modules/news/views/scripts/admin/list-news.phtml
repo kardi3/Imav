@@ -1,5 +1,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
+    
     var oTable = $("#news_table").dataTable( {
 
          "bFilter": true,
@@ -13,12 +14,17 @@ $(document).ready(function() {
         "iDisplayLength": 50,
         "aaSorting": [[ 0, "desc" ]],
         "aoColumns": [
-            { sWidth: '100px' },
+            { sWidth: '50px' },
             null,
-            { sWidth: '200px' },
-            { sWidth: '200px' },
-            { sWidth: '200px' },
-            { "bSortable": false, sWidth: '100px' }
+            { sWidth: '100px' },
+            { sWidth: '120px' },
+            { sWidth: '120px' },
+            { sWidth: '120px' },
+            { sWidth: '120px' },
+            { "bSortable": true, sWidth: '80px' },
+            { "bSortable": true, sWidth: '80px' },
+            { "bSortable": true, sWidth: '80px' },
+            { "bSortable": false, sWidth: '50px' }
         ]
                
     }).yadcf([
@@ -32,20 +38,57 @@ $(document).ready(function() {
         },
         {
           column_number: 2,
-          filter_type: "range_date",
-          date_format: "yyyy-mm-dd"
         },
         {
           column_number: 3,
-          filter_type: "range_date",
-          date_format: "yyyy-mm-dd"
         },
         {
           column_number: 4,
           filter_type: "range_date",
-          date_format: "yyyy-mm-dd"
+          date_format: "dd/mm/yy"
         },
+        {
+          column_number: 5,
+          filter_type: "range_date",
+          date_format: "dd/mm/yy"
+        },
+        {
+          column_number: 6,
+          filter_type: "range_date",
+          date_format: "dd/mm/yy"
+        },
+       {
+           
+          column_number: 7,
+           data: [{
+                value: '1',
+                label: 'Tak'
+            }, {
+                value: 'empty_value',
+                label: 'Nie'
+            }],
         
+        },
+       {
+          column_number: 8,
+          data: [{
+                value: '1',
+                label: 'Tak'
+            }, {
+                value: 'empty_value',
+                label: 'Nie'
+            }],
+        },
+       {
+          column_number: 9,
+          data: [{
+                value: '1',
+                label: 'Tak'
+            }, {
+                value: 'empty_value',
+                label: 'Nie'
+            }],
+        }
         ]);
 });
 
@@ -71,12 +114,32 @@ $(document).ready(function() {
             <div class="content clearfix">
                 <table id="news_table" cellpadding="0" cellspacing="0" border="0" class=" display table table-bordered" width="100%">
                     <thead>
-                        <th><?php echo $this->translate('Id') ?></th>
-                        <th><?php echo $this->translate('Title') ?></th>
-                        <th><?php echo $this->translate('Created') ?></th>
-                        <th><?php echo $this->translate('Updated') ?></th>
-                        <th><?php echo $this->translate('Publish date') ?></th>
-                        <th><?php echo $this->translate('Options') ?></th>
+                        <tr>
+                            <th><?php echo $this->translate('Id') ?></th>
+                            <th><?php echo $this->translate('Title') ?></th>
+                            <th><?php echo $this->translate('Category') ?></th>
+                            <th><?php echo $this->translate('Group') ?></th>
+                            <th><?php echo $this->translate('Created') ?></th>
+                            <th><?php echo $this->translate('Updated') ?></th>
+                            <th><?php echo $this->translate('Publish date') ?></th>
+                            <th><?php echo $this->translate('Student') ?></th>
+                            <th><?php echo $this->translate('Student accept') ?></th>
+                            <th><?php echo $this->translate('Breaking news') ?></th>
+                            <th><?php echo $this->translate('Options') ?></th>
+                        </tr>
+                        <tr>
+                            <th><?php echo $this->translate('Id') ?></th>
+                            <th><?php echo $this->translate('Title') ?></th>
+                            <th><?php echo $this->translate('Category') ?></th>
+                            <th><?php echo $this->translate('Group') ?></th>
+                            <th><?php echo $this->translate('Created') ?></th>
+                            <th><?php echo $this->translate('Updated') ?></th>
+                            <th><?php echo $this->translate('Publish date') ?></th>
+                            <th><?php echo $this->translate('Student') ?></th>
+                            <th><?php echo $this->translate('Student accept') ?></th>
+                            <th><?php echo $this->translate('Breaking news') ?></th>
+                            <th><?php echo $this->translate('Options') ?></th>
+                        </tr>
                     </thead>
                     <tbody>
                          <?php echo $this->result; ?>

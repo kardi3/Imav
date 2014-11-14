@@ -2,25 +2,33 @@ options:
   type: MyISAM
   collate: utf8_general_ci
   charset: utf8
-SliderSerwis5:
-  tableName: slider_slider_serwis5
+Slider:
+  tableName: slider_slider
   columns:
     id:
       primary: true
-      type: string(128)
+      autoincrement: true
+      type: integer(4)
     name:
       type: string(255)
+    slug:
+      type: string(255)
+      unique: true
     slide_root_id:
-      type: integer(4)
+      type: integer(11)
   relations:
-    SlideSerwis5:
+    Slide:
       local: slide_root_id
       foreign: root_id
       alias: Slides
       type: many
-SlideSerwis5:
-  tableName: slider_slide_serwis5
+Slide:
+  tableName: slider_slide
   actAs: 
+    I18n:
+      fields: [title, slug, content]
+      tableName: slider_slide_translation
+      className: SlideTranslation
     NestedSet:
       hasManyRoots: true
   columns:
@@ -29,63 +37,68 @@ SlideSerwis5:
       autoincrement: true
       type: integer(4)
     slider_id:
-      type: string(128)
-    title:
+      type: integer(11)
+    transition:
       type: string(255)
-    title_pos_x:
+    slot_amount:
       type: integer(4)
-    title_pos_y:
+    rotation: 
       type: integer(4)
-    title_color:
-      type: string(12)
-    title_size:
+    transition_duration:
       type: integer(4)
-    description:
+    delay:
+      type: integer(4)
+    target_href:
       type: string(255)
-    description_pos_x:
-      type: integer(4)
-    description_pos_y:
-      type: integer(4)
-    description_color:
-      type: string(12)
-    description_size:
-      type: integer(4)
-    description_bg_color:
-      type: string(12)
-    description_bg_width:
-      type: integer(4)
-    description_bg_height:
-      type: integer(4)
-    animation:
+    target_type:
+      type: string(255)
+    news_id:
       type: string(255)
     photo_root_id:
       type: integer(4)
-    target_href:
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    content:
       type: clob
   relations:
-    SliderSerwis5:
+    Slider:
       local: id
       foreign: slide_root_id
       foreignAlias: SlideRoot
       foreignType: one
-SliderSerwis6:
-  tableName: slider_slider_serwis6
+    SlideLayer:
+      local: id
+      foreign: root_id
+      alias: Layers
+      type: many
+SlideTranslation:
+  tableName: slider_slide_translation
   columns:
     id:
       primary: true
-      type: string(128)
-    name:
-      type: string(255)
-    slide_root_id:
+      autoincrement: true
       type: integer(4)
+    lang:
+      primary: true
+      type: string(64)
+    slug:
+      type: string(255)
+    title:
+      type: string(255)
+    content:
+      type: clob
   relations:
-    SlideSerwis6:
-      local: slide_root_id
-      foreign: root_id
-      alias: Slides
-      type: many
-SlideSerwis6:
-  tableName: slider_slide_serwis6
+    Slide:
+      local: id
+      foreign: id
+      foreignAlias: Translation
+      alias: Slide
+      type: one
+      foreignType: many
+SlideLayer:
+  tableName: slider_slide_layer
   actAs: 
     NestedSet:
       hasManyRoots: true
@@ -94,175 +107,37 @@ SlideSerwis6:
       primary: true
       autoincrement: true
       type: integer(4)
-    slider_id:
+    slide_id:
       type: string(128)
-    title:
+    type:
+      type: string(128)
+    text_html:
       type: string(255)
-    title_pos_x:
-      type: integer(4)
-    title_pos_y:
-      type: integer(4)
-    title_color:
-      type: string(12)
-    title_size:
-      type: integer(4)
-    description:
+    animation: 
       type: string(255)
-    description_pos_x:
-      type: integer(4)
-    description_pos_y:
-      type: integer(4)
-    description_color:
-      type: string(12)
-    description_size:
-      type: integer(4)
-    description_bg_color:
-      type: string(12)
-    description_bg_width:
-      type: integer(4)
-    description_bg_height:
-      type: integer(4)
-    animation:
+    easing:
       type: string(255)
-    photo_root_id:
+    speed:
       type: integer(4)
     target_href:
-      type: clob
-  relations:
-    SliderSerwis6:
-      local: id
-      foreign: slide_root_id
-      foreignAlias: SlideRoot
-      foreignType: one
-SliderSerwis7:
-  tableName: slider_slider_serwis7
-  columns:
-    id:
-      primary: true
+      type: string(255)
+    x_position:
+      type: integer(4)
+    y_position:
+      type: integer(4)
+    start:
+      type: integer(8)
+    class:
       type: string(128)
-    name:
-      type: string(255)
-    slide_root_id:
-      type: integer(4)
-  relations:
-    SlideSerwis7:
-      local: slide_root_id
-      foreign: root_id
-      alias: Slides
-      type: many
-SlideSerwis7:
-  tableName: slider_slide_serwis7
-  actAs: 
-    NestedSet:
-      hasManyRoots: true
-  columns:
-    id:
-      primary: true
-      autoincrement: true
-      type: integer(4)
-    slider_id:
-      type: string(128)
-    title:
-      type: string(255)
-    title_pos_x:
-      type: integer(4)
-    title_pos_y:
-      type: integer(4)
-    title_color:
-      type: string(12)
-    title_size:
-      type: integer(4)
-    description:
-      type: string(255)
-    description_pos_x:
-      type: integer(4)
-    description_pos_y:
-      type: integer(4)
-    description_color:
-      type: string(12)
-    description_size:
-      type: integer(4)
-    description_bg_color:
-      type: string(12)
-    description_bg_width:
-      type: integer(4)
-    description_bg_height:
-      type: integer(4)
-    animation:
-      type: string(255)
+    width_iframe:
+      type: integer(8)
+    height_iframe:
+      type: integer(8)
     photo_root_id:
       type: integer(4)
-    target_href:
-      type: clob
   relations:
-    SliderSerwis7:
-      local: id
-      foreign: slide_root_id
-      foreignAlias: SlideRoot
-      foreignType: one
-SliderSerwis8:
-  tableName: slider_slider_serwis8
-  columns:
-    id:
-      primary: true
-      type: string(128)
-    name:
-      type: string(255)
-    slide_root_id:
-      type: integer(4)
-  relations:
-    SlideSerwis8:
-      local: slide_root_id
-      foreign: root_id
-      alias: Slides
-      type: many
-SlideSerwis8:
-  tableName: slider_slide_serwis8
-  actAs: 
-    NestedSet:
-      hasManyRoots: true
-  columns:
-    id:
-      primary: true
-      autoincrement: true
-      type: integer(4)
-    slider_id:
-      type: string(128)
-    title:
-      type: string(255)
-    title_pos_x:
-      type: integer(4)
-    title_pos_y:
-      type: integer(4)
-    title_color:
-      type: string(12)
-    title_size:
-      type: integer(4)
-    description:
-      type: string(255)
-    description_pos_x:
-      type: integer(4)
-    description_pos_y:
-      type: integer(4)
-    description_color:
-      type: string(12)
-    description_size:
-      type: integer(4)
-    description_bg_color:
-      type: string(12)
-    description_bg_width:
-      type: integer(4)
-    description_bg_height:
-      type: integer(4)
-    animation:
-      type: string(255)
-    photo_root_id:
-      type: integer(4)
-    target_href:
-      type: clob
-  relations:
-    SliderSerwis8:
-      local: id
-      foreign: slide_root_id
-      foreignAlias: SlideRoot
+    Slide:
+      local: slide_id
+      foreign: id
+      foreignAlias: SlideLayerRoot
       foreignType: one

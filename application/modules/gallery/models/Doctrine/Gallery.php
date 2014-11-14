@@ -18,6 +18,17 @@ class Gallery_Model_Doctrine_Gallery extends Gallery_Model_Doctrine_BaseGallery
 //        'faq' => 'FAQ'
     );
     
+     public static $galleryPhotoDimensions = array(
+        '126x126' => 'Photo in admin panel',                  // admin
+        '300x239' => 'Gorące newsy(300x239)',
+        '829x528' => 'Pojedyncza galeria - główne(829x528)',
+        '106x106' => 'Pojedyncza galeria - galeria(106x106)',
+        '265x273' => 'Powiązane galerie(265x273)',
+    );
+    
+    public static function getGalleryPhotoDimensions() {
+        return self::$galleryPhotoDimensions;
+    }
     
     public static function getAvailableTypes() {
         return self::$types;
@@ -69,6 +80,11 @@ class Gallery_Model_Doctrine_Gallery extends Gallery_Model_Doctrine_BaseGallery
           $this->hasOne('Media_Model_Doctrine_Photo as PhotoRoot', array(
             'local' => 'photo_root_id',
             'foreign' => 'id'
+        ));
+          
+           $this->hasMany('Media_Model_Doctrine_Photo as Photos', array(
+            'local' => 'photo_root_id',
+            'foreign' => 'root_id'
         ));
     }
 }

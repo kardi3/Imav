@@ -16,4 +16,10 @@ class Newsletter_Model_Doctrine_SubscriberTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('Newsletter_Model_Doctrine_Subscriber');
     }
+    
+    public function getSubscriberQuery() {
+        $q = $this->createQuery('s');
+        $q->addSelect('s.*');
+        return $q;
+    }
 }

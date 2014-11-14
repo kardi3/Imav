@@ -38,13 +38,50 @@ class Gallery_Service_Gallery extends MF_Service_ServiceAbstract {
         switch($field) {
             case 'slug':
             case 'title':
-                $q->andWhere('t.' . $field . ' = ?', $id);
+                $q->andWhere('gt.' . $field . ' = ?', $id);
                 break;
             default:
-                $q->andWhere('p.' . $field . ' = ?', $id);
+                $q->andWhere('g.' . $field . ' = ?', $id);
         }
-        $q->andWhere('(t.lang = ? AND (mt.lang = ? OR mt.lang IS NULL))', array($language, $language));
+        $q->andWhere('(gt.lang = ? AND (mt.lang = ? OR mt.lang IS NULL))', array($language, $language));
         return $q->fetchOne(array(), $hydrationMode);
+    }
+    
+     public function getLatestGalleries($limit = 3,$hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
+        $q = $this->galleryTable->getFullGalleryQuery();
+        $q->addOrderBy('g.created_at DESC');
+        $q->limit($limit);
+        return $q->execute(array(), $hydrationMode);
+    }
+    
+    public function getMainPageGalleries($hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
+        $q = $this->galleryTable->getFullGalleryQuery();
+        $q->addWhere('g.main_page = 1');
+        $q->addOrderBy('g.created_at DESC');
+        return $q->execute(array(), $hydrationMode);
+    }
+    
+    public function getCategoryGalleries($category_id,$limit = 3,$hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
+        $q = $this->galleryTable->getShortGalleryQuery();
+        $q->addWhere('g.category_id = ?',$category_id);
+        $q->addOrderBy('g.created_at DESC');
+        $q->limit($limit);
+        return $q->execute(array(), $hydrationMode);
+    }
+    
+     public function getLastCategoryOtherGalleries($gallery, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
+        $q = $this->galleryTable->getShortGalleryQuery();
+        $q->addWhere('g.category_id = ?',$gallery['category_id']);
+        $q->addWhere('g.id != ?',$gallery['id']);
+        $q->orderBy('g.created_at DESC');
+        $q->limit(8);
+        return $q->execute(array(), $hydrationMode);
+    }
+    
+    public function getGalleryPaginationQuery($language) {
+        $q = $this->galleryTable->getShortGalleryQuery();
+        $q->addOrderBy('g.created_at DESC');
+        return $q;
     }
     
     public function getAllGallerys() {
@@ -74,11 +111,41 @@ class Gallery_Service_Gallery extends MF_Service_ServiceAbstract {
         foreach($languages as $language) {
             $i18nSubform = $form->translations->getSubForm($language);
             if($i18nSubform) {
-                $i18nSubform->getElement('name')->setValue($gallery->Translation[$language]->name);
-                $i18nSubform->getElement('description')->setValue($gallery->Translation[$language]->description);
+                $i18nSubform->getElement('title')->setValue($gallery->Translation[$language]->title);
+                $i18nSubform->getElement('content')->setValue($gallery->Translation[$language]->content);
             }
         }
         return $form;
+    }
+    
+     public function saveGalleryFromNews(News_Model_Doctrine_News $news) {
+        $gallery = $this->galleryTable->getRecord();
+        $gallery['photo_root_id'] = $news['photo_root_id'];
+        $gallery['category_id'] = $news['category_id'];
+        
+        foreach($news['Translation'] as $language => $translation) {
+            $gallery->Translation[$language]->title = $translation['title'];
+            $gallery->Translation[$language]->slug = MF_Text::createUniqueTableSlug('Gallery_Model_Doctrine_GalleryTranslation', $news['Translation'][$language]['title'], $gallery->getId());
+            $gallery->Translation[$language]->content = $translation['content'];
+        }
+        
+        $gallery->save();
+        return $gallery;
+    }
+    
+    public function saveGalleryFromAttraction(District_Model_Doctrine_Attraction $attraction) {
+        $gallery = $this->galleryTable->getRecord();
+        $gallery['photo_root_id'] = $attraction['photo_root_id'];
+        $gallery['category_id'] = 10;
+        
+        foreach($attraction['Translation'] as $language => $translation) {
+            $gallery->Translation[$language]->title = $translation['title'];
+            $gallery->Translation[$language]->slug = MF_Text::createUniqueTableSlug('Gallery_Model_Doctrine_GalleryTranslation', $attraction['Translation'][$language]['title'], $gallery->getId());
+            $gallery->Translation[$language]->content = $translation['content'];
+        }
+        
+        $gallery->save();
+        return $gallery;
     }
     
     public function saveGalleryFromArray(array $values) {
@@ -94,9 +161,9 @@ class Gallery_Service_Gallery extends MF_Service_ServiceAbstract {
         
         $gallery->fromArray($values);
         foreach($values['translations'] as $language => $translation) {
-            $gallery->Translation[$language]->name = $translation['name'];
-            $gallery->Translation[$language]->slug = MF_Text::createUniqueTableSlug('Gallery_Model_Doctrine_GalleryTranslation', $values['translations'][$language]['name'], $gallery->getId());
-            $gallery->Translation[$language]->description = $translation['description'];
+            $gallery->Translation[$language]->title = $translation['title'];
+            $gallery->Translation[$language]->slug = MF_Text::createUniqueTableSlug('Gallery_Model_Doctrine_GalleryTranslation', $values['translations'][$language]['title'], $gallery->getId());
+            $gallery->Translation[$language]->content = $translation['content'];
         }
         
         $gallery->save();

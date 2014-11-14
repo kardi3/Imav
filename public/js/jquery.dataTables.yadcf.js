@@ -1256,7 +1256,6 @@ var yadcf = (function ($) {
 
 				options = [];
 				col_filter_array = {};
-
 				if (data === undefined) {
 					data = oTable.fnSettings().aoData;
 					data_length = data.length;
@@ -1270,7 +1269,11 @@ var yadcf = (function ($) {
 								col_inner_elements = $(col_inner_elements);
 							}
 							for (k = 0; k < col_inner_elements.length; k++) {
+                                                            console.log($(col_inner_elements[k]).children('span').text());
 								switch (html_data_type) {
+                                                                case "span_value":
+                                                                   col_inner_data = 1;
+                                                                    break;
 								case "text":
 									col_inner_data = $(col_inner_elements[k]).text();
 									break;
@@ -1372,8 +1375,10 @@ var yadcf = (function ($) {
 
 				if (columnObj.filter_type === "select") {
 					options_tmp = "<option value=\"" + "-1" + "\">" + filter_default_label + "</option>";
+                                        console.log(options[0]);
 					if (typeof options[0] === 'object') {
 						for (ii = 0; ii < options.length; ii++) {
+//                                                        console.log(options[ii]);
 							options_tmp += "<option value=\"" + options[ii].value + "\">" + options[ii].label + "</option>";
 						}
 					} else {

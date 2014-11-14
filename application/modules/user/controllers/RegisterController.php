@@ -209,6 +209,7 @@ class User_RegisterController extends MF_Controller_Action
                         
                     if($user = $userService->getUser($values['token'], 'token')) {
                         $user->setPassword($passwordEncoder->encode($values['password'], $user['salt']));
+                        $user->set('active',1);
                         $user->save();
                     }
                     

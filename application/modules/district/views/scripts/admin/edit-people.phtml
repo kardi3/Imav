@@ -62,7 +62,7 @@ $(document).ready(function() {
         $.ajax({
             type: "post",
             dataType: "json",
-            url: "<?php echo $this->adminUrl('remove-people-photo', 'district') ?>/id/"+$('#id').val()+"/photo-id/"+$(this).attr('rel'),
+            url: "<?php echo $this->adminUrl('remove-people-main-photo', 'district') ?>/id/"+$('#id').val()+"/photo-id/"+$(this).attr('rel'),
             data: data,
             success: function(resp) {
                 if(resp.status == "success") {
@@ -176,7 +176,7 @@ $(document).ready(function() {
 
                 <h4>
                     <span class="icon16 icomoon-icon-pencil"></span>
-                    <span><?php echo $this->translate('Edit people') ?> <?php echo $this->people->Translation[$this->language]->title ?></span>
+                    <span>Edytuj sylwetke <?php echo $this->people->Translation[$this->language]->title ?></span>
                 </h4>
                 
             </div>

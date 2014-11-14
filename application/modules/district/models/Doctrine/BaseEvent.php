@@ -16,6 +16,7 @@
  * @property integer $photo_root_id
  * @property integer $metatag_id
  * @property integer $video_root_id
+ * @property string $url
  * @property Doctrine_Collection $Translation
  * 
  * @package    Admi
@@ -71,6 +72,10 @@ abstract class District_Model_Doctrine_BaseEvent extends Doctrine_Record
         $this->hasColumn('video_root_id', 'integer', 4, array(
              'type' => 'integer',
              'length' => '4',
+             ));
+        $this->hasColumn('url', 'string', 255, array(
+             'type' => 'string',
+             'length' => '255',
              ));
 
         $this->option('type', 'MyISAM');

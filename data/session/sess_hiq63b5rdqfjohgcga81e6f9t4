@@ -1,0 +1,1 @@
+locale|a:1:{s:4:"lang";s:11:"favicon.ico";}Messages|a:1:{s:8:"messages";a:0:{}}RequestedURL|a:1:{s:3:"url";s:7:"/admin/";}Zend_Auth|a:1:{s:7:"storage";s:5:"admin";}USER|a:1:{s:14:"dashboard_time";a:2:{s:12:"new_articles";i:1412853557;s:12:"new_invoices";i:1412853557;}}__ZF|a:1:{s:4:"USER";a:1:{s:4:"ENVT";a:1:{s:14:"dashboard_time";i:1412864306;}}}

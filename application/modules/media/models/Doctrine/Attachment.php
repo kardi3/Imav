@@ -36,6 +36,14 @@ class Media_Model_Doctrine_Attachment extends Media_Model_Doctrine_BaseAttachmen
         return $this->_get('filename');
     }
     
+    public function setExtension($extension) {
+        $this->_set('extension', $extension);
+    }
+    
+    public function getExtension() {
+        return $this->_get('extension');
+    }
+    
     public function setTitle($title) {
         $this->_set('title', $title);
     }

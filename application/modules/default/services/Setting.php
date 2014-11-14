@@ -23,8 +23,9 @@ class Default_Service_Setting extends MF_Service_ServiceAbstract {
     }
     
     public function getSetting($id, $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        return $this->settingTable->findOneById($id, $hydrationMode);
+        return $this->settingTable->findOneBy('id',$id, $hydrationMode);
     }
+    
     
     public function getAllSettings($hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
         return $this->settingTable->findAll($hydrationMode);

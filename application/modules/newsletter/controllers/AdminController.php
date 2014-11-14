@@ -3,161 +3,23 @@
 /**
  * Newsletter_AdminController
  *
- * @author Tomasz Kardas <kardi31@o2.pl>
+ * @author Andrzej Wilczyński <and.wilczynski@gmail.com>
  */
 class Newsletter_AdminController extends MF_Controller_Action {
-  
     
-    
-    public function listMessageAction() {
-        
+    public function init() {
+        $this->_helper->ajaxContext()
+                ->addActionContext('send-message-portion', 'json')
+                ->initContext();
+        parent::init();
     }
     
-    public function listMessageDataAction() {
-        
-        $table = Doctrine_Core::getTable('Newsletter_Model_Doctrine_Message');
-        $dataTables = Default_DataTables_Factory::factory(array(
-            'request' => $this->getRequest(), 
-            'table' => $table, 
-            'class' => 'Newsletter_DataTables_Message', 
-            'columns' => array('x.title','c.name', 'x.send_at','x.sent'),
-            'searchFields' => array('x.id','x.title','c.name', 'x.send_at','x.sent')
-        ));
-        
-        $results = $dataTables->getResult();
-        
-        $rows = array();
-        foreach($results as $result) {
-            $row = array();
-            $row['DT_RowId'] = $result->id;
-            $row[] = $result->title;
-            $categories = "";
-            foreach($result['Categories'] as $category):
-                $categories .= $category->name."<br />";
-            endforeach;
-            $row[] = $categories;
-            
-            $row[] = MF_Text::timeFormat($result->send_at, 'Y-d-m H:i:s');
-             
-            if($result->sent){
-                $options = '<a href="' . $this->view->adminUrl('edit-message', 'newsletter', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon32 entypo-icon-settings"></span></a>';
-                $row[] = '<div class="btn btn-success">true</div>';
-            }
-            else{
-                 $row[] = '<div class="btn btn-danger">false</div>';
-                $options = '<a href="' . $this->view->adminUrl('send-message', 'newsletter', array('id' => $result->id)) . '" title="' . $this->view->translate('Send') . '"><span class="icon24 icomoon-icon-arrow-up-5"></span></a>';
-                $options .= '<a href="' . $this->view->adminUrl('edit-message', 'newsletter', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon32 entypo-icon-settings"></span></a>';
-            }
-            $options .= '<a href="' . $this->view->adminUrl('remove-message', 'newsletter', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icomoon-icon-cancel-3"></span></a>';
-            $row[] = $options;
-            $rows[] = $row;
-        }
-
-        $response = array(
-            "sEcho" => intval($_GET['sEcho']),
-            "iTotalRecords" => $dataTables->getDisplayTotal(),
-            "iTotalDisplayRecords" => $dataTables->getTotal(),
-            "aaData" => $rows
+    private $TYPE_NAME = array(
+        0 => 'wiadomość',
         );
-
-        $this->_helper->json($response);
-    }
-    public function addMessageAction() {
-        $newsletterService = $this->_service->getService('Newsletter_Service_Newsletter');
-        $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
-        
-        $subscribers = $subscriberService->getSubscribers();
-        $groups = $subscriberService->getGroups();
-        
-        $form = $newsletterService->getMessageForm();
-        
-        $form->getElement('subscribers')->setAttribs(array('multiple' => 'multiple', 'class' => 'nostyle'));
-        $form->getElement('subscribers')->setMultiOptions($subscribers);
-        
-        $form->getElement('groups')->setAttribs(array('multiple' => 'multiple', 'class' => 'nostyle'));
-        $form->getElement('groups')->setMultiOptions($groups);
-        
-        if($this->getRequest()->isPost()) {
-            if(($this->getRequest()->getPost())) { 
-                try {
-                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
-                    $values = $this->getRequest()->getParams();
-                    
-                    $newsletterService->saveMessageFromArray($values);
-                    
-                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
-                    
-                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-message', 'newsletter'));
-                } catch(Exception $e) {
-                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
-                    $this->_service->get('log')->log($e->getMessage(), 4);
-                }
-            }
-        }
-                
-        $this->view->assign('form', $form);
-    }
-    
-    
-    public function editMessageAction() {
-        $newsletterService = $this->_service->getService('Newsletter_Service_Newsletter');
-        $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
-        
-        $message = $newsletterService->getMessage($this->getRequest()->getParam('id'));
-        
-        $subscribers = $subscriberService->getSubscribers();
-        $groups = $subscriberService->getGroups();
-                
-        $form = $newsletterService->getMessageForm($message);
-        
-        $form->getElement('subscribers')->setAttribs(array('multiple' => 'multiple', 'class' => 'nostyle'));
-        $form->getElement('subscribers')->setMultiOptions($subscribers);
-        
-        $form->getElement('groups')->setAttribs(array('multiple' => 'multiple', 'class' => 'nostyle'));
-        $form->getElement('groups')->setMultiOptions($groups);
-        
-        
-        if($this->getRequest()->isPost()) {
-            if(($this->getRequest()->getPost())) { 
-                try {
-                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
-                    
-                    $values = $this->getRequest()->getParams();
-                  
-                    $message = $newsletterService->saveMessageFromArray($values);
-                    
-                    
-                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
-                    
-                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-message', 'newsletter'));
-                } catch(Exception $e) {
-                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
-                    $this->_service->get('log')->log($e->getMessage(), 4);
-                }
-            }
-        }
-                
-        $this->view->assign('form', $form);
-        
-        
-    }
-    
-    public function sendMessageAction(){
-        $newsletterService = $this->_service->getService('Newsletter_Service_Newsletter');
-        
-        $message = $newsletterService->getMessage($this->getRequest()->getParam('id'));
-        $newsletterService->setGroupUsersToSend($message);
-        
-        $newsletterService->sendMessage($message);
-            
-         return $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-message', 'newsletter'));
-    }
-    
-    
-    /* subscribers */
     
     public function listSubscriberAction() {
-        
+  
     }
     
     public function listSubscriberDataAction() {
@@ -167,8 +29,8 @@ class Newsletter_AdminController extends MF_Controller_Action {
             'request' => $this->getRequest(), 
             'table' => $table, 
             'class' => 'Newsletter_DataTables_Subscriber', 
-            'columns' => array('x.name', 'x.email','c.name'),
-            'searchFields' => array('x.id', 'x.email','c.name')
+            'columns' => array('s.username', 's.email', 's.created_at'),
+            'searchFields' => array('s.username', 's.email', 's.created_at')
         ));
         
         $results = $dataTables->getResult();
@@ -177,15 +39,10 @@ class Newsletter_AdminController extends MF_Controller_Action {
         foreach($results as $result) {
             $row = array();
             $row['DT_RowId'] = $result->id;
+            $row[] = $result->username;
             $row[] = $result->email;
-            $categories = "";
-            foreach($result['Categories'] as $category):
-                $categories .= $category['Translation'][$this->view->language]['name']."<br />";
-            endforeach;
-            $row[] = $categories;
-            $options = '<a href="' . $this->view->adminUrl('edit-subscriber', 'newsletter', array('id' => $result->id)) . '" class="edit" title="' . $this->view->translate('Edit') . '"><span class="icon16 entypo-icon-settings"></span></a>';
-            $options .= '<a href="' . $this->view->adminUrl('remove-subscriber', 'newsletter', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
-            $row[] = $options;
+            $row[] = MF_Text::timeFormat($result->created_at, 'H:i d/m/Y');
+            $row[] = '<a href="' . $this->view->adminUrl('remove-subscriber', 'newsletter', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
             $rows[] = $row;
         }
 
@@ -200,92 +57,25 @@ class Newsletter_AdminController extends MF_Controller_Action {
     }
     
     public function removeSubscriberAction(){
+        $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
         
-        $subsService = $this->_service->getService('Newsletter_Service_Subscriber');
-        
-        try {
-            $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();                    
-            $subs = $subsService->removeSubscriber($this->_request->getParam('id'));
-            $this->view->messages()->add($this->translate('Item has been deleted'), 'success');                    
-            $this->_service->get('doctrine')->getCurrentConnection()->commit();                
+        if($subscriber = $subscriberService->getSubscriber($this->getRequest()->getParam('id'))) {
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                
+                $subscriberService->removeSubscriber($subscriber);
 
-        } catch(Exception $e) {
-            $this->_service->get('doctrine')->getCurrentConnection()->rollback();
-            $this->_service->get('log')->log($e->getMessage(), 4);
-        }
-        
-        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-subscriber', 'newsletter'));
-        $this->_helper->viewRenderer->setNoRender();
-                
-    }
-    
-     public function addSubscriberAction() {
-        $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
-        $categoryService = $this->_service->getService('Product_Service_Category');
-        
-        $categories = $categoryService->getNewsletterCategories();
-        
-        $form = $subscriberService->getSubscriberForm();
-       
-        $form->getElement('category_id')->setAttribs(array('multiple' => 'multiple', 'class' => 'nostyle'));
-        $form->getElement('category_id')->setMultiOptions($categories);
-        
-        if($this->getRequest()->isPost()) {
-            if(($form->isValid($this->getRequest()->getPost()))) { 
-                try {
-                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
-                    $values = $form->getValues();
-                    $subscriberService->saveSubscriberFromArray($values);
-                    
-                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
-                    
-                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-subscriber', 'newsletter'));
-                } catch(Exception $e) {
-                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
-                    $this->_service->get('log')->log($e->getMessage(), 4);
-                }
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-subscriber', 'newsletter'));
+            } catch(Exception $e) {
+                $this->_service->get('Logger')->log($e->getMessage(), 4);
             }
         }
-                
-        $this->view->assign('form', $form);
+        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-subscriber', 'newsletter'));           
     }
-    
-    public function editSubscriberAction() {
-        $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
-        $categoryService = $this->_service->getService('Product_Service_Category');
-        $su = $subscriberService->getAllSubscribers();
-        foreach($su as $sub):
-            var_dump($sub['Categories']->toArray());exit;
-        endforeach;
-        $form = $subscriberService->getSubscriberForm($subscriber);
-       
-        $form->getElement('category_id')->setAttribs(array('multiple' => 'multiple', 'class' => 'nostyle'));
-        $form->getElement('category_id')->setMultiOptions($categories);
-        
-        if($this->getRequest()->isPost()) {
-            if(($form->isValid($_POST))) { 
-                try {
-                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
-                    $values = $form->getValues();
-                    $subscriber = $subscriberService->saveSubscriberFromArray($values);
-                    
-                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
-                    
-                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-subscriber', 'newsletter'));
-                } catch(Exception $e) {
-                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
-                    $this->_service->get('log')->log($e->getMessage(), 4);
-                }
-            }
-        }
-                
-        $this->view->assign('form', $form);
-    }
-    
-    /* groups */
     
     public function listGroupAction() {
-        
+
     }
     
     public function listGroupDataAction() {
@@ -295,8 +85,8 @@ class Newsletter_AdminController extends MF_Controller_Action {
             'request' => $this->getRequest(), 
             'table' => $table, 
             'class' => 'Newsletter_DataTables_Group', 
-            'columns' => array('x.name'),
-            'searchFields' => array('x.name')
+            'columns' => array('g.name'),
+            'searchFields' => array('g.name')
         ));
         
         $results = $dataTables->getResult();
@@ -304,11 +94,10 @@ class Newsletter_AdminController extends MF_Controller_Action {
         $rows = array();
         foreach($results as $result) {
             $row = array();
-            $row['DtRow'] = $result->id;
+            $row['DT_RowId'] = $result->id;
             $row[] = $result->name;
-            
-            $options = '<a href="' . $this->view->adminUrl('edit-group', 'newsletter', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>';
-            $options .= '<a href="' . $this->view->adminUrl('remove-group', 'newsletter', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icomoon-icon-cancel-3"></span></a>';
+            $options = '<a href="' . $this->view->adminUrl('edit-group', 'newsletter', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;';
+            $options .= '<a href="' . $this->view->adminUrl('remove-group', 'newsletter', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
             $row[] = $options;$rows[] = $row;
         }
 
@@ -322,25 +111,22 @@ class Newsletter_AdminController extends MF_Controller_Action {
         $this->_helper->json($response);
     }
     
-    
     public function addGroupAction() {
         $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
+        $groupService = $this->_service->getService('Newsletter_Service_Group');
         
-        $subscribers = $subscriberService->getSubscribers();
-        
-        $form = $subscriberService->getGroupForm();
-       
-        $form->getElement('subscribers')->setAttribs(array('multiple' => 'multiple', 'class' => 'nostyle'));
-        $form->getElement('subscribers')->setMultiOptions($subscribers);
+        $form = $groupService->getGroupForm();
+        $form->getElement('subscriber_id')->setMultiOptions($subscriberService->getTargetSubscriberSelectOptions(false));
         
         if($this->getRequest()->isPost()) {
-            if($form->isValid($this->getRequest()->getPost())) { 
+            if($form->isValid($this->getRequest()->getPost())) {
                 try {
                     $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
-                    $values = $this->getRequest()->getParams();
                     
-                    $subscriberService->saveGroupFromArray($values);
-                                        
+                    $values = $form->getValues();
+                    
+                    $group = $groupService->saveGroupFromArray($values); 
+                    
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
                     
                     $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-group', 'newsletter'));
@@ -354,53 +140,29 @@ class Newsletter_AdminController extends MF_Controller_Action {
         $this->view->assign('form', $form);
     }
     
-    
-    
-    public function removeGroupAction(){
-        
-        $groupService = $this->_service->getService('Newsletter_Service_Subscriber');
-        
-        try {
-            $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();                    
-            $groupService->removeGroup($this->_request->getParam('id'));
-            $groupService->removeSubscriber($this->_request->getParam('id'));
-            $this->view->messages()->add($this->translate('Item has been deleted'), 'success');                    
-            $this->_service->get('doctrine')->getCurrentConnection()->commit();                
-
-        } catch(Exception $e) {
-            $this->_service->get('doctrine')->getCurrentConnection()->rollback();
-            $this->_service->get('log')->log($e->getMessage(), 4);
-        }
-        
-        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-group', 'newsletter'));
-        $this->_helper->viewRenderer->setNoRender();
-                
-    }
-    
-    public function editGroupAction() {
+     public function editGroupAction() {
         $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
+        $groupService = $this->_service->getService('Newsletter_Service_Group');
         
-        $subscribers = $subscriberService->getSubscribers();
-        
-        if(!$group = $subscriberService->getGroup((int) $this->getRequest()->getParam('id'))) {
+        if(!$group = $groupService->getGroup((int) $this->getRequest()->getParam('id'))) {
             throw new Zend_Controller_Action_Exception('Group not found');
         }
         
-        $form = $subscriberService->getGroupForm($group);
-        $form->getElement('subscribers')->setAttribs(array('multiple' => 'multiple', 'class' => 'nostyle'));
-        $form->getElement('subscribers')->setMultiOptions($subscribers);
+        $form = $groupService->getGroupForm($group);
+        $form->getElement('subscriber_id')->setMultiOptions($subscriberService->getTargetSubscriberSelectOptions(false));
+        $form->getElement('subscriber_id')->setValue($group->get('Subscribers')->getPrimaryKeys());
         
-        if($this->getRequest()->isPost()) {
-            
+        $form->setAction($this->view->adminUrl('edit-group', 'newsletter', array('id' => $group->getId())));
+       
+         if($this->getRequest()->isPost()) {
             if($form->isValid($this->getRequest()->getPost())) {
-                
                 try {
                     $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
                 
                     $values = $form->getValues();
                     
-                    $group = $subscriberService->saveGroupFromArray($values);
-                    
+                    $group = $groupService->saveGroupFromArray($values);
+
                     $this->_service->get('doctrine')->getCurrentConnection()->commit();
                   
                     $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-group', 'newsletter'));
@@ -411,10 +173,342 @@ class Newsletter_AdminController extends MF_Controller_Action {
             }
            
         }
-        
-        
+
         $this->view->assign('form', $form);
     }
     
+    public function removeGroupAction(){
+        $groupService = $this->_service->getService('Newsletter_Service_Group');
+        
+         if($group = $groupService->getGroup($this->getRequest()->getParam('id'))) {
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                
+                $groupService->removeGroup($group);
+
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-group', 'newsletter'));
+            } catch(Exception $e) {
+                $this->_service->get('Logger')->log($e->getMessage(), 4);
+            }
+        }
+        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-group', 'newsletter'));                     
+    }
+    
+    public function listMessageAction() {
+        
+    }
+    
+    public function listMessageDataAction() {
+        
+        $table = Doctrine_Core::getTable('Newsletter_Model_Doctrine_Message');
+        $dataTables = Default_DataTables_Factory::factory(array(
+            'request' => $this->getRequest(), 
+            'table' => $table, 
+            'class' => 'Newsletter_DataTables_Message', 
+            'columns' => array('m.id', 'm.title', 'm.created_at'),
+            'searchFields' => array('m.title')
+        ));
+        
+        $results = $dataTables->getResult();
+        
+        $rows = array();
+        foreach($results as $result) {
+            $row = array();
+            $row['DT_RowId'] = $result->id;
+            $row[] = $result->id;
+            $row[] = $result->title;
+            $row[] = MF_Text::timeFormat($result->created_at, 'H:i d/m/Y');
+            $options = '<a href="' . $this->view->adminUrl('send-message', 'newsletter', array('id' => $result->id)) . '" title="' . $this->view->translate('Send') . '"><span class="icon24 icon-arrow-up"></span></a>&nbsp;&nbsp;';
+            $options .= '<a href="' . $this->view->adminUrl('edit-message', 'newsletter', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;';
+            $options .= '<a href="' . $this->view->adminUrl('remove-message', 'newsletter', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
+            $row[] = $options;
+            
+            $rows[] = $row;
+        }
+
+        $response = array(
+            "sEcho" => intval($_GET['sEcho']),
+            "iTotalRecords" => $dataTables->getDisplayTotal(),
+            "iTotalDisplayRecords" => $dataTables->getTotal(),
+            "aaData" => $rows
+        );
+
+        $this->_helper->json($response);
+    }
+    
+    public function addMessageAction() {
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        $messageService = $this->_service->getService('Newsletter_Service_Message');
+        $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
+        $groupService = $this->_service->getService('Newsletter_Service_Group');
+        $sentMessageService = $this->_service->getService('Newsletter_Service_SentMessage');
+        
+        $adminLanguage = $i18nService->getAdminLanguage();
+        
+        $form = $messageService->getMessageForm();
+        $form->removeElement('product_id');
+        $form->getElement('subscriber_id')->setMultiOptions($subscriberService->getTargetSubscriberSelectOptions(false));
+        $form->getElement('group_id')->setMultiOptions($groupService->getTargetGroupSelectOptions(false));
+        
+        if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getPost())) {
+                try {
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    
+                    $values = $form->getValues();
+                    
+                    $message = $messageService->saveMessageFromArray($values);
+                    $values['message_id'] = $message->getId();
+                    $sentMessageService->saveSentMessagesFromArray($values);
+
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-message', 'newsletter', array('id' => $message->getid())));
+                } catch(Exception $e) {
+                    var_dump($e->getMessage()); exit;
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+        }
+                
+        $this->view->assign('form', $form);
+    }
+    
+    public function editMessageAction() {
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        $messageService = $this->_service->getService('Newsletter_Service_Message');
+        $subscriberService = $this->_service->getService('Newsletter_Service_Subscriber');
+        $groupService = $this->_service->getService('Newsletter_Service_Group');
+        $sentMessageService = $this->_service->getService('Newsletter_Service_SentMessage');
+        
+        $adminLanguage = $i18nService->getAdminLanguage();
+        
+        if(!$message = $messageService->getMessage((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Message not found');
+        }
+
+        $form = $messageService->getMessageForm($message);
+        $form->removeElement('product_id');
+        $form->getElement('subscriber_id')->setMultiOptions($subscriberService->getTargetSubscriberSelectOptions(false));
+        $form->getElement('group_id')->setMultiOptions($groupService->getTargetGroupSelectOptions(false)); 
+        
+        $sentMessages = $message->get('SentMessages');
+        $subscriberIds = array();
+        $groupIds = array();
+        foreach($sentMessages as $sentMessage):
+            if ($sentMessage['group_id']):
+                $groupIds[] = $sentMessage['group_id'];
+            else:
+                $subscriberIds[] = $sentMessage['subscriber_id'];
+            endif;
+        endforeach;
+        $allSubscribers = $form->getElement('all_subscribers')->getValue();
+        $form->getElement('subscriber_id')->setValue($subscriberIds);
+        $form->getElement('group_id')->setValue($groupIds);
+     
+        
+        if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getPost())) {
+                try {
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+
+                    $values = $form->getValues();
+                    
+                    $message = $messageService->saveMessageFromArray($values);
+                    
+                    $values['message_id'] = $message->getId();
+                    $sentMessageService->saveSentMessagesFromArray($values);
+                    
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-message', 'newsletter'));
+                } catch(Exception $e) {
+                    var_dump($e->getMessage());exit;
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+//            else{
+//                var_dump($form->getMessages());exit;
+//            }
+        }     
+        $this->view->assign('allSubscribers', $allSubscribers);
+        $this->view->assign('form', $form);    
+    }
+    
+    public function removeMessageAction(){
+        $messageService = $this->_service->getService('Newsletter_Service_Message');
+        
+        if($message = $messageService->getMessage($this->getRequest()->getParam('id'))) {
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                
+                $messageService->removeMessage($message);
+
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-message', 'newsletter'));
+            } catch(Exception $e) {
+                $this->_service->get('Logger')->log($e->getMessage(), 4);
+            }
+        }
+        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-message', 'newsletter'));          
+    }
+    
+    public function sendMessageAction(){
+        $messageService = $this->_service->getService('Newsletter_Service_Message');
+        $sentMessageService = $this->_service->getService('Newsletter_Service_SentMessage');
+        
+        if(!$message = $messageService->getMessage((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Message not found');
+        }
+        
+        $form = new Newsletter_Form_SendForm();
+        if($this->getRequest()->isPost()) {
+                if($form->isValid($this->getRequest()->getPost())) {
+                    try {
+                       
+                        $this->_helper->redirector->gotoUrl($this->view->adminUrl('send-message-progress', 'newsletter', array("id" => $message->getId())));
+
+                    } catch(Exception $e) {
+                        $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                        $this->_service->get('log')->log($e->getMessage(), 4);
+                    }
+                }
+        }           
+        $this->view->assign('form', $form); 
+        $this->view->assign('message', $message); 
+    }
+    
+    public function sendMessageProgressAction(){
+        $messageService = $this->_service->getService('Newsletter_Service_Message');
+        $sentMessageService = $this->_service->getService('Newsletter_Service_SentMessage');
+        
+        if(!$message = $messageService->getMessage((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Message not found');
+        }
+        $messagesToSent = $sentMessageService->getMessagesToSent($message->getId());
+       
+        $allMessagesToSentCounter = $sentMessageService->getCountAllMessagesToSent($message->getId());
+        $counter = $messagesToSent->count();
+        $alreadySent = $allMessagesToSentCounter - $counter;
+        $percent = $alreadySent*100/$allMessagesToSentCounter;
+
+        
+        $this->view->assign("allMessagesToSentCounter", $allMessagesToSentCounter);
+        $this->view->assign("percent", $percent);
+        $this->view->assign("counter", $counter);
+        $this->view->assign('message', $message); 
+    }
+    
+    public function sendMessagePortionAction(){
+        $this->_helper->layout->disableLayout();
+        
+        $messageService = $this->_service->getService('Newsletter_Service_Message');
+        $sentMessageService = $this->_service->getService('Newsletter_Service_SentMessage');
+        
+        if(!$message = $messageService->getMessage((int) $this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Message not found');
+        }
+        
+        $messagesToSent = $sentMessageService->getMessagesToSent($message->getId());
+       
+        if ($messagesToSent->count != 0){
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                $i = 0;
+                for($i=0; $i<5; $i++){ 
+                    if ($messagesToSent[$i]->get('Subscriber')->getEmail()):
+                        $mail = new Zend_Mail('UTF-8');
+                        $mail->addTo($messagesToSent[$i]->get('Subscriber')->getEmail());
+                        $mail->setBodyHTML($this->view->partial('message.phtml', array('message' => $message, 'token' => $messagesToSent[$i]->get('Subscriber')->getToken())));
+                        
+                        $mail->setSubject($message->getTitle());
+                        $mail->send();
+                        $messagesToSent[$i]->setSent(1);
+                        $messagesToSent[$i]->save();
+                    elseif(strlen($messagesToSent[$i]->get('Subscriber')->get('username'))):
+                        $messagesToSent[$i]->setSent(1);
+                        $messagesToSent[$i]->setError('Brak emaila');
+                    else:
+                        break;
+                    endif;
+                    sleep(5);
+                }
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+               
+            } catch(Exception $e) {
+                $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                $this->_service->get('log')->log($e->getMessage(), 4);
+            }           
+        }
+
+        $counter = $sentMessageService->getMessagesToSent($message->getId())->count();
+        
+        $allMessagesToSentCounter = $sentMessageService->getCountAllMessagesToSent($message->getId());
+        $alreadySent = $allMessagesToSentCounter - $counter;
+        $percent = $alreadySent*100/$allMessagesToSentCounter;
+
+        
+        $this->view->assign("allMessagesToSentCounter", $allMessagesToSentCounter);
+        $this->view->assign("percent", $percent);
+        $this->view->assign("counter", $counter);
+        
+        
+        $progressView = $this->view->partial('admin/send-message-portion.phtml', 'newsletter', array('counter' => $counter, 'message' => $message, 'allMessagesToSentCounter' => $allMessagesToSentCounter, 'percent' => $percent));
+        $this->view->assign('message', $message); 
+        
+        $this->_helper->json(array(
+             'status' => 'success',
+             'body' => $progressView
+        ));      
+    }
+    
+    public function headerTemplateAction() {
+        
+        $this->_helper->layout->disableLayout();
+    }
+    
+    public function newsEventsTemplateAction() {
+        $newsService = $this->_service->getService('News_Service_News');
+        $eventPromotedService = $this->_service->getService('Event_Service_EventPromoted');
+        $companyService = $this->_service->getService('Company_Service_Company');
+        
+        $newsIds = $this->getRequest()->getParam('news-ids');
+        $newsIds = explode(',', $newsIds);
+        
+        $news = $newsService->getPreSortedPredifiniedNews($newsIds);
+        
+        $eventsIds = $this->getRequest()->getParam('events-ids');
+        $eventsIds = explode(',', $eventsIds);
+        
+        $events = $eventPromotedService->getPreSortedPredifiniedEventsPromoted($eventsIds);
+        
+        $companiesIds = $this->getRequest()->getParam('companies-ids');
+        $companiesIds = explode(',', $companiesIds);
+        
+        $companies = $companyService->getPreSortedPredifiniedCompanies($companiesIds);
+        
+        $this->view->assign('companies', $companies);
+        $this->view->assign('news', $news);
+        $this->view->assign('events', $events);
+    }
+    
+    public function newestProductsTemplateAction() {
+        $this->_helper->layout->disableLayout();
+      $productService = $this->_service->getService('Product_Service_Product');
+      
+      $productsIds = $this->getRequest()->getParam('products-ids');
+      $productsIds = explode(',', $productsIds);
+      $newestProducts = $productService->getPreSortedPredifiniedNewestProducts(3, $productsIds);
+        
+      $this->view->assign('newestProducts', $newestProducts);
+    }
+    
+    public function footerTemplateAction() {
+  
+        $this->_helper->layout->disableLayout();
+    }
 }
 

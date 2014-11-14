@@ -7,10 +7,13 @@
  * 
  * @property integer $id
  * @property integer $metatag_id
- * @property string $name
+ * @property string $title
  * @property string $slug
- * @property clob $description
+ * @property clob $content
  * @property integer $photo_root_id
+ * @property integer $category_id
+ * @property boolean $main_page
+ * @property Gallery_Model_Doctrine_Category $Category
  * @property Doctrine_Collection $Translation
  * 
  * @package    Admi
@@ -33,7 +36,7 @@ abstract class Gallery_Model_Doctrine_BaseGallery extends Doctrine_Record
              'type' => 'integer',
              'length' => '4',
              ));
-        $this->hasColumn('name', 'string', 255, array(
+        $this->hasColumn('title', 'string', 255, array(
              'type' => 'string',
              'length' => '255',
              ));
@@ -41,12 +44,20 @@ abstract class Gallery_Model_Doctrine_BaseGallery extends Doctrine_Record
              'type' => 'string',
              'length' => '255',
              ));
-        $this->hasColumn('description', 'clob', null, array(
+        $this->hasColumn('content', 'clob', null, array(
              'type' => 'clob',
              ));
         $this->hasColumn('photo_root_id', 'integer', 4, array(
              'type' => 'integer',
              'length' => '4',
+             ));
+        $this->hasColumn('category_id', 'integer', 4, array(
+             'type' => 'integer',
+             'length' => '4',
+             ));
+        $this->hasColumn('main_page', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => 0,
              ));
 
         $this->option('type', 'MyISAM');
@@ -57,6 +68,10 @@ abstract class Gallery_Model_Doctrine_BaseGallery extends Doctrine_Record
     public function setUp()
     {
         parent::setUp();
+        $this->hasOne('Gallery_Model_Doctrine_Category as Category', array(
+             'local' => 'category_id',
+             'foreign' => 'id'));
+
         $this->hasMany('Gallery_Model_Doctrine_GalleryTranslation as Translation', array(
              'local' => 'id',
              'foreign' => 'id'));
@@ -64,13 +79,17 @@ abstract class Gallery_Model_Doctrine_BaseGallery extends Doctrine_Record
         $i18n0 = new Doctrine_Template_I18n(array(
              'fields' => 
              array(
-              0 => 'name',
+              0 => 'title',
               1 => 'slug',
-              2 => 'description',
+              2 => 'content',
              ),
              'tableName' => 'gallery_gallery_translation',
              'className' => 'GalleryTranslation',
              ));
+        $timestampable0 = new Doctrine_Template_Timestampable();
+        $softdelete0 = new Doctrine_Template_SoftDelete();
         $this->actAs($i18n0);
+        $this->actAs($timestampable0);
+        $this->actAs($softdelete0);
     }
 }

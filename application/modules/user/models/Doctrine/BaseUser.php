@@ -20,6 +20,7 @@
  * @property User_Model_Doctrine_Profile $Profile
  * @property Doctrine_Collection $Update
  * @property Doctrine_Collection $Groups
+ * @property Doctrine_Collection $Roles
  * 
  * @package    Admi
  * @subpackage User
@@ -102,6 +103,11 @@ abstract class User_Model_Doctrine_BaseUser extends Doctrine_Record
              'refClass' => 'User_Model_Doctrine_UserGroup',
              'local' => 'user_id',
              'foreign' => 'group_id'));
+
+        $this->hasMany('User_Model_Doctrine_Role as Roles', array(
+             'refClass' => 'User_Model_Doctrine_UserRole',
+             'local' => 'id',
+             'foreign' => 'slug'));
 
         $timestampable0 = new Doctrine_Template_Timestampable();
         $softdelete0 = new Doctrine_Template_SoftDelete();

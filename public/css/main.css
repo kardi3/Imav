@@ -3161,3 +3161,25 @@ form input.valid {border: 1px solid #9FC569 !important;}
 	.loginContainer {width: 180px;margin-left: -100px;}
 	.ui-datepicker{ max-width: 180px;}
 }
+
+.dataTables_length .selector{
+    width:inherit !important;
+}
+.spaninspan{
+    display:none !important;
+}
+
+.errorMessage{
+    padding: 3px 4px 3px 4px;
+	background: #c93605;
+        display:block;
+        margin:5px 0px;
+        text-align:center;
+        
+        color:#fff;
+	font-weight: bold;
+	text-shadow: 0px 1px 1px rgba(164, 44, 4, 0.20);
+    -moz-text-shadow: 0px 1px 1px rgba(164, 44, 4, 0.20);
+    -webkit-text-shadow: 0px 1px 1px rgba(164, 44, 4, 0.20);
+    font-size:13px;
+}

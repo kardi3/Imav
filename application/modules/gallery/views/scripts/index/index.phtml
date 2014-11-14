@@ -1,37 +1,83 @@
-<article class="grid_8">
-<h1><?php echo $this->gallery['Translation'][$this->language]['name'] ?></h1>
-<?php echo $this->gallery['Translation'][$this->language]['description'] ?>
-<?php if($this->gallery->get('PhotoRoot')){ ?>
-    <div class="gallery-container gallery-list">
 
-                <div class="gallery-box">
-                        <ul>
-                            <?php foreach($this->gallery->get('PhotoRoot')->getNode()->getChildren() as $photo): ?>
-                                <li>
-                                    <a href="/media/photos/<?php echo $photo['offset'] ?>/<?php echo $photo['filename'] ?>" alt="<?php echo $photo['title'] ?>"
-                                       data-lightview-group='<?php echo $this->gallery['Translation'][$this->language]['slug'] ?>'
-                                       data-lightview-title="<?php echo $photo['title'] ?>"
-                                       class='lightview' 
-                                       data-lightview-options="
-                                           width: 800,
-                                           height: 460,
-                                           viewport: 'false',
-                                         "
-                                       >
-                                        <img src="/media/photos/<?php echo $photo['offset'] ?>/<?php echo $this->photoDimension; ?>/<?php echo $photo['filename'] ?>" alt="<?php echo $photo['title'] ?>" />
-                                    </a>
-                                    <div class="photoTitle">
-                                        <?php echo $photo['title'] ?>
-                                    </div>
-                                </li>
-                                <?php endforeach; ?>
-                        </ul>	
+    <script id="addJS">jQuery(document).ready(function($) {
+  $('#gallery-1').royalSlider({
+    fullscreen: {
+      enabled: true,
+      nativeFS: true
+    },
+    controlNavigation: 'thumbnails',
+    autoScaleSlider: true, 
+    autoScaleSliderWidth: 829,     
+    autoScaleSliderHeight: 528,
+    loop: false,
+    imageScaleMode: 'fit-if-smaller',
+    navigateByClick: true,
+    numImagesToPreload:2,
+    arrowsNav:true,
+    arrowsNavAutoHide: true,
+    arrowsNavHideOnTouch: true,
+    keyboardNavEnabled: true,
+    fadeinLoadedSlide: true,
+    globalCaption: false,
+    globalCaptionInside: false,
+    thumbs: {
+      appendSpan: true,
+      firstMargin: true,
+      paddingBottom: 4
+    }
+  });
+});
+</script>
+<?php $gallery = $this->gallery; ?>
+<div class="main-title cat-<?php echo $gallery['Category']['slug']; ?>-main-title">
+        <h2><?php echo $gallery['Translation'][$this->language]['title']; ?></h2>
+</div>
+ <div id="gallery-1" class="royalSlider rsDefault">
+                        <?php foreach($gallery['Photos'] as $key=> $photo): ?>
+    <a class="rsImg" data-rsw="829" data-rsh="528"  data-rsBigImg="/media/photos/<?php echo $photo['offset']; ?>/829x528/<?php echo $photo['filename']; ?>" href="/media/photos/<?php echo $photo['offset']; ?>/829x528/<?php echo $photo['filename']; ?>">Vincent van Gogh - Still Life: Vase with Twelve Sunflowers<img width="96" height="72" class="rsTmb" src="/media/photos/<?php echo $photo['offset']; ?>/106x106/<?php echo $photo['filename']; ?>" /></a>
+  
+                        <?php endforeach; ?>
+        
+</div>
+<div class="single-photo-gallery">
+        
 
-
+        <div class="single-photo-content">
+                <div class="content-category">
+                        <a href="#" class="cat-<?php echo $gallery['Category']['slug']; ?>-title"> <?php echo $gallery['Category']['title']; ?></a>
                 </div>
+                <h3><?php echo $gallery['Translation'][$this->language]['title']; ?></h3>
+                <?php echo $gallery['Translation'][$this->language]['content']; ?>
+        </div>
+</div>
+<div class="main-title cat-<?php echo $gallery['Category']['slug']; ?>-main-title">
+        <h2>POWIĄZANE GALERIE</h2>
+        <span>Ostatnie galerie z kategorii <?php echo $gallery['Category']['title']; ?></span>
+</div>
 
-            </div>
-<?php
-}
-?>
-</article>
+<div class="photo-galleries">
+
+        <?php foreach($this->lastCategoryOtherGalleries as $otherGalleries): ?>
+        <div class="item">
+                <div class="item-header">
+                        <a href="<?php echo $this->url(array('slug' => $otherGalleries['Translation'][$this->language]['slug']),'domain-i18n:gallery'); ?>" class="image-hover" data-path-hover="M 34,56 45,34 63,41 64,66 47,76 z">
+                                <figure>
+                                        <img src="/media/photos/<?php echo $otherGalleries['PhotoRoot']['offset']; ?>/265x273/<?php echo $otherGalleries['PhotoRoot']['filename']; ?>" alt="<?php echo $otherGalleries['Translation'][$this->language]['title']; ?>" />
+                                        <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M 0,100 0,99 50,97 100,99 100,100 z" fill="<?php echo MF_Text::getCatColor($otherGalleries['Category']['slug']); ?>" /></svg>
+                                        <figcaption>
+                                                <span class="hover-text"><i class="fa fa-search"></i></span>
+                                        </figcaption>
+                                </figure>
+                        </a>
+                </div>
+                <div class="item-content">
+                        <div class="content-category">
+                                <a href="<?php echo $this->url(array('slug' => $otherGalleries['Translation'][$this->language]['slug']),'domain-i18n:gallery'); ?>" class="cat-<?php echo $otherGalleries['Category']['slug']; ?>-title"><?php  echo $otherGalleries['Category']['title'] ?></a>
+                        </div>
+                        <h3><a href="<?php echo $this->url(array('slug' => $otherGalleries['Translation'][$this->language]['slug']),'domain-i18n:gallery'); ?>"><?php echo $otherGalleries['Translation'][$this->language]['title']; ?></a></h3>
+                        <p><?php echo MF_Text::getCatColor($otherGalleries['Category']['slug']); ?></p>
+                        <a href="<?php echo $this->url(array('slug' => $otherGalleries['Translation'][$this->language]['slug']),'domain-i18n:gallery'); ?>" class="read-more-link">Zobacz galerie<i class="fa fa-angle-double-right"></i></a>
+                </div>
+        </div>
+        <?php endforeach; ?>
+</div>

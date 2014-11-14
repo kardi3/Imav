@@ -10,8 +10,12 @@
  * @property string $name
  * @property string $slug
  * @property string $website
+ * @property string $position
+ * @property timestamp $date_from
+ * @property timestamp $date_to
  * @property clob $description
  * @property boolean $status
+ * @property integer $attachment_root_id
  * @property integer $photo_root_id
  * @property integer $metatag_id
  * @property Doctrine_Collection $Translation
@@ -48,12 +52,26 @@ abstract class Banner_Model_Doctrine_BaseBanner extends Doctrine_Record
              'type' => 'string',
              'length' => '255',
              ));
+        $this->hasColumn('position', 'string', 255, array(
+             'type' => 'string',
+             'length' => '255',
+             ));
+        $this->hasColumn('date_from', 'timestamp', null, array(
+             'type' => 'timestamp',
+             ));
+        $this->hasColumn('date_to', 'timestamp', null, array(
+             'type' => 'timestamp',
+             ));
         $this->hasColumn('description', 'clob', null, array(
              'type' => 'clob',
              ));
         $this->hasColumn('status', 'boolean', null, array(
              'type' => 'boolean',
              'default' => 1,
+             ));
+        $this->hasColumn('attachment_root_id', 'integer', 4, array(
+             'type' => 'integer',
+             'length' => '4',
              ));
         $this->hasColumn('photo_root_id', 'integer', 4, array(
              'type' => 'integer',

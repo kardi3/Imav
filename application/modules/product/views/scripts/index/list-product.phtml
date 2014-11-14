@@ -1,0 +1,32 @@
+<div class="block_breadcrumbs">
+    <ul>
+        <li><a href="/">Strona głowna</a></li>
+        <li>Rękodzieło</li>
+    </ul>
+</div>
+<div class="separator" style="height:30px;"></div>
+<div class="clearboth"></div>
+<?php foreach($this->productList as $category => $products): ?>
+    <h3 style="font-size:16px;"><?php echo $category; ?></h3>
+    <div class="line_4" style="margin:-4px 0px 18px;"></div>
+    <div class="block_topic_news">
+        <?php foreach($products as $product): 
+            $photoRoot = $product['PhotoRoot'];
+            ?>
+                                    <article class="block_topic_post">
+                                        <p class="title"><a href="<?php echo $this->url(array('slug' => $product['Translation'][$this->language]['slug']),'domain-i18n:product'); ?>"><?php echo $product['Translation'][$this->language]['name']; ?></a></p>
+                                        <div class="f_pic"><a href="<?php echo $this->url(array('slug' => $product['Translation'][$this->language]['slug']),'domain-i18n:product'); ?>" class="scale"><img src="/media/photos/<?php echo $photoRoot['offset'];?>/256x122/<?php echo $photoRoot['filename']; ?>" alt=""></a></div>
+                                    <p class="text"><?php echo MF_Text::truncate(strip_tags($product['Translation'][$this->language]['description']),100,'letters'); ?></p>
+                                    
+                                </article>
+        <?php endforeach; ?>
+     </div>
+    
+<div class="separator" style="height:15px;"></div>
+    <?php if(strlen($products[0]['Category']['Translation'][$this->language]['slug'])): ?>
+        <div class="text-align-right">
+                <a class="lnk_all_product" href="<?php echo $this->url(array('category' => $products[0]['Category']['Translation'][$this->language]['slug']),'domain-category-product'); ?>">Zobacz pozostałe produkty w tej kategorii</a>
+        </div>
+         <div class="line_3" style="margin:20px 0px 24px;"></div>
+     <?php endif; ?>
+<?php endforeach; ?>

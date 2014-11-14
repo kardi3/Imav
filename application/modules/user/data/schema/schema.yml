@@ -163,3 +163,28 @@ UserGroup:
     group_id:
       primary: true
       type: integer(4)
+Role:
+  tableName: user_role
+  columns:
+    name:
+      type: string(255)
+    slug:
+      type: string(255)
+      primary: true
+  relations:
+   User:
+      refClass: UserRole
+      local: slug
+      foreign: id
+      type: many
+      foreignAlias: Roles
+      alias: Users
+UserRole:
+  tableName: user_user_role
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+    slug:
+      type: string(255)
+      primary: true

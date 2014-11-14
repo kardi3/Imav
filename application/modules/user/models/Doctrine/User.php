@@ -105,20 +105,7 @@ class User_Model_Doctrine_User extends User_Model_Doctrine_BaseUser implements U
     }
     
     public function setUp() {    
-        $this->hasOne('Product_Model_Doctrine_Discount as Discount', array(
-            'local' => 'discount_id',
-            'foregin' => 'id'
-        )); 
-        
-        $this->hasMany('Product_Model_Doctrine_Comment as Comments', array(
-            'local' => 'id',
-            'foreign' => 'user_id'
-        ));
-        
-//        $this->hasMany('Order_Model_Doctrine_Order as Orders', array(
-//            'local' => 'id',
-//            'foreign' => 'user_id'
-//        ));
+       
         parent::setUp();
     }
 }

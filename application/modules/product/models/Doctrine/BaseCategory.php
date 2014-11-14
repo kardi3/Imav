@@ -9,16 +9,10 @@
  * @property string $name
  * @property clob $description
  * @property string $slug
- * @property integer $discount_id
  * @property boolean $status
  * @property integer $metatag_id
  * @property integer $photo_root_id
- * @property integer $views
- * @property integer $clicks
- * @property boolean $promoted
  * @property Doctrine_Collection $Products
- * @property Doctrine_Collection $Previews
- * @property Product_Model_Doctrine_Discount $Discount
  * @property Doctrine_Collection $Translation
  * 
  * @package    Admi
@@ -48,10 +42,6 @@ abstract class Product_Model_Doctrine_BaseCategory extends Doctrine_Record
              'type' => 'string',
              'length' => '255',
              ));
-        $this->hasColumn('discount_id', 'integer', 4, array(
-             'type' => 'integer',
-             'length' => '4',
-             ));
         $this->hasColumn('status', 'boolean', null, array(
              'type' => 'boolean',
              'default' => 1,
@@ -64,20 +54,6 @@ abstract class Product_Model_Doctrine_BaseCategory extends Doctrine_Record
              'type' => 'integer',
              'length' => '4',
              ));
-        $this->hasColumn('views', 'integer', 4, array(
-             'type' => 'integer',
-             'default' => 0,
-             'length' => '4',
-             ));
-        $this->hasColumn('clicks', 'integer', 4, array(
-             'type' => 'integer',
-             'default' => 0,
-             'length' => '4',
-             ));
-        $this->hasColumn('promoted', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => 0,
-             ));
 
         $this->option('type', 'MyISAM');
         $this->option('collate', 'utf8_general_ci');
@@ -88,18 +64,8 @@ abstract class Product_Model_Doctrine_BaseCategory extends Doctrine_Record
     {
         parent::setUp();
         $this->hasMany('Product_Model_Doctrine_Product as Products', array(
-             'refClass' => 'Product_Model_Doctrine_ProductCategory',
-             'local' => 'category_id',
-             'foreign' => 'product_id'));
-
-        $this->hasMany('Product_Model_Doctrine_Preview as Previews', array(
-             'refClass' => 'Product_Model_Doctrine_PreviewCategory',
-             'local' => 'category_id',
-             'foreign' => 'preview_id'));
-
-        $this->hasOne('Product_Model_Doctrine_Discount as Discount', array(
-             'local' => 'discount_id',
-             'foreign' => 'id'));
+             'local' => 'id',
+             'foreign' => 'category_id'));
 
         $this->hasMany('Product_Model_Doctrine_CategoryTranslation as Translation', array(
              'local' => 'id',
@@ -115,13 +81,9 @@ abstract class Product_Model_Doctrine_BaseCategory extends Doctrine_Record
              'tableName' => 'product_category_translation',
              'className' => 'CategoryTranslation',
              ));
-        $nestedset0 = new Doctrine_Template_NestedSet(array(
-             'HasManyRoots' => false,
-             ));
         $timestampable0 = new Doctrine_Template_Timestampable();
         $softdelete0 = new Doctrine_Template_SoftDelete();
         $this->actAs($i18n0);
-        $this->actAs($nestedset0);
         $this->actAs($timestampable0);
         $this->actAs($softdelete0);
     }

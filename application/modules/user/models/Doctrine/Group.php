@@ -29,10 +29,7 @@ class User_Model_Doctrine_Group extends User_Model_Doctrine_BaseGroup
     }
     
     public function setUp() {    
-        $this->hasOne('Product_Model_Doctrine_Discount as Discount', array(
-            'local' => 'discount_id',
-            'foregin' => 'id'
-        )); 
+      
         parent::setUp();
     }
 }

@@ -1,4 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>application/modules/product/controllers/IndexController.php</url>
+            <bookmark id="1">
+                <name/>
+                <line>88</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/var/www/imav/application/modules/default/controllers/IndexController.php</file>
+        <file>file:/var/www/imav/application/modules/default/services/Metatag.php</file>
+        <file>file:/var/www/imav/library/Zend/View/Helper/HeadMeta.php</file>
+        <file>file:/var/www/imav/library/Zend/View/Helper/Doctype.php</file>
+        <file>file:/var/www/imav/application/modules/news/controllers/IndexController.php</file>
+        <file>file:/var/www/imav/application/modules/news/data/schema/schema.yml</file>
+        <file>file:/var/www/imav/application/modules/news/controllers/AdminController.php</file>
+        <file>file:/var/www/imav/application/modules/news/services/Tag.php</file>
+        <file>file:/var/www/imav/application/modules/news/library/DataTables/Tag.php</file>
+        <file>file:/var/www/imav/application/modules/news/library/DataTables/Adapter/Tag.php</file>
+        <file>file:/var/www/imav/application/modules/news/views/scripts/admin/add-tag.phtml</file>
+        <file>file:/var/www/imav/application/modules/news/views/scripts/admin/edit-tag.phtml</file>
+        <file>file:/var/www/imav/application/modules/news/views/scripts/admin/list-tag.phtml</file>
+        <file>file:/var/www/imav/application/layouts/scripts/admin.phtml</file>
+        <file>file:/var/www/imav/application/modules/news/forms/Tag.php</file>
+        <file>file:/var/www/imav/application/modules/news/models/Doctrine/Tag.php</file>
+        <file>file:/var/www/imav/application/modules/news/models/Doctrine/Group.php</file>
+        <file>file:/var/www/imav/application/modules/news/forms/News.php</file>
+        <file>file:/var/www/imav/application/modules/news/services/News.php</file>
+        <file>file:/var/www/imav/application/modules/news/views/scripts/admin/add-news.phtml</file>
+        <file>file:/var/www/imav/application/modules/news/views/scripts/admin/edit-news.phtml</file>
+        <file>file:/var/www/imav/application/modules/news/models/Doctrine/BaseNews.php</file>
+        <file>file:/var/www/imav/application/modules/news/views/scripts/index/index.phtml</file>
+        <file>file:/var/www/imav/application/modules/news/views/scripts/index/article.phtml</file>
+        <file>file:/var/www/imav/application/configs/resources/router.ini</file>
+        <file>file:/var/www/imav/application/modules/news/models/Doctrine/NewsTable.php</file>
+        <file>file:/var/www/imav/application/modules/news/views/scripts/index/tag.phtml</file>
+        <file>file:/var/www/imav/library/MF/Text.php</file>
+        <file>file:/var/www/imav/application/views/scripts/_header.phtml</file>
+        <file>file:/var/www/imav/application/configs/translations/router.tmx</file>
+        <file>file:/var/www/imav/application/modules/news/views/scripts/index/search.phtml</file>
+        <file>file:/var/www/imav/public/videoplayer/css/videoPlayerMain.css</file>
+        <file>file:/var/www/imav/public/videoplayer/css/videoPlayer.theme1.css</file>
+        <file>file:/var/www/imav/public/videoplayer/css/videoPlayer.theme1_Playlist.css</file>
+        <file>file:/var/www/imav/public/videoplayer/js/videoPlayer.js</file>
+        <file>file:/var/www/imav/application/modules/banner/data/schema/schema.yml</file>
+        <file>file:/var/www/imav/application/modules/banner/forms/Banner.php</file>
+        <file>file:/var/www/imav/application/modules/banner/controllers/IndexController.php</file>
+        <file>file:/var/www/imav/application/modules/banner/controllers/AdminController.php</file>
+        <file>file:/var/www/imav/application/modules/banner/services/Ad.php</file>
+        <file>file:/var/www/imav/application/modules/banner/views/scripts/admin/edit-ad.phtml</file>
+        <file>file:/var/www/imav/application/modules/district/forms/Video.php</file>
+        <file>file:/var/www/imav/application/modules/news/forms/Video.php</file>
+        <file>file:/var/www/imav/application/modules/banner/views/scripts/admin/add-ad.phtml</file>
+        <file>file:/var/www/imav/public/assets/css/main-stylesheet.css</file>
+        <file>file:/var/www/imav/application/configs/application.ini</file>
+        <file>file:/var/www/imav/public/.htaccess</file>
+        <file>file:/var/www/imav/application/modules/default/library/DataTables/Adapter/AdapterAbstract.php</file>
+    </open-files>
 </project-private>

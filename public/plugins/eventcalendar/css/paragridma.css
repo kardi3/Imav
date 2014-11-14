@@ -18,7 +18,7 @@
    		License: none (public domain)
 	*/
 	
-	html, body,.eventsCalendar-list div,.eventsCalendar-list span,.eventsCalendar-list applet,.eventsCalendar-list object,.eventsCalendar-list iframe,.eventsCalendar-list
+	html .eventsCalendar-list, body .eventsCalendar-list,.eventsCalendar-list div,.eventsCalendar-list span,.eventsCalendar-list applet,.eventsCalendar-list object,.eventsCalendar-list iframe,.eventsCalendar-list
 	.eventsCalendar-list h1,.eventsCalendar-list h2,.eventsCalendar-list h3,.eventsCalendar-list h4,.eventsCalendar-list h5,.eventsCalendar-list h6,.eventsCalendar-list p,.eventsCalendar-list blockquote,.eventsCalendar-list pre,.eventsCalendar-list
 	.eventsCalendar-list a,.eventsCalendar-list abbr,.eventsCalendar-list acronym,.eventsCalendar-list address,.eventsCalendar-list big,.eventsCalendar-list cite,.eventsCalendar-list code,.eventsCalendar-list
 	.eventsCalendar-list del,.eventsCalendar-list dfn,.eventsCalendar-list em,.eventsCalendar-list img,.eventsCalendar-list ins,.eventsCalendar-list kbd,.eventsCalendar-list q,.eventsCalendar-list s,.eventsCalendar-list samp,.eventsCalendar-list
@@ -66,7 +66,7 @@
 	
 	body { background: #fff; position: relative; -webkit-font-smoothing: antialiased; }
 	
-	body, input, select, textarea, button {
+	.eventsCalendar-list body,.eventsCalendar-list input,.eventsCalendar-list select,.eventsCalendar-list textarea, button {
 		font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, "Lucida Grande", sans-serif; 
 		font-size: 13px; 
 		line-height: 18px; 
@@ -87,15 +87,15 @@ img, object { max-width: 100%; } /* http://unstoppablerobotninja.com/entry/fluid
 
 /*= List */
 
-	ul, ol { margin-bottom: 18px; }
-	ul { list-style: none outside; }
+/*	ul, ol { margin-bottom: 18px; }
+	ul { list-style: none outside; }*/
 	ol { list-style: decimal; }
 	ol, ul.square, ul.circle, ul.disc { margin-left: 30px; }
 	ul.square { list-style: square outside; }
 	ul.circle { list-style: circle outside; }
 	ul.disc { list-style: disc outside; }
 	ul ul, ol ol { margin: 4px 0 5px 30px; }
-	li { margin-bottom: 12px; }
+	/*li { margin-bottom: 12px; }*/
 	ul.horizontal li { float:left;  }
 	ul.nm { margin:0;}
 
