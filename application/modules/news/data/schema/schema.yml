@@ -192,3 +192,60 @@ NewsTag:
       type: integer(4)
     news_id:
       type: integer(4)
+Stream:
+  tableName: news_stream
+  actAs:
+    I18n:
+      fields: [title, slug, content]
+      tableName: news_stream_translation
+      className: StreamTranslation
+    Timestampable: ~
+    SoftDelete: ~
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    user_id:
+      type: integer(4)
+    last_user_id:
+      type: integer(4)
+    url:
+      type: string(255)
+    type:
+      type: string(255)
+    title:
+      type: string(255)
+    slug:
+      type: string(255)
+    content:
+      type: clob
+    publish:
+      type: boolean
+      default: 1
+    metatag_id:
+      type: integer(4)
+StreamTranslation:
+  tableName: news_stream_translation
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer(4)
+    lang:
+      primary: true
+      type: string(64)
+    slug:
+      type: string(255)
+    title:
+      type: string(255)
+    content:
+      type: clob
+  relations:
+    Stream:
+      local: id
+      foreign: id
+      foreignAlias: Translation
+      alias: Stream
+      type: one
+      foreignType: many

@@ -6,6 +6,8 @@
                     <?php $slide = $this->mainSlides[$i];
                         if($slide['target_type'] == "news_target"):
                             $url = $this->url(array('slug' => $slide['News']['Translation'][$this->language]['slug']),'domain-news-article'); 
+                        elseif($slide['target_type'] == "stream_target"):
+                            $url = $this->url(array('slug' => $slide['Stream']['Translation'][$this->language]['slug']),'domain-stream'); 
                         elseif($slide['target_type'] == "custom_url"):
                             $url = $slide['target_href'];
                         else:
@@ -18,6 +20,8 @@
                                     <strong>
                                         <?php if($slide['target_type'] == "news_target"): ?>
                                             <i class="cat-<?php echo $slide['News']['Category']['slug'];?>"><?php echo $slide['News']['Category']['title'];?></i>
+                                        <?php elseif($slide['target_type'] == "stream_target"): ?>
+                                            <i class="cat-sport">LIVE</i>
                                         <?php endif; ?>
                                         <?php echo strip_tags($slide['Translation'][$this->language]['content']);?>
                                     </strong>
@@ -28,6 +32,8 @@
             <?php $slide = $this->mainSlides[$i+1];
                         if($slide['target_type'] == "news"):
                             $url = $this->url(array('slug' => $slide['News']['Translation'][$this->language]['slug']),'domain-news-article'); 
+                        elseif($slide['target_type'] == "stream_target"):
+                            $url = $this->url(array('slug' => $slide['Stream']['Translation'][$this->language]['slug']),'domain-stream'); 
                         elseif($slide['target_type'] == "custom_url"):
                             $url = $slide['target_href'];
                         else:
@@ -39,6 +45,8 @@
                                     <strong>
                                         <?php if($slide['target_type'] == "news_target"): ?>
                                             <i class="cat-<?php echo $slide['News']['Category']['slug'];?>"><?php echo $slide['News']['Category']['title'];?></i>
+                                        <?php elseif($slide['target_type'] == "stream_target"): ?>
+                                            <i class="cat-sport">LIVE</i>
                                         <?php endif; ?>
                                         <?php echo strip_tags($slide['Translation'][$this->language]['content']);?>
                                     </strong>
@@ -48,6 +56,8 @@
             <?php $slide = $this->mainSlides[$i+2];
                         if($slide['target_type'] == "news"):
                             $url = $this->url(array('slug' => $slide['News']['Translation'][$this->language]['slug']),'domain-news-article'); 
+                        elseif($slide['target_type'] == "stream_target"):
+                            $url = $this->url(array('slug' => $slide['Stream']['Translation'][$this->language]['slug']),'domain-stream'); 
                         elseif($slide['target_type'] == "custom_url"):
                             $url = $slide['target_href'];
                         else:
@@ -58,6 +68,8 @@
                                     <strong>
                                         <?php if($slide['target_type'] == "news_target"): ?>
                                             <i class="cat-<?php echo $slide['News']['Category']['slug'];?>"><?php echo $slide['News']['Category']['title'];?></i>
+                                        <?php elseif($slide['target_type'] == "stream_target"): ?>
+                                            <i class="cat-sport">LIVE</i>
                                         <?php endif; ?>
                                         <?php echo strip_tags($slide['Translation'][$this->language]['content']);?>
                                     </strong>
@@ -67,6 +79,8 @@
             <?php $slide = $this->mainSlides[$i+3];
                         if($slide['target_type'] == "news"):
                             $url = $this->url(array('slug' => $slide['News']['Translation'][$this->language]['slug']),'domain-news-article'); 
+                        elseif($slide['target_type'] == "stream_target"):
+                            $url = $this->url(array('slug' => $slide['Stream']['Translation'][$this->language]['slug']),'domain-stream'); 
                         elseif($slide['target_type'] == "custom_url"):
                             $url = $slide['target_href'];
                         else:
@@ -77,6 +91,8 @@
                                 <strong>
                                         <?php if($slide['target_type'] == "news_target"): ?>
                                             <i class="cat-<?php echo $slide['News']['Category']['slug'];?>"><?php echo $slide['Translation'][$this->language]['title'];?></i>
+                                        <?php elseif($slide['target_type'] == "stream_target"): ?>
+                                            <i class="cat-sport">LIVE</i>
                                         <?php endif; ?>
                                     <?php echo strip_tags($slide['Translation'][$this->language]['content']);?>
                                 </strong>

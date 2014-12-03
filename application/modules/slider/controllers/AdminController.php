@@ -222,6 +222,7 @@ class Slider_AdminController extends MF_Controller_Action {
         $sliderService = $this->_service->getService('Slider_Service_Slider');
         $photoService = $this->_service->getService('Media_Service_Photo');
         $newsService = $this->_service->getService('News_Service_News');
+        $streamService = $this->_service->getService('News_Service_Stream');
         
         
         $languages = $i18nService->getLanguageList();
@@ -238,6 +239,8 @@ class Slider_AdminController extends MF_Controller_Action {
         $form = $sliderService->getSlideForm($slide);
         $form->getElement('news_id')->addMultiOptions($newsService->getTargetNewsSelectOptions(true,$adminLanguage->getId()));
         $form->getElement('news_id')->setValue($slide['news_id']);
+        $form->getElement('stream_id')->addMultiOptions($streamService->getTargetStreamSelectOptions(true,$adminLanguage->getId()));
+        $form->getElement('stream_id')->setValue($slide['stream_id']);
         $form->transition->addMultiOptions($sliderService->getTargetTransitionsSelectOptions());
 
         if($this->getRequest()->isPost()) {

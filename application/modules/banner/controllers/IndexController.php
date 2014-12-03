@@ -27,13 +27,24 @@ class Banner_IndexController extends MF_Controller_Action {
         $this->view->assign('rightBanners', $rightBanners);
     }
     
-    public function bannerSidebarAction(){
+    public function bannerSidebar2Action(){
         
         $bannerService = $this->_service->getService('Banner_Service_Banner');
         
         $banners = $bannerService->getPositionBanners('Sidebar2');
         
-        $this->_helper->viewRenderer->setResponseSegment('bannerSidebar');
+        $this->_helper->viewRenderer->setResponseSegment('bannerSidebar2');
+        
+        $this->view->assign('banners', $banners);
+    }
+    
+    public function bannerSidebar3Action(){
+        
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $banners = $bannerService->getPositionBanners('Sidebar3');
+        
+        $this->_helper->viewRenderer->setResponseSegment('bannerSidebar3');
         
         $this->view->assign('banners', $banners);
     }
@@ -96,6 +107,15 @@ class Banner_IndexController extends MF_Controller_Action {
         $this->view->assign('banners', $banners);
     }
     
+    public function bannerUnderStreamAction(){
+        
+        $bannerService = $this->_service->getService('Banner_Service_Banner');
+        
+        $banners = $bannerService->getPositionBanners('UnderStream');
+        
+        
+        $this->view->assign('banners', $banners);
+    }
     
 }
 

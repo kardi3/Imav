@@ -33,6 +33,7 @@ class Slider_Form_SliderSlide extends Admin_Form {
         $targetType->addMultiOption('','Brak linku');
         $targetType->addMultiOption('custom_target','Własny cel');
         $targetType->addMultiOption('news_target','News');
+        $targetType->addMultiOption('stream_target','Stream');
         $targetType->setValue('');
         
         
@@ -58,6 +59,9 @@ class Slider_Form_SliderSlide extends Admin_Form {
         $newsSlug->setLabel('Wybierz news');
         $newsSlug->setDecorators(self::$selectDecorators);
         
+        $streamId = $this->createElement('select', 'stream_id');
+        $streamId->setLabel('Wybierz stream');
+        $streamId->setDecorators(self::$selectDecorators);
         
         $languages = $i18nService->getLanguageList();
 
@@ -108,6 +112,7 @@ class Slider_Form_SliderSlide extends Admin_Form {
             $slotAmount,
             $newsSlug,
             $targetType,
+            $streamId,
             $targetHref,
             $transitionDuration,
             $delay,

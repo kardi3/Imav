@@ -51,7 +51,7 @@ class News_Service_News extends MF_Service_ServiceAbstract{
         return $q->fetchOne(array(), $hydrationMode);
     }
     public function getArticleWithAd($id, $field = 'id', $hydrationMode = Doctrine_Core::HYDRATE_RECORD) {
-        $q = $this->newsTable->getPublishNewsQuery();
+        $q = $this->newsTable->getNewsQuery();
         if(in_array($field, array('id'))) {
             $q->andWhere('n.' . $field . ' = ?', array($id));
         } elseif(in_array($field, array('slug'))) {
@@ -65,7 +65,6 @@ class News_Service_News extends MF_Service_ServiceAbstract{
         $q->addWhere('a.publish = 1');
        $q->addWhere('a.date_from <= NOW()');
        $q->addWhere('a.date_to > NOW()');
-       Zend_Debug::dump($q->fetchOne(array(), $hydrationMode)->toArray());exit;
         return $q->fetchOne(array(), $hydrationMode);
     }
     
@@ -84,6 +83,16 @@ class News_Service_News extends MF_Service_ServiceAbstract{
        // $q = $this->newsTable->getPhotoQuery($q);
         $q->andWhere('at.lang = ?', $language);
         $q->addOrderBy('a.publish_date DESC');
+        return $q;
+    }
+    
+    public function getCategoryPaginationQuery($category_id,$language) {
+        $q = $this->newsTable->getNewsCategoryQuery();
+       // $q = $this->newsTable->getPhotoQuery($q);
+        $q->andWhere('nt.lang = ?', $language);
+        $q->addWhere('c.id = ?',$category_id);
+        $q->addOrderBy('n.publish_date DESC');
+        
         return $q;
     }
     
@@ -199,9 +208,7 @@ class News_Service_News extends MF_Service_ServiceAbstract{
     }
     
       public function getLastNews($limit = 4, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
-        $q = $this->newsTable->getNewsQuery();
-//        $q->andWhere('n.publish = 1');
-//        $q->addWhere('n.publish_date > NOW()');
+        $q = $this->newsTable->getLastNewsQuery();
         $q->leftJoin('n.VideoRoot v');
         $q->addSelect('v.*');
         $q->orderBy('n.publish_date DESC');
@@ -242,23 +249,24 @@ class News_Service_News extends MF_Service_ServiceAbstract{
     }
     
     public function getLastCategoryOtherArticles($news, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
-        $q = $this->newsTable->getNewsQuery();
+        $q = $this->newsTable->getLastNewsQuery();
         $q->addWhere('n.category_id = ?',$news['category_id']);
         $q->addWhere('n.id != ?',$news['id']);
-        $q->leftJoin('n.Videos v');
+        $q->leftJoin('n.VideoRoot v');
         $q->orderBy('n.publish_date DESC');
         $q->limit(8);
         return $q->execute(array(), $hydrationMode);
     }
     
      public function getLastCategoryNews($category_id,$limit = null, $hydrationMode = Doctrine_Core::HYDRATE_RECORD){
-        $q = $this->newsTable->getNewsQuery();
+        $q = $this->newsTable->getLastNewsQuery();
         $q->addWhere('n.category_id = ?',$category_id);
-        $q->leftJoin('n.Videos v');
+        $q->leftJoin('n.VideoRoot v');
         $q->addSelect('v.id');
         $q->orderBy('n.publish_date DESC');
-        if($limit!=null)
+        if($limit!=null){
             $q->limit($limit);
+        }
         return $q->execute(array(), $hydrationMode);
     }
     

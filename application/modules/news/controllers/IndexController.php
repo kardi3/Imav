@@ -7,7 +7,7 @@
  */
 class News_IndexController extends MF_Controller_Action {
  
-    public static $articleItemCountPerPage = 10;
+    public static $articleItemCountPerPage = 12;
     
     public function indexAction() {
         
@@ -15,10 +15,8 @@ class News_IndexController extends MF_Controller_Action {
     
     public function lastNewsAction() {
         $newsService = $this->_service->getService('News_Service_News');
-        
         $lastNews = $newsService->getLastNews(6,Doctrine_Core::HYDRATE_ARRAY);
         $this->view->assign('lastNews', $lastNews);
-        
         $this->_helper->viewRenderer->setResponseSegment('lastNews');
     }
     
@@ -38,7 +36,6 @@ class News_IndexController extends MF_Controller_Action {
         
         
         $categories = $categoryService->getAllCategories();
-        
         $newsList = array();
         foreach($categories as $category):
             if($category['title'] == "Reportaże")
@@ -130,11 +127,20 @@ class News_IndexController extends MF_Controller_Action {
             
         }
         
+         $query = $newsService->getCategoryPaginationQuery($category['id'],$this->language);
+
+        $adapter = new MF_Paginator_Adapter_Doctrine($query, Doctrine_Core::HYDRATE_ARRAY);
+        $paginator = new Zend_Paginator($adapter);
+        $paginator->setCurrentPageNumber($this->getRequest()->getParam('page', 1));
+        $paginator->setItemCountPerPage(self::$articleItemCountPerPage);
+        
+        $this->view->assign('paginator', $paginator);
+       
+        
         $metatagService->setViewMetatags($page['metatag_id'],$this->view);
         
-        $newsList = $newsService->getCategoryNews($category['id'],Doctrine_Core::HYDRATE_ARRAY);
         
-         $this->view->assign('newsList', $newsList);
+         $this->view->assign('paginator', $paginator);
          $this->view->assign('category', $category);
         
     }
@@ -245,12 +251,10 @@ class News_IndexController extends MF_Controller_Action {
         $commentService = $this->_service->getService('News_Service_Comment');
         $censorService = $this->_service->getService('Censor_Service_Censor');
         $settingsService = $this->_service->getService('Default_Service_Setting');
-        
         if(!$article = $newsService->getFullArticle($this->getRequest()->getParam('slug'), 'slug')) {
             throw new Zend_Controller_Action_Exception('Article not found', 404);
         }
         $ad = $adService->getActiveAd($article['VideoRoot']['Ad']['id']);
-       
         $lastServerId = $settingsService->getSetting('server',Doctrine_Core::HYDRATE_RECORD);
         $videoUrl = $article['VideoRoot']['url'];
         // jak nie vimeo i youtube
@@ -343,6 +347,26 @@ class News_IndexController extends MF_Controller_Action {
         $this->_helper->layout->setLayout('article');
     }
     
+    
+     public function streamAction() {
+        $streamService = $this->_service->getService('News_Service_Stream');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        
+        if(!$stream = $streamService->getFullStream($this->getRequest()->getParam('slug'), 'slug')) {
+            throw new Zend_Controller_Action_Exception('Stream not found', 404);
+        }
+       
+        $metatagService->setViewMetatags($stream->get('Metatags'), $this->view);
+        $metatagService->setOgMetatags($this->view,$stream['Translation'][$this->view->language]['title'],'',$stream['Translation'][$this->view->language]['content']);
+       
+        
+        $this->view->assign('stream', $stream);
+        
+        
+        $this->_helper->actionStack('layout', 'index', 'default');
+        
+        $this->_helper->layout->setLayout('article');
+    }
     
     public function facebookAction(){
         

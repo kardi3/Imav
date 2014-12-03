@@ -46,13 +46,13 @@ $key = -1;
                                 ?>
                                    <div class="item">
                                         <div class="item-header">
-                                                <a href="<?php// echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>" class="image-hover">
+                                                <a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>" class="image-hover">
                                                     <img src="/media/photos/<?php echo $news['PhotoRoot']['offset'];?>/61x61/<?php echo $news['PhotoRoot']['filename'];?>" alt="" />
                                                 </a>
                                         </div>
                                         <div class="item-content">
-                                                <h3><a href="<?php //echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>"><?php echo MF_Text::truncate(strip_tags($news['Translation'][$this->language]['content']),80); ?></a></h3>
-                                                <a href="<?php //echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>" class="read-more-link">Czytaj więcej<i class="fa fa-angle-double-right"></i></a>
+                                                <h3><a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>"><?php echo MF_Text::truncate(strip_tags($news['Translation'][$this->language]['content']),80); ?></a></h3>
+                                                <a href="<?php echo $this->url(array('slug' => $news['Translation'][$this->language]['slug']),'domain-news-article'); ?>" class="read-more-link">Czytaj więcej<i class="fa fa-angle-double-right"></i></a>
                                         </div>
                                     </div>
 

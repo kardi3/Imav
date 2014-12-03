@@ -71,12 +71,15 @@ class Banner_Form_Banner extends Admin_Form {
         $position->setAttrib('class', 'span8');
         $position->addMultiOption('','');
         $position->addMultiOption('Sidebar1','Sidebar1');
+        $position->addMultiOption('Sidebar2','Sidebar2');
+        $position->addMultiOption('Sidebar3','Sidebar3');
         $position->addMultiOption('MainFirst','MainFirst');
         $position->addMultiOption('MainSecond','MainSecond');
         $position->addMultiOption('MainThird','MainThird');
         $position->addMultiOption('MainFourth','MainFourth');
         $position->addMultiOption('MainFifth','MainFifth');
         $position->addMultiOption('UnderNews','UnderNews');
+        $position->addMultiOption('UnderStream','UnderStream');
         
         $submit = $this->createElement('button', 'submit');
         $submit->setLabel('Save');

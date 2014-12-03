@@ -107,6 +107,6 @@ $(document).ready(function() {
 <?php $i = 0; foreach($this->config as $key => $label): ?>
 <div class="crop-photo">
     <h3><?php echo $this->translate($label) ?></h3>
-    <img id="img<?php echo $i ?>" src="/media/photos/<?php if(strlen($this->photo->offset)) echo $this->photo->offset . '/' ?><?php echo $this->photo->filename ?>" width="380" height="270" style="height: 270px !important; width: 380px !important;" />
+    <img id="img<?php echo $i ?>" src="/media/photos/<?php if(strlen($this->photo->offset)) echo $this->photo->offset . '/' ?><?php echo $this->photo->filename ?>" />
 </div>
 <?php $i++; endforeach; ?>

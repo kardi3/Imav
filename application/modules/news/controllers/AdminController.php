@@ -1283,5 +1283,193 @@ class News_AdminController extends MF_Controller_Action {
         $this->_helper->viewRenderer->setNoRender();
     }
     
+    public function listStreamAction() {}
+    public function listStreamDataAction() {
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        
+        $table = Doctrine_Core::getTable('News_Model_Doctrine_Stream');
+        $dataTables = Default_DataTables_Factory::factory(array(
+            'request' => $this->getRequest(), 
+            'table' => $table, 
+            'class' => 'News_DataTables_Stream', 
+            'columns' => array('x.id','xt.title'),
+            'searchFields' => array('x.id','xt.title')
+        ));
+        
+        $results = $dataTables->getResult();
+        $language = $i18nService->getAdminLanguage();
+
+        $rows = array();
+        foreach($results as $result) {
+            
+            $row = array();
+            $row[] = $result->id;
+            $row[] = $result->Translation[$language->getId()]->title;
+           
+            if($result['publish'] == 1){ 
+                    $row[] = '<a href="' . $this->view->adminUrl('set-publish-stream', 'news', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-2"><span class="spaninspan">Tak</span></span></a>';
+            }
+            else{
+                    $row[] = '<a href="' . $this->view->adminUrl('set-publish-stream', 'news', array('id' => $result->id)) . '" title=""><span class="icon16 icomoon-icon-checkbox-unchecked-2"><span class="spaninspan">Nie</span></span></a>';
+            }
+            
+                $options = '<a href="' . $this->view->adminUrl('edit-stream', 'news', array('id' => $result->id)) . '" title="' . $this->view->translate('Edit') . '"><span class="icon24 entypo-icon-settings"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                $options .= '<a href="' . $this->view->adminUrl('remove-stream', 'news', array('id' => $result->id)) . '" class="remove" title="' . $this->view->translate('Remove') . '"><span class="icon16 icon-remove"></span></a>';
+            
+             $row[] = $options;
+            $rows[] = $row;
+        }
+
+         $response = array(
+            "sEcho" => intval($_GET['sEcho']),
+            "iTotalRecords" => $dataTables->getDisplayTotal(),
+            "iTotalDisplayRecords" => $dataTables->getTotal(),
+            "aaData" => $rows
+        );
+
+        $this->_helper->json($response);
+        
+    }
+    
+    public function addStreamAction() {
+        $streamService = $this->_service->getService('News_Service_Stream');
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        
+        
+        $translator = $this->_service->get('translate');
+        
+        $adminLanguage = $i18nService->getAdminLanguage();
+        
+        $form = $streamService->getStreamForm();
+//        $form->getElement('category_id')->addMultiOptions($categoryService->prependCategoryOptions());
+        $metatagsForm = $metatagService->getMetatagsSubForm();
+        $form->addSubForm($metatagsForm, 'metatags');
+        
+        
+        if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getParams())) {
+                try {
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    
+                    $values = $form->getValues();
+                    if($metatags = $metatagService->saveMetatagsFromArray(null, $values, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
+                        $values['metatag_id'] = $metatags->getId();
+                    }
+                    $stream = $streamService->saveStreamFromArray($values,$this->user->getId(),$this->user->getId());
+                    
+                    
+                    
+                    $this->view->messages()->add($translator->translate('Item has been added'), 'success');
+                    
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-stream', 'news'));
+                } catch(Exception $e) {
+                    var_dump($e->getMessage());exit;
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+        }
+
+        $languages = $i18nService->getLanguageList();
+        
+        $this->view->assign('adminLanguage', $adminLanguage);
+        $this->view->assign('languages', $languages);
+        $this->view->assign('form', $form);
+    }
+    
+    public function editStreamAction() {
+        $streamService = $this->_service->getService('News_Service_Stream');
+        $i18nService = $this->_service->getService('Default_Service_I18n');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        
+        
+        $translator = $this->_service->get('translate');
+        
+        if(!$stream = $streamService->getStream($this->getRequest()->getParam('id'))) {
+            throw new Zend_Controller_Action_Exception('Stream not found');
+        }
+        
+        $adminLanguage = $i18nService->getAdminLanguage();
+        
+        $form = $streamService->getStreamForm($stream);
+        $metatagsForm = $metatagService->getMetatagsSubForm($stream->get('Metatags'));
+        $form->addSubForm($metatagsForm, 'metatags');
+       
+        if($this->getRequest()->isPost()) {
+            if($form->isValid($this->getRequest()->getParams())) {
+                try {
+                    $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+                    
+                    $values = $form->getValues();
+                    if($metatags = $metatagService->saveMetatagsFromArray($stream->get('Metatags'), $values, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
+                        $values['metatag_id'] = $metatags->getId();
+                    }
+                    
+                    $stream = $streamService->saveStreamFromArray($values,$this->user->getId());
+                    
+                    $this->view->messages()->add($translator->translate('Item has been updated'), 'success');
+                    
+                    $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                    
+                    
+                    
+                     if(isset($_POST['save_only'])){
+                        $this->_helper->redirector->gotoUrl($this->view->adminUrl('edit-stream', 'news',array('id' => $stream->id)));
+                    }
+
+                    $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-stream', 'news'));
+                } catch(Exception $e) {
+                    $this->_service->get('doctrine')->getCurrentConnection()->rollback();
+                    $this->_service->get('log')->log($e->getMessage(), 4);
+                }
+            }
+        }
+        
+        $languages = $i18nService->getLanguageList();
+        
+        $this->view->assign('adminLanguage', $adminLanguage);
+        $this->view->assign('stream', $stream);
+        $this->view->assign('languages', $languages);
+        $this->view->assign('form', $form);
+    }
+    
+    public function removeStreamAction() {
+        $streamService = $this->_service->getService('News_Service_Stream');
+        $metatagService = $this->_service->getService('Default_Service_Metatag');
+        $metatagTranslationService = $this->_service->getService('Default_Service_MetatagTranslation');
+        $photoService = $this->_service->getService('Media_Service_Photo');
+        
+         $authService = $this->_service->getService('User_Service_Auth');
+        
+        
+        if($stream = $streamService->getStream($this->getRequest()->getParam('id'))) {
+            try {
+                $this->_service->get('doctrine')->getCurrentConnection()->beginTransaction();
+
+                $metatag = $metatagService->getMetatag((int) $stream->getMetatagId());
+                $metatagTranslation = $metatagTranslationService->getMetatagTranslation((int) $stream->getMetatagId());
+
+                $photoRoot = $stream->get('PhotoRoot');
+                $photoService->removePhoto($photoRoot);
+                
+                $stream->set('UserUpdated',$this->user);
+                $stream->save();
+                
+                $streamService->removeStream($stream);
+
+                $metatagService->removeMetatag($metatag);
+                $metatagTranslationService->removeMetatagTranslation($metatagTranslation);
+
+                $this->_service->get('doctrine')->getCurrentConnection()->commit();
+                $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-stream', 'news'));
+            } catch(Exception $e) {
+                $this->_service->get('Logger')->log($e->getMessage(), 4);
+            }
+        }
+        $this->_helper->redirector->gotoUrl($this->view->adminUrl('list-stream', 'news'));
+    }
 }
 

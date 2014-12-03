@@ -8,7 +8,7 @@
 
 		<a href="#dat-menu" class="ot-menu-toggle"><i class="fa fa-bars"></i>Toggle Menu</a>
 		<div class="boxed active">
-			<header class="header willfix">
+			<header class="header">
                             <?php echo $this->render('_header.phtml'); ?>
 			</header>
 			
@@ -42,9 +42,14 @@
                                                     
 							<?php echo $this->layout()->lastNewsSidebar; ?>
 							
+							<?php echo $this->layout()->bannerSidebar2; ?>
+                                                    
 							<?php echo $this->layout()->nextEvents; ?>
 							
+							<?php echo $this->layout()->bannerSidebar3; ?>
+                                                    
 							<?php echo $this->layout()->mainPageGalleries; ?>
+                                                    
 							
 						</aside>
 

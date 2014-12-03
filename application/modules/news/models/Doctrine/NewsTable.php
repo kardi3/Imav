@@ -18,23 +18,42 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
     }
     
      public function getNewsQuery() {
+          $q = $this->createQuery('n')
+                ->select('n.*')
+                ->addSelect('nt.*')
+                ->addSelect('pr.*')
+                ->addSelect('p.*')
+                ->addSelect('c.*')
+                ->leftJoin('n.Translation nt')
+                ;
+        
+        $q->leftJoin('n.PhotoRoot pr');
+        $q->leftJoin('n.Photos p');
+        $q->addWhere('n.publish = 1');
+        $q->addWhere('n.publish_date <= NOW()');
+        $q->leftJoin('n.Comments c');
+        $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
+        return $q;
+    }
+   
+    public function getLastNewsQuery() {
         $q = $this->createQuery('n')
                 ->addSelect('n.*')
                 ->addSelect('nt.*')
                 ->addSelect('pr.*')
                 ->addSelect('c.*')
-                ->addSelect('p.*')
+                ->addSelect('pr.*')
                 ->leftJoin('n.Translation nt')
                 ;
         
-        $q->leftJoin('n.PhotoRoot pr');
-        $q->leftJoin('n.Photos p')
+        $q->leftJoin('n.PhotoRoot pr')
+     //   $q->leftJoin('n.Photos p')
                 ->leftJoin('n.Category c');
         $q->addWhere('n.publish = 1');
         $q->addWhere('n.publish_date <= NOW()');
         $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
         return $q;
-    }
+    } 
     
     public function getShowNewsQuery() {
         $q = $this->createQuery('n')
@@ -83,7 +102,7 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
                 ;
         
         $q->leftJoin('n.PhotoRoot pr');
-        $q->leftJoin('n.Photos p')
+        $q//->leftJoin('n.Photos p')
                 ->leftJoin('n.Category c');
         $q->addWhere('n.publish = 1');
         $q->addWhere('n.publish_date <= NOW()');
@@ -104,7 +123,7 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
                 ;
         
         $q->leftJoin('n.PhotoRoot pr');
-        $q->leftJoin('n.Photos p')
+        $q//->leftJoin('n.Photos p')
                 ->leftJoin('n.Category c');
         $q->addWhere('n.publish = 1');
         $q->addWhere('n.publish_date <= NOW()');
@@ -125,7 +144,7 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
                 ->leftJoin('n.VideoRoot vr');
                 
         $q->leftJoin('n.PhotoRoot pr');
-        $q->leftJoin('n.Photos p')
+        $q//->leftJoin('n.Photos p')
                 ->leftJoin('n.Category c')
                 ->leftJoin('n.Group g');
         $q->addWhere('n.publish = 1');
@@ -148,7 +167,7 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
                 ->leftJoin('n.VideoRoot vr');
                 
         $q->leftJoin('n.PhotoRoot pr');
-        $q->leftJoin('n.Photos p')
+        $q//->leftJoin('n.Photos p')
                 ->leftJoin('n.Category c')
                 ->leftJoin('n.Tags t');
         $q->addWhere('n.publish = 1');
@@ -170,7 +189,7 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
                 ;
         
         $q->leftJoin('n.PhotoRoot pr');
-        $q->leftJoin('n.Photos p');
+       // $q->leftJoin('n.Photos p');
         $q->addWhere('n.publish = 1');
         $q->addWhere('n.publish_date <= NOW()');
         
@@ -190,7 +209,7 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
                 ;
         
         $q->leftJoin('n.PhotoRoot pr');
-        $q->leftJoin('n.Photos p');
+       // $q->leftJoin('n.Photos p');
         $q->addWhere('n.student_accept IN (IF(n.student = 1, "1","0,1"))');
         return $q;
     }
@@ -206,7 +225,7 @@ class News_Model_Doctrine_NewsTable extends Doctrine_Table
                 ;
         
         $q->leftJoin('n.PhotoRoot pr');
-        $q->leftJoin('n.Photos p');
+       // $q->leftJoin('n.Photos p');
         $q->addWhere('n.publish = 1');
         $q->addWhere('n.publish_date <= NOW()');
         $q->leftJoin('n.Comments c');

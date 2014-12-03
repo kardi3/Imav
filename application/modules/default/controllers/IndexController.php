@@ -14,7 +14,7 @@ class Default_IndexController extends MF_Controller_Action
         $bannerService = $this->_service->getService('Banner_Service_Banner');
         $menuService = $this->_service->getService('Menu_Service_Menu');
         
-        
+       
         if(!$menu = $menuService->getMenu(1)) {
             throw new Zend_Controller_Action_Exception('Menu not found');
         }
@@ -35,11 +35,6 @@ class Default_IndexController extends MF_Controller_Action
         
         $pageService = $this->_service->getService('Page_Service_Page');
 
-        $topBanners = $bannerService->getPositionBanners('Gora');
-        $mainBanners = $bannerService->getPositionBanners('Glowna');
-        $sidebarTopBanners = $bannerService->getPositionBanners('Sidebar1');
-        $sidebarBottomBanners = $bannerService->getPositionBanners('Sidebar2');
-        
 //       if(!$footer = $pageService->getI18nPage('footer', 'type', $this->view->language, Doctrine_Core::HYDRATE_RECORD)) {
 //            throw new Zend_Controller_Action_Exception('Footer not found');
 //        }
@@ -77,6 +72,7 @@ class Default_IndexController extends MF_Controller_Action
                 }
             }
         }
+        
         $this->view->assign('footer', $footer);
         $this->view->assign('homepage', $homepage);
         $this->view->assign('activeLanguages', $activeLanguages);
@@ -85,19 +81,18 @@ class Default_IndexController extends MF_Controller_Action
         $this->view->assign('submenu_tree', $submenu_tree);
         $this->view->assign('tree', $tree);
         $this->view->assign('route', $route);
-        $this->view->assign('topBanners', $topBanners);
-        $this->view->assign('mainBanners', $mainBanners);
-        $this->view->assign('sidebarTopBanners', $sidebarTopBanners);
-        $this->view->assign('sidebarBottomBanners', $sidebarBottomBanners);
         
         
-        $this->_helper->actionStack('banner-right', 'index', 'banner');
+        $this->_helper->actionStack('banner-right', 'index', 'banner'); 
+        $this->_helper->actionStack('banner-sidebar2', 'index', 'banner'); 
+        $this->_helper->actionStack('banner-sidebar3', 'index', 'banner'); 
         $this->_helper->actionStack('breaking-news', 'index', 'news');
         $this->_helper->actionStack('last-categories-news', 'index', 'news');
-        $this->_helper->actionStack('last-news-sidebar', 'index', 'news');
+       $this->_helper->actionStack('last-news-sidebar', 'index', 'news');
         $this->_helper->actionStack('slider');
         $this->_helper->actionStack('main-page-galleries', 'index', 'gallery');
         $this->_helper->actionStack('next-events', 'index', 'district');
+         
         $this->_helper->viewRenderer->setNoRender();
     }
     

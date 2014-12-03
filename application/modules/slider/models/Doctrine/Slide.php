@@ -65,5 +65,10 @@ class Slider_Model_Doctrine_Slide extends Slider_Model_Doctrine_BaseSlide
             'local' => 'news_id',
             'foreign' => 'id'
         ));
+        
+        $this->hasOne('News_Model_Doctrine_Stream as Stream', array(
+            'local' => 'stream_id',
+            'foreign' => 'id'
+        ));
     }
 }

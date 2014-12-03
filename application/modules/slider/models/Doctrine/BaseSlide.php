@@ -14,7 +14,8 @@
  * @property integer $delay
  * @property string $target_href
  * @property string $target_type
- * @property string $news_id
+ * @property integer $news_id
+ * @property integer $stream_id
  * @property integer $photo_root_id
  * @property string $title
  * @property string $slug
@@ -73,7 +74,11 @@ abstract class Slider_Model_Doctrine_BaseSlide extends Doctrine_Record
              'length' => '255',
              ));
         $this->hasColumn('news_id', 'integer', 4, array(
-             'type' => 'interger',
+             'type' => 'integer',
+             'length' => '4',
+             ));
+        $this->hasColumn('stream_id', 'integer', 4, array(
+             'type' => 'integer',
              'length' => '4',
              ));
         $this->hasColumn('photo_root_id', 'integer', 4, array(

@@ -53,7 +53,9 @@ Slide:
     target_type:
       type: string(255)
     news_id:
-      type: string(255)
+      type: integer(4)
+    stream_id:
+      type: integer(4)
     photo_root_id:
       type: integer(4)
     title:

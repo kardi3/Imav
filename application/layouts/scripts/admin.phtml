@@ -211,15 +211,17 @@
                     $serviceBroker = MF_Service_ServiceBroker::getInstance();
                    $user = $serviceBroker->getService('User_Service_Auth')->getAuthenticatedUser();
                    if($user->role=="admin"): ?>
+                        
                         <li><a href="<?php echo $this->adminUrl('list-ad', 'banner') ?>"><span class="icon16 icomoon-icon-newspaper"></span><?php echo $this->translate('Reklama') ?></a></li>
                       
                         <li><a href="<?php echo $this->adminUrl('list-banner', 'banner') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Banners') ?></a></li>
+                       <li><a href="<?php echo $this->adminUrl('list-comment', 'news') ?>"><span class="icon16 icomoon-icon-newspaper"></span>Komentarze</a></li>
                           <li><a href="<?php echo $this->adminUrl('list-gallery', 'gallery') ?>"><span class="icon16 icomoon-icon-camera-2"></span><?php echo $this->translate('Galeria') ?></a></li>
                         <li><a href="<?php echo $this->adminUrl('list-group', 'news') ?>"><span class="icon16 icomoon-icon-newspaper"></span><?php echo $this->translate('News group') ?></a></li>
                        
                           <li><a href="<?php echo $this->adminUrl('list-menu', 'menu') ?>"><span class="icon16 icomoon-icon-list-view"></span><?php echo $this->translate('Menu') ?></a></li>
-                       <li><a href="<?php echo $this->adminUrl('list-comment', 'news') ?>"><span class="icon16 icomoon-icon-newspaper"></span>Komentarze</a></li>
                         <li><a href="<?php echo $this->adminUrl('list-censor', 'censor') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Niecenzuralne słowa') ?></a></li>
+                        <li><a href="<?php echo $this->adminUrl('list-stream', 'news') ?>"><span class="icon16 icomoon-icon-newspaper"></span><?php echo $this->translate('Streams') ?></a></li>
                         <li><a href="<?php echo $this->adminUrl('list-ip', 'censor') ?>"><span class="icon16 icomoon-icon-list-view-2"></span><?php echo $this->translate('Zablokowane IP') ?></a></li>
                         <li><a href="<?php echo $this->adminUrl('list-event', 'district') ?>"><span class="icon16 icomoon-icon-calendar"></span><?php echo $this->translate('Wydarzenia') ?></a></li>
                       

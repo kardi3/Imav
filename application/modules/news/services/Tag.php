@@ -36,6 +36,29 @@ class News_Service_Tag extends MF_Service_ServiceAbstract{
         return $form;
     }
     
+    public function createTag($name){
+         if($tag = $this->getTag($name,'title')){
+             return $tag;
+         }
+         
+         $metatagService = MF_Service_ServiceBroker::getInstance()->getService('Default_Service_Metatag');
+         $elems['metatags']['translations']['pl']['meta_title'] = $name;
+         $elems['metatags']['translations']['pl']['meta_description'] = "Wiadomości z grupy ".$name;
+         
+         if($metatags = $metatagService->saveMetatagsFromArray(null, $elems, array('title' => 'title', 'description' => 'content', 'keywords' => 'content'))) {
+            $values['metatag_id'] = $metatags->getId();
+        }
+          $tag = $this->tagTable->getRecord();
+          $values['title'] = $name;
+          $values['slug'] = MF_Text::createUniqueTableSlug('News_Model_Doctrine_Tag', $values['title'], $tag->getId());
+          
+          $tag->fromArray($values);
+ 
+        $tag->save();
+       
+        return $tag;
+    }
+    
     public function saveTagFromArray($values) {
 
         foreach($values as $key => $value) {
